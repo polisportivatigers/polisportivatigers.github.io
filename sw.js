@@ -1,5 +1,5 @@
 /* QUINTO · service worker: l'app si apre anche senza rete; i dati restano gestiti da Firebase. */
-const CACHE = 'quinto-v2';
+const CACHE = 'quinto-v3';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './tigers-stemma.png', './csi-logo-s.png', './forza-tigers-intro.mp3', './icons/icon-192.png'];
 const CDN = ['unpkg.com', 'cdnjs.cloudflare.com', 'www.gstatic.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
