@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Lettura libera per calendario, classifica, allenamenti e schemi.
+    // Tutto il resto (rosa, valutazioni, note, referti) solo per lo staff.
+    // Scrittura solo per l'utente MISTER.
+    match /{coll}/{docId} {
+      allow read: if coll in ['club', 'matches', 'training', 'tactics']
+                  || request.auth.token.email == 'mister@quinto-tigers.app';
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'mister@quinto-tigers.app';
+    }
+  }
+}
