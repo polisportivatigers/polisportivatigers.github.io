@@ -1,0 +1,36 @@
+name: Aggiorna dati CSI
+
+# Ogni sera alle 23 ora italiana. GitHub usa l'ora UTC: le due righe coprono ora solare e legale,
+# e il passo "orario" lascia proseguire solo quella che cade alle 23 in Italia.
+on:
+  schedule:
+    - cron: '0 21 * * *'
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    steps:
+      - name: orario
+        id: orario
+        run: |
+          ORA=$(TZ=Europe/Rome date +%H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$ORA" = "23" ] || [ "$ORA" = "00" ]; then echo "vai=si" >> "$GITHUB_OUTPUT"; else echo "vai=no" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.orario.outputs.vai == 'si'
+      - name: leggi i dati CSI
+        if: steps.orario.outputs.vai == 'si'
+        run: python3 scripts/aggiorna_csi.py
+      - name: pubblica
+        if: steps.orario.outputs.vai == 'si'
+        run: |
+          if git diff --quiet -- csi.json && git ls-files --error-unmatch csi.json >/dev/null 2>&1; then echo "Nessuna novità"; exit 0; fi
+          git config user.name "QUINTO aggiornamento CSI"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add csi.json
+          git commit -m "Dati CSI aggiornati"
+          git push

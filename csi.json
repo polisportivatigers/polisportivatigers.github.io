@@ -1,0 +1,302 @@
+{
+ "checkedAt": "2026-11-17T06:10:04.622Z",
+ "source": "Portale CSI tramite automazione ChatGPT",
+ "standings": [
+  {
+   "name": "Daniel San Zelo",
+   "position": 1,
+   "points": 15,
+   "played": 5,
+   "wins": 5,
+   "draws": 0,
+   "losses": 0,
+   "gf": 33,
+   "ga": 10,
+   "notes": ""
+  },
+  {
+   "name": "Don Lorenzo Milani Club",
+   "position": 2,
+   "points": 12,
+   "played": 4,
+   "wins": 4,
+   "draws": 0,
+   "losses": 0,
+   "gf": 21,
+   "ga": 14,
+   "notes": ""
+  },
+  {
+   "name": "Atletico Gerre",
+   "position": 3,
+   "points": 10,
+   "played": 5,
+   "wins": 3,
+   "draws": 1,
+   "losses": 1,
+   "gf": 14,
+   "ga": 12,
+   "notes": ""
+  },
+  {
+   "name": "U.S. i Dispettosi",
+   "position": 4,
+   "points": 9,
+   "played": 4,
+   "wins": 3,
+   "draws": 0,
+   "losses": 1,
+   "gf": 22,
+   "ga": 7,
+   "notes": ""
+  },
+  {
+   "name": "Mirmidoni",
+   "position": 5,
+   "points": 6,
+   "played": 3,
+   "wins": 2,
+   "draws": 0,
+   "losses": 1,
+   "gf": 13,
+   "ga": 6,
+   "notes": ""
+  },
+  {
+   "name": "Atalantina",
+   "position": 6,
+   "points": 5,
+   "played": 5,
+   "wins": 1,
+   "draws": 2,
+   "losses": 2,
+   "gf": 15,
+   "ga": 21,
+   "notes": ""
+  },
+  {
+   "name": "La Petrarca Pub",
+   "position": 7,
+   "points": 4,
+   "played": 4,
+   "wins": 1,
+   "draws": 1,
+   "losses": 2,
+   "gf": 15,
+   "ga": 20,
+   "notes": ""
+  },
+  {
+   "name": "Spartak Comazzo",
+   "position": 8,
+   "points": 4,
+   "played": 4,
+   "wins": 1,
+   "draws": 1,
+   "losses": 2,
+   "gf": 12,
+   "ga": 18,
+   "notes": ""
+  },
+  {
+   "name": "Lodifutsal 2009",
+   "position": 9,
+   "points": 3,
+   "played": 4,
+   "wins": 1,
+   "draws": 0,
+   "losses": 3,
+   "gf": 15,
+   "ga": 19,
+   "notes": ""
+  },
+  {
+   "name": "Polisportiva Tigers Casalmaiocco Sordio A.S.D.",
+   "position": 10,
+   "points": 2,
+   "played": 4,
+   "wins": 0,
+   "draws": 2,
+   "losses": 2,
+   "gf": 5,
+   "ga": 12,
+   "notes": ""
+  },
+  {
+   "name": "Izanese",
+   "position": 11,
+   "points": 1,
+   "played": 4,
+   "wins": 0,
+   "draws": 1,
+   "losses": 3,
+   "gf": 14,
+   "ga": 19,
+   "notes": ""
+  },
+  {
+   "name": "Marescoglio",
+   "position": 12,
+   "points": 0,
+   "played": 4,
+   "wins": 0,
+   "draws": 0,
+   "losses": 4,
+   "gf": 13,
+   "ga": 34,
+   "notes": ""
+  }
+ ],
+ "scores": {
+  "2615A1": [
+   2,
+   0,
+   "2026-10-19",
+   "21:00"
+  ],
+  "2615A2": [
+   2,
+   6,
+   "2026-10-23",
+   "21:00"
+  ],
+  "2615A3": [
+   4,
+   2,
+   "2026-10-20",
+   "22:00"
+  ],
+  "2615A4": [
+   3,
+   8,
+   "2026-10-20",
+   "21:15"
+  ],
+  "2615A5": [
+   3,
+   6,
+   "2026-10-20",
+   "21:30"
+  ],
+  "2615A6": [
+   5,
+   0,
+   "2026-10-22",
+   "21:30"
+  ],
+  "2615A10": [
+   2,
+   5,
+   "2026-10-29",
+   "21:30"
+  ],
+  "2615A11": [
+   4,
+   4,
+   "2026-10-29",
+   "20:30"
+  ],
+  "2615A7": [
+   3,
+   10,
+   "2026-10-27",
+   "21:15"
+  ],
+  "2615A8": [
+   3,
+   3,
+   "2026-10-26",
+   "21:00"
+  ],
+  "2615A9": [
+   7,
+   4,
+   "2026-10-27",
+   "22:00"
+  ],
+  "2615A13": [
+   7,
+   1,
+   "2026-11-02",
+   "21:45"
+  ],
+  "2615A14": [
+   2,
+   10,
+   "2026-11-03",
+   "21:15"
+  ],
+  "2615A15": [
+   3,
+   4,
+   "2026-11-03",
+   "21:30"
+  ],
+  "2615A16": [
+   3,
+   3,
+   "2026-11-05",
+   "21:30"
+  ],
+  "2615A17": [
+   5,
+   0,
+   "2026-11-05",
+   "20:30"
+  ],
+  "2615A18": [
+   5,
+   4,
+   "2026-11-06",
+   "21:00"
+  ],
+  "2615A19": [
+   3,
+   2,
+   "2026-11-09",
+   "21:00"
+  ],
+  "2615A20": [
+   6,
+   5,
+   "2026-11-10",
+   "21:00"
+  ],
+  "2615A21": [
+   6,
+   5,
+   "2026-11-10",
+   "22:00"
+  ],
+  "2615A22": [
+   1,
+   1,
+   "2026-11-12",
+   "20:30"
+  ],
+  "2615A23": [
+   2,
+   3,
+   "2026-11-12",
+   "21:30"
+  ],
+  "2615A24": [
+   9,
+   2,
+   "2026-11-13",
+   "22:00"
+  ],
+  "2615A25": [
+   5,
+   0,
+   "2026-11-16",
+   "21:00"
+  ],
+  "2615A26": [
+   7,
+   2,
+   "2026-11-16",
+   "21:45"
+  ]
+ }
+}

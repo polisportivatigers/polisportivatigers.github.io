@@ -1,5 +1,5 @@
 /* QUINTO · service worker: l'app si apre anche senza rete; i dati restano gestiti da Firebase. */
-const CACHE = 'quinto-v3';
+const CACHE = 'quinto-v4';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './tigers-stemma.png', './csi-logo-s.png', './forza-tigers-intro.mp3', './icons/icon-192.png'];
 const CDN = ['unpkg.com', 'cdnjs.cloudflare.com', 'www.gstatic.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
@@ -8,8 +8,8 @@ self.addEventListener('fetch', (e) => {
   const req = e.request; if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin === location.origin) {
-    if (req.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('config.js')) {
-      // pagina e configurazione: prima la rete, così gli aggiornamenti arrivano subito
+    if (req.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('.json') || url.pathname.endsWith('config.js')) {
+      // pagina, configurazione e dati (csi.json, trailer): prima la rete, così gli aggiornamenti arrivano subito
       e.respondWith(fetch(req).then((r) => { const c = r.clone(); caches.open(CACHE).then((k) => k.put(req, c)); return r; }).catch(() => caches.match(req).then((r) => r || caches.match('./index.html'))));
     } else if (!url.pathname.endsWith('.mp3') || url.pathname.endsWith('intro.mp3')) {
       e.respondWith(caches.match(req).then((r) => r || fetch(req).then((res) => { const c = res.clone(); caches.open(CACHE).then((k) => k.put(req, c)); return res; })));

@@ -665,6 +665,7 @@ async function bootFirebase() {
 
 async function boot() {
   loadSnapshot();
+  loadCsi();
   // si mostra subito: dati incorporati o già salvati sul telefono; l'archivio aggiorna in tempo reale appena risponde
   S.phase = 'ready'; bump();
   if (IS_FB) { try { await bootFirebase(); } catch (e) { S.phase = 'ready'; S.mode = 'snapshot'; S.error = 'Archivio non raggiungibile: ' + e.message; refreshRights(); } return; }
@@ -737,7 +738,16 @@ function errMsg(e) {
 /* ---------- selettori ---------- */
 const profile = () => S.club.profile || SNAPSHOT.profile;
 const trainingCfg = () => profile().trainingConfig || { mondayTime: '20:30', thursdayTime: '20:00', duration: 120 };
-const matchList = () => sortBy(Object.values(S.matches), (m) => (m.date || '9999') + (m.time || ''));
+/* dati ufficiali CSI letti ogni sera (file csi.json pubblicato sul sito): hanno precedenza sulle correzioni manuali più vecchie */
+let CSI = null;
+async function loadCsi() { try { const r = await fetch('csi.json', { cache: 'no-cache' }); if (r.ok) { const j = await r.json(); if (j && j.checkedAt && Array.isArray(j.standings)) { CSI = j; bump(); } } } catch (e) { /* file assente: si usano i dati dell'archivio */ } }
+const csiNewer = (than) => !!(CSI && CSI.checkedAt > (than || ''));
+function withCsi(m) {
+  const sc = CSI && m.sourceCode && CSI.scores && CSI.scores[m.sourceCode];
+  if (!sc || sc[0] == null || m.status === 'played' || m.status === 'cancelled' || (m.live && m.live.started && !m.live.finished)) return m;
+  return { ...m, status: 'played', ourScore: m.home ? sc[0] : sc[1], theirScore: m.home ? sc[1] : sc[0], fromCsi: true };
+}
+const matchList = () => sortBy(Object.values(S.matches).map(withCsi), (m) => (m.date || '9999') + (m.time || ''));
 const staffOf = (id) => S.staffmatches[id] || {};
 const playerList = (all) => sortBy(Object.values(S.players).filter((p) => all || p.active !== false), (p) => (p.role === 'Portiere' ? '0' : '1') + String(p.number ?? 99).padStart(3, '0') + p.name);
 const pName = (p) => p ? (p.nick || p.name) : '—';
@@ -746,8 +756,9 @@ const isUnavailable = (p) => p && (p.injury?.active || p.suspension?.active);
 function nextMatch() { const t = todayISO(); return matchList().find((m) => m.status === 'scheduled' && m.date && m.date >= t); }
 function lastPlayed() { return matchList().filter((m) => m.status === 'played').pop(); }
 function resultOf(m) { if (m.status !== 'played' || m.ourScore == null) return null; return m.ourScore > m.theirScore ? 'V' : m.ourScore < m.theirScore ? 'P' : 'N'; }
-function standingsRows() { return sortBy((S.club.standings?.rows) || SNAPSHOT.standings, (r) => r.position); }
-function leagueScores() { return S.club.league?.scores || SNAPSHOT.scores || {}; }
+function standingsCheckedAt() { const fs = S.club.standings?.checkedAt || SNAPSHOT.standingsCheckedAt; return csiNewer(fs) ? CSI.checkedAt : fs; }
+function standingsRows() { const fs = S.club.standings; if (CSI && CSI.standings.length && csiNewer(fs?.checkedAt)) return sortBy(CSI.standings, (r) => r.position); return sortBy((fs?.rows) || SNAPSHOT.standings, (r) => r.position); }
+function leagueScores() { const base = S.club.league?.scores || SNAPSHOT.scores || {}; if (!CSI || !CSI.scores) return base; return csiNewer(S.club.league?.checkedAt) ? { ...base, ...CSI.scores } : { ...CSI.scores, ...base }; }
 function trainingList() { return sortBy(Object.values(S.training), (t) => t.date + (t.time || '')); }
 function nextTraining() { const t = todayISO(); return trainingList().find((s) => s.date >= t && s.status !== 'replaced'); }
 
@@ -1831,9 +1842,9 @@ function Classifica() {
   useStore();
   const rows = standingsRows();
   const [edit, setEdit] = useState(null);
-  const checked = S.club.standings?.checkedAt || SNAPSHOT.standingsCheckedAt;
+  const checked = standingsCheckedAt();
   return html`<div class="page">
-    <${PageHead} eyebrow="Classifica" title="Ogni punto conta." lead=${`Girone unico, 12 squadre. Valori ufficiali CSI letti il ${fmtDate(checked, { year: true })}.`}>
+    <${PageHead} eyebrow="Classifica" title="Ogni punto conta." lead=${`Girone unico, 12 squadre. Valori ufficiali CSI letti il ${fmtDate(String(checked).slice(0, 10), { year: true })}${String(checked).length > 10 ? ' alle ' + new Date(checked).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : ''}. Aggiornamento automatico ogni sera verso le 23.`}>
       <a class="btn line" href=${CSI_LEAGUE} target="_blank" rel="noopener"><${Icon} n="ext"/>Verifica sul CSI</a>
     </${PageHead}>
     <div class="tablewrap"><table>
