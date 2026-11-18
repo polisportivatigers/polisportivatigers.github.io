@@ -1,11 +1,11 @@
 name: Aggiorna dati CSI
 
-# Ogni sera alle 23 ora italiana. GitHub usa l'ora UTC: le due righe coprono ora solare e legale,
-# e il passo "orario" lascia proseguire solo quella che cade alle 23 in Italia.
+# Ogni sera alle 23:15 ora italiana (ChatGPT legge il CSI alle 23). GitHub usa l'ora UTC: le due righe coprono ora solare e legale,
+# e il passo "orario" lascia proseguire solo quella che cade alle 23:15 in Italia.
 on:
   schedule:
-    - cron: '0 21 * * *'
-    - cron: '0 22 * * *'
+    - cron: '15 21 * * *'
+    - cron: '15 22 * * *'
   workflow_dispatch:
 
 permissions:

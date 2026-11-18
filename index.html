@@ -1844,7 +1844,7 @@ function Classifica() {
   const [edit, setEdit] = useState(null);
   const checked = standingsCheckedAt();
   return html`<div class="page">
-    <${PageHead} eyebrow="Classifica" title="Ogni punto conta." lead=${`Girone unico, 12 squadre. Valori ufficiali CSI letti il ${fmtDate(String(checked).slice(0, 10), { year: true })}${String(checked).length > 10 ? ' alle ' + new Date(checked).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : ''}. Aggiornamento automatico ogni sera verso le 23.`}>
+    <${PageHead} eyebrow="Classifica" title="Ogni punto conta." lead=${`Girone unico, 12 squadre. Valori ufficiali CSI letti il ${fmtDate(String(checked).slice(0, 10), { year: true })}${String(checked).length > 10 ? ' alle ' + new Date(checked).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : ''}. Aggiornamento automatico ogni sera verso le 23:15.`}>
       <a class="btn line" href=${CSI_LEAGUE} target="_blank" rel="noopener"><${Icon} n="ext"/>Verifica sul CSI</a>
     </${PageHead}>
     <div class="tablewrap"><table>
