@@ -534,6 +534,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .lv-line .sc{font-family:var(--f-data);font-weight:700;font-size:18px}
 .lv-line.goal{font-size:15px}
 @media (prefers-reduced-motion:reduce){.lv-tile.pick,.lv-to.late{animation:none}}
+.lv-editline{grid-template-columns:72px 22px minmax(0,1fr) auto}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -1529,9 +1530,10 @@ function CentroPartita({ go, arg }) {
       <div class="row"><${NavLinks} venue=${m.venue}/>${gcalUrl(m) && html`<a class="btn line sm" href=${gcalUrl(m)} target="_blank" rel="noopener"><${Icon} n="cal"/>Aggiungi al calendario</a>`}${m.sourceUrl && html`<a class="btn line sm" href=${m.sourceUrl} target="_blank" rel="noopener"><${Icon} n="ext"/>Scheda CSI</a>`}<button class="btn blue sm" onClick=${() => go('live', m.id)}><${Icon} n="live"/>Live</button></div>
       ${m.sourceNote && html`<div class="callout warn"><${Icon} n="info"/>Variazione pubblicata dal CSI: ${m.sourceNote}</div>`}
     </article>
-    ${m.status === 'played' && !editing ? html`<${MatchSummary} m=${m} onEdit=${() => { setEditId(id); setTab('referto'); }}/>` : !S.canWrite ? html`<${ReadOnly}/>` : html`
+    ${m.status === 'played' && !editing ? html`<${MatchSummary} m=${m} onEdit=${() => { setEditId(id); setTab('cronaca'); }}/>` : !S.canWrite ? html`<${ReadOnly}/>` : html`
       ${m.status === 'played' && html`<div class="row between lv-sumbar"><span class="muted small">Stai modificando la partita.</span><button class="btn line" onClick=${() => setEditId(null)}><${Icon} n="check"/>Torna al riepilogo</button></div>`}
-      <${Tabs} value=${tab} onChange=${setTab} options=${[['convoca', 'Convocazioni'], ['quintetto', 'Quintetto'], ['referto', 'Risultato e referto']]}/>
+      <${Tabs} value=${tab} onChange=${setTab} options=${[...(m.status === 'played' ? [['cronaca', 'Cronaca']] : []), ['convoca', 'Convocazioni'], ['quintetto', 'Quintetto'], ['referto', 'Risultato e referto']]}/>
+      ${tab === 'cronaca' && m.status === 'played' && html`<${CronacaEditor} m=${m}/>`}
       ${tab === 'convoca' && html`<${Convocazioni} m=${m}/>`}
       ${tab === 'quintetto' && html`<${Quintetto} m=${m} go=${go}/>`}
       ${tab === 'referto' && html`<${Referto} m=${m}/>`}`}
@@ -2215,6 +2217,92 @@ function MatchSummary({ m, onEdit }) {
     : html`<article class="card stack"><span class="eyebrow">Cronaca</span><p class="muted">Questa partita non è stata seguita con il Live: c’è solo il risultato${Object.keys(scorers).length ? ' e i marcatori del referto' : ''}.</p>
         ${Object.keys(scorers).length ? html`<div class="list">${Object.entries(scorers).map(([id, n]) => html`<div class="lrow"><${Icon} n="ball"/><div class="ttl">${nm(id)}</div><b>${n}</b></div>`)}</div>` : null}</article>`}
   </div>`;
+}
+
+/* ---------- correzione della cronaca dopo la partita ---------- */
+async function applyCronaca(m, events, syncScore) {
+  const cur = S.matches[m.id]; const L = clone(cur.live || { period: '2', periodMinutes: 20, extraMinutes: 5, countdown: false, elapsedMs: 0, runningSince: null, onField: [], initialLineup: [], baseOurs: 0, baseOpponent: 0, started: true, finished: true });
+  L.events = events; L.started = true; L.finished = true; L.finalizedAt = L.finalizedAt || new Date().toISOString();
+  const next = { ...cur, live: L };
+  const extra = {};
+  if (syncScore) { const [o, t] = liveScore(next); Object.assign(extra, { ourScore: o, theirScore: t, status: 'played' }); }
+  // referto: gol, assist e cartellini ricalcolati dagli eventi, presenze e minuti conservati
+  const r = staffOf(m.id); const rep = clone(r.report || {});
+  const ids = new Set([...(r.called || []), ...Object.keys(rep)]);
+  ids.forEach((id) => { rep[id] = { played: false, minutes: 0, ...(rep[id] || {}), goals: 0, assists: 0, yellow: 0, red: 0 }; });
+  events.forEach((e) => { if (e.side !== 'ours') return; const g = (id) => { if (!id) return null; if (!rep[id]) rep[id] = { played: true, minutes: 0, goals: 0, assists: 0, yellow: 0, red: 0 }; return rep[id]; };
+    const p = g(e.playerId); if (p && ((e.kind === 'goal' && !e.ownGoal) || (e.kind === 'penalty' && e.scored))) { p.goals++; p.played = true; }
+    if (p && e.kind === 'yellow') p.yellow++; if (p && e.kind === 'red') p.red++;
+    const a = e.kind === 'goal' ? g(e.assistId) : null; if (a) { a.assists++; a.played = true; }
+    if (e.kind === 'sub') { const i = g(e.inId); if (i) i.played = true; } });
+  await put('staffmatches', m.id, { availability: {}, called: [], starters: [], ...clone(r), report: rep });
+  await put('matches', m.id, { ...next, ...extra }); if (S.canPublish) autoPublish(6000);
+}
+function CronacaEditor({ m }) {
+  const L = m.live || {}; const ev = L.events || [];
+  const r = staffOf(m.id);
+  const roster = [...new Set([...(r.called || []), ...Object.keys(S.players)])].filter((id) => S.players[id]);
+  const hadLive = ev.length > 0;
+  const [sync, setSync] = useState(hadLive || m.ourScore == null);
+  const [edit, setEdit] = useState(null);
+  const sorted = ev.map((e) => ({ ...e, at: eventAt(L, e) })).filter((e) => e.kind !== 'foul').sort((a, b) => a.at - b.at);
+  const label = (id) => { const p = S.players[id]; return p ? `${pName(p)}${p.number != null ? ' #' + p.number : ''}` : ''; };
+  const [o, t] = liveScore({ ...m, live: { ...L, events: ev } });
+  const save = async (events) => { await applyCronaca(m, events, sync); toast('Cronaca aggiornata'); };
+  const fouls = (side, p) => ev.filter((e) => e.kind === 'foul' && e.side === side && (e.period || '1') === p).length;
+  const setFoul = async (side, p, d) => { let events = ev.slice(); if (d > 0) events.push({ id: uid('e'), kind: 'foul', side, accumulated: true, period: p, elapsedMs: 0, createdAt: new Date().toISOString() }); else { const i = events.map((e) => e.kind === 'foul' && e.side === side && (e.period || '1') === p).lastIndexOf(true); if (i < 0) return; events.splice(i, 1); } await save(events); };
+  const sideName = (s) => (s === 'ours' ? 'Tigers' : m.opponent);
+  return html`<div class="stack" style="gap:16px">
+    <article class="card stack">
+      <div class="card-h"><span class="eyebrow">Cronaca della partita</span><button class="btn fire sm" onClick=${() => setEdit({})}><${Icon} n="plus"/>Aggiungi evento</button></div>
+      <label class="check"><input type="checkbox" checked=${sync} onChange=${(e) => setSync(e.target.checked)}/>Il risultato segue la cronaca (ora ${o}–${t}${m.ourScore != null ? `, registrato ${m.ourScore}–${m.theirScore}` : ''})</label>
+      ${!hadLive && html`<p class="small muted">Questa partita non ha una cronaca. Aggiungendo gli eventi compariranno nel riepilogo e nel grafico. Togli la spunta se vuoi tenere il risultato registrato anche con una cronaca incompleta.</p>`}
+      ${sorted.length ? html`<div class="lv-chron">${sorted.map((e) => html`<div class="lv-line lv-editline">
+        <time>${periodShort(e.period)} ${fmtClock(e.elapsedMs)}</time><span class="ic">${e.kind === 'yellow' ? html`<i class="card-y"></i>` : e.kind === 'red' ? html`<i class="card-r"></i>` : html`<${Icon} n=${e.kind === 'goal' || e.kind === 'penalty' ? 'ball' : e.kind === 'sub' ? 'swap' : e.kind === 'timeout' ? 'clock' : 'note'} s=${16}/>`}</span>
+        <span><b>${EVK[e.kind]}${e.kind === 'penalty' ? (e.scored ? ' segnato' : ' sbagliato') : ''}${e.ownGoal ? ' (autorete)' : ''}</b> · ${sideName(e.side)}${e.label ? ' · ' + e.label : ''}${e.note ? ' — ' + e.note : ''}</span>
+        <span class="row" style="gap:4px;flex-wrap:nowrap"><button class="iconbtn" aria-label="Modifica evento" onClick=${() => setEdit(ev.find((x) => x.id === e.id))}><${Icon} n="edit" s=${16}/></button><button class="iconbtn" aria-label="Elimina evento" onClick=${() => save(ev.filter((x) => x.id !== e.id))}><${Icon} n="trash" s=${16}/></button></span></div>`)}</div>`
+      : html`<p class="muted">Nessun evento. Tocca “Aggiungi evento” per inserire gol, cambi o cartellini.</p>`}
+    </article>
+    <article class="card stack"><span class="eyebrow">Falli accumulati</span>
+      <div class="tablewrap"><table><thead><tr><th></th><th class="num">Tigers</th><th class="num">${short(m.opponent)}</th></tr></thead><tbody>
+        ${['1', '2'].map((p) => html`<tr><td>${PERIODS[p]}</td>${['ours', 'opponent'].map((s) => html`<td class="num"><span class="row" style="justify-content:flex-end;gap:6px;flex-wrap:nowrap"><button class="iconbtn" aria-label="Togli un fallo" onClick=${() => setFoul(s, p, -1)}>−</button><b>${fouls(s, p)}</b><button class="iconbtn" aria-label="Aggiungi un fallo" onClick=${() => setFoul(s, p, 1)}>+</button></span></td>`)}</tr>`)}
+      </tbody></table></div></article>
+    ${edit && html`<${EventEditor} m=${m} e=${edit} roster=${roster} label=${label} onClose=${() => setEdit(null)} onSave=${async (x) => { const events = x.id && ev.some((y) => y.id === x.id) ? ev.map((y) => (y.id === x.id ? x : y)) : ev.concat([{ ...x, id: uid('e'), createdAt: new Date().toISOString() }]); await save(events); setEdit(null); }}/>`}
+  </div>`;
+}
+function EventEditor({ m, e, roster, label, onClose, onSave }) {
+  const [f, setF] = useState(() => ({ kind: 'goal', side: 'ours', period: '1', playerId: '', inId: '', assistId: '', ownGoal: false, scored: true, note: '', opponentNumber: '', ...e, min: Math.floor((e.elapsedMs || 0) / 60000), sec: Math.floor((e.elapsedMs || 0) / 1000) % 60 }));
+  const up = (k, v) => setF((o) => ({ ...o, [k]: v }));
+  const ours = f.side === 'ours';
+  const pl = (k, lab, excl) => html`<${Field} label=${lab}><select value=${f[k]} onChange=${(x) => up(k, x.target.value)}><option value="">${k === 'assistId' ? 'Nessuno' : 'Non indicato'}</option>${roster.filter((id) => id !== excl).map((id) => html`<option value=${id}>${label(id)}</option>`)}</select></${Field}>`;
+  const submit = (x) => { x.preventDefault();
+    const out = { ...e, kind: f.kind, side: f.kind === 'sub' ? 'ours' : f.side, period: f.period, elapsedMs: (Math.max(0, +f.min || 0) * 60 + Math.max(0, Math.min(59, +f.sec || 0))) * 1000, note: f.note || '' };
+    ['playerId', 'inId', 'assistId', 'ownGoal', 'scored', 'opponentNumber', 'accumulated'].forEach((k) => delete out[k]);
+    if (out.side === 'ours' && ['goal', 'penalty', 'yellow', 'red', 'note'].includes(f.kind)) out.playerId = f.playerId;
+    if (f.kind === 'goal') { out.ownGoal = !!f.ownGoal; if (out.side === 'ours') out.assistId = f.assistId; }
+    if (f.kind === 'penalty') out.scored = f.scored === true || f.scored === 'true';
+    if (f.kind === 'sub') { out.playerId = f.playerId; out.inId = f.inId; }
+    if (out.side === 'opponent' && f.opponentNumber) out.opponentNumber = f.opponentNumber;
+    out.label = f.kind === 'sub' ? [f.inId && 'entra ' + label(f.inId), f.playerId && 'esce ' + label(f.playerId)].filter(Boolean).join(', ')
+      : out.side === 'ours' ? [label(out.playerId), f.kind === 'goal' && f.assistId ? 'assist ' + (S.players[f.assistId]?.nick || pName(S.players[f.assistId])) : ''].filter(Boolean).join(' · ')
+      : (f.opponentNumber ? 'n. ' + f.opponentNumber : '');
+    onSave(out); };
+  return html`<${Modal} title=${e.id ? 'Modifica evento' : 'Nuovo evento'} onClose=${onClose}><form class="form" onSubmit=${submit}>
+    <div class="fgrid">
+      <${Field} label="Evento"><select value=${f.kind} onChange=${(x) => up('kind', x.target.value)}>${['goal', 'penalty', 'sub', 'yellow', 'red', 'timeout', 'note'].map((k) => html`<option value=${k}>${k === 'penalty' ? 'Tiro libero / rigore' : EVK[k]}</option>`)}</select></${Field}>
+      ${f.kind !== 'sub' && html`<${Field} label="Squadra"><${Seg} value=${f.side} onChange=${(v) => up('side', v)} options=${[['ours', 'Tigers'], ['opponent', short(m.opponent)]]}/></${Field}>`}
+      <${Field} label="Tempo"><select value=${f.period} onChange=${(x) => up('period', x.target.value)}>${Object.entries(PERIODS).map(([k, v]) => html`<option value=${k}>${v}</option>`)}</select></${Field}>
+      <${Field} label="Minuto e secondi"><span class="row" style="gap:6px;flex-wrap:nowrap"><input aria-label="Minuto" type="number" min="0" max="60" style="width:80px" value=${f.min} onInput=${(x) => up('min', x.target.value)}/><b>:</b><input aria-label="Secondi" type="number" min="0" max="59" style="width:80px" value=${f.sec} onInput=${(x) => up('sec', x.target.value)}/></span></${Field}>
+      ${ours && ['goal', 'penalty', 'yellow', 'red', 'note'].includes(f.kind) && pl('playerId', f.kind === 'goal' || f.kind === 'penalty' ? 'Chi ha segnato' : 'Giocatore')}
+      ${ours && f.kind === 'goal' && pl('assistId', 'Assist', f.playerId)}
+      ${f.kind === 'sub' && html`${pl('inId', 'Entra')}${pl('playerId', 'Esce', f.inId)}`}
+      ${!ours && f.kind !== 'sub' && ['goal', 'penalty', 'yellow', 'red'].includes(f.kind) && html`<${Field} label="Numero avversario (facoltativo)"><input inputmode="numeric" value=${f.opponentNumber} onInput=${(x) => up('opponentNumber', x.target.value)}/></${Field}>`}
+    </div>
+    ${f.kind === 'goal' && html`<label class="check"><input type="checkbox" checked=${f.ownGoal} onChange=${(x) => up('ownGoal', x.target.checked)}/>Autorete (il gol va all’altra squadra)</label>`}
+    ${f.kind === 'penalty' && html`<${Seg} value=${f.scored === true || f.scored === 'true'} onChange=${(v) => up('scored', v)} options=${[[true, 'Segnato'], [false, 'Sbagliato']]}/>`}
+    <${Field} label="Annotazione"><input value=${f.note} onInput=${(x) => up('note', x.target.value)} placeholder="Facoltativa"/></${Field}>
+    <div class="row"><button class="btn line" type="button" onClick=${onClose}>Annulla</button><button class="btn fire" type="submit">Salva</button></div>
+  </form></${Modal}>`;
 }
 
 /* ===== QUINTO · trailer della partita =====
