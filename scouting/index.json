@@ -1,0 +1,872 @@
+{
+ "clips": {
+  "iza1": {
+   "file": "scouting/clips/iza1.mp4",
+   "scorer": "Izanese",
+   "title": "Tiro da fuori dal limite, centrale, su attacco manovrato"
+  },
+  "iza2": {
+   "file": "scouting/clips/iza2.mp4",
+   "scorer": "Izanese",
+   "title": "Conduzione sulla destra, palla in mezzo e gol da sotto porta"
+  },
+  "iza3": {
+   "file": "scouting/clips/iza3.mp4",
+   "scorer": "Izanese",
+   "title": "Pressing alto a inizio ripresa: recupero e tiro ravvicinato"
+  },
+  "iza4": {
+   "file": "scouting/clips/iza4.mp4",
+   "scorer": "Izanese",
+   "title": "Contrasto vinto a metà campo, ripartenza e primo palo"
+  },
+  "iza5": {
+   "file": "scouting/clips/iza5.mp4",
+   "scorer": "Izanese",
+   "title": "Pivot spalle alla porta: riceve in area, si gira e tira"
+  },
+  "iza6": {
+   "file": "scouting/clips/iza6.mp4",
+   "scorer": "Izanese",
+   "title": "Attacco con 4 uomini, tiro da sinistra in area e mischia"
+  },
+  "iza7": {
+   "file": "scouting/clips/iza7.mp4",
+   "scorer": "Izanese",
+   "title": "Contrasto vinto al limite e conclusione immediata"
+  },
+  "spa1": {
+   "file": "scouting/clips/spa1.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "Tiro del n. 8 da sinistra, respinta corta del portiere e gol"
+  },
+  "spa2": {
+   "file": "scouting/clips/spa2.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "33 secondi dopo il gol subito: n. 8 centrale, 2 contro 1"
+  },
+  "spa3": {
+   "file": "scouting/clips/spa3.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "Il n. 5 porta palla da metà campo fino in area, pochi a coprire"
+  },
+  "spa4": {
+   "file": "scouting/clips/spa4.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "17 secondi dopo il gol subito: tiro, respinta, n. 8 sul secondo palo"
+  },
+  "spa5": {
+   "file": "scouting/clips/spa5.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "Attacco prolungato con 4 uomini in area, tiro da vicino"
+  },
+  "spa6": {
+   "file": "scouting/clips/spa6.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "Ripartenza 3 contro 2: il n. 7 chiude e segna in alto"
+  }
+ },
+ "teams": {
+  "Izanese": {
+   "match": {
+    "title": "Izanese – Spartak Comazzo",
+    "result": "8–9",
+    "note": "Analisi dal video della diretta. Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
+   },
+   "summary": "Squadra coraggiosa che pressa alto e riempie l’area, ma si scopre: subisce spesso subito dopo aver segnato e il portiere respinge corto. Nella ripresa ha rimontato da 2–5 a 7–7.",
+   "scores": {
+    "title": "Come segnano",
+    "points": [
+     "3 gol su 7 nascono da recuperi palla aggressivi: pressing alto e contrasti vinti.",
+     "Un pivot che sa giocare spalle alla porta e girarsi in area.",
+     "Tiratori dalla distanza e conduzioni sulla fascia destra.",
+     "Attaccano con tanta gente in area: le mischie diventano gol."
+    ],
+    "clips": [
+     "iza3",
+     "iza4",
+     "iza7",
+     "iza5",
+     "iza1",
+     "iza2",
+     "iza6"
+    ]
+   },
+   "concedes": {
+    "title": "Dove soffrono",
+    "points": [
+     "Il portiere (maglia grigia) respinge corto e centrale: 2 gol su 6 su ribattuta.",
+     "Calo dopo il gol: due volte hanno subito entro 35 secondi dal proprio gol.",
+     "In transizione restano scoperti: conduzioni e ripartenze contro una difesa in inferiorità."
+    ],
+    "clips": [
+     "spa1",
+     "spa4",
+     "spa2",
+     "spa6",
+     "spa3",
+     "spa5"
+    ]
+   },
+   "players": "I numeri non si leggono (maglie rosse e a righe bianche e rosse). Riferimenti: il pivot, il portiere in grigio.",
+   "plans": [
+    {
+     "title": "Uscire dal loro pressing",
+     "tag": "Costruzione",
+     "text": "Niente passaggi corti e centrali sotto pressione. Il portiere apre sul laterale vicino alla linea, che gioca subito lungo sul pivot; l’altro laterale attacca lo spazio alle spalle della pressione.",
+     "clips": [
+      "iza3",
+      "iza4"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 26,
+       "y": 86,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 26,
+       "y": 16,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 40,
+       "y": 50,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 76,
+       "y": 50,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 30,
+       "y": 78,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 30,
+       "y": 24,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 20,
+       "y": 52,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 48,
+       "y": 52,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 94,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 8,
+       "y": 54,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 7,
+       "y1": 52,
+       "x2": 25,
+       "y2": 84,
+       "kind": "pass"
+      },
+      {
+       "x1": 27,
+       "y1": 84,
+       "x2": 74,
+       "y2": 52,
+       "kind": "pass"
+      },
+      {
+       "x1": 27,
+       "y1": 18,
+       "x2": 62,
+       "y2": 28,
+       "kind": "run"
+      }
+     ]
+    },
+    {
+     "title": "Tiro e ribattuta",
+     "tag": "Attacco",
+     "text": "Il loro portiere respinge davanti a sé: chi tira deve sempre avere un compagno che segue sul primo palo e uno sul secondo. Tiriamo presto, anche da fuori.",
+     "clips": [
+      "spa1",
+      "spa4"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 36,
+       "y": 50,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 68,
+       "y": 28,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 84,
+       "y": 58,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 70,
+       "y": 78,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 80,
+       "y": 36,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 82,
+       "y": 68,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 62,
+       "y": 52,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 52,
+       "y": 30,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 95,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 70,
+       "y": 30,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 70,
+       "y1": 30,
+       "x2": 95,
+       "y2": 46,
+       "kind": "pass"
+      },
+      {
+       "x1": 84,
+       "y1": 58,
+       "x2": 91,
+       "y2": 48,
+       "kind": "run"
+      },
+      {
+       "x1": 70,
+       "y1": 78,
+       "x2": 90,
+       "y2": 62,
+       "kind": "run"
+      }
+     ]
+    },
+    {
+     "title": "Anticipo sul loro pivot",
+     "tag": "Difesa",
+     "text": "Non lasciarlo ricevere spalle alla porta: il difensore gioca davanti o di lato, non dietro. Un compagno scala a copertura dietro di lui.",
+     "clips": [
+      "iza5"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 24,
+       "y": 46,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 14,
+       "y": 58,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 36,
+       "y": 24,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 40,
+       "y": 72,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 19,
+       "y": 50,
+       "side": "b",
+       "label": "PV"
+      },
+      {
+       "x": 42,
+       "y": 30,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 44,
+       "y": 64,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 60,
+       "y": 48,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 94,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 43,
+       "y": 32,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 42,
+       "y1": 32,
+       "x2": 21,
+       "y2": 49,
+       "kind": "pass"
+      },
+      {
+       "x1": 24,
+       "y1": 46,
+       "x2": 22,
+       "y2": 48,
+       "kind": "run"
+      }
+     ]
+    },
+    {
+     "title": "Ripartenza 3 contro 2",
+     "tag": "Transizione",
+     "text": "Quando attaccano in 4 restano in due dietro, a volte uno solo. Al recupero: conduzione centrale veloce e due compagni che si allargano sulle fasce. Come i gol dello Spartak.",
+     "clips": [
+      "spa6",
+      "spa3",
+      "spa2"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 22,
+       "y": 44,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 30,
+       "y": 18,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 30,
+       "y": 80,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 16,
+       "y": 64,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 62,
+       "y": 40,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 66,
+       "y": 62,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 20,
+       "y": 30,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 14,
+       "y": 76,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 94,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 24,
+       "y": 46,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 22,
+       "y1": 44,
+       "x2": 56,
+       "y2": 50,
+       "kind": "run"
+      },
+      {
+       "x1": 30,
+       "y1": 18,
+       "x2": 76,
+       "y2": 22,
+       "kind": "run"
+      },
+      {
+       "x1": 30,
+       "y1": 80,
+       "x2": 76,
+       "y2": 76,
+       "kind": "run"
+      },
+      {
+       "x1": 56,
+       "y1": 50,
+       "x2": 75,
+       "y2": 24,
+       "kind": "pass"
+      }
+     ]
+    },
+    {
+     "title": "Dopo il gol: 30 secondi",
+     "tag": "Mentalità",
+     "text": "Dopo un loro gol si rilassano: subito dalla ripresa del gioco attacchiamo la porta. Dopo un nostro gol, invece, 30 secondi di massima attenzione: sono pericolosi quando inseguono.",
+     "clips": [
+      "spa2",
+      "spa4"
+     ]
+    }
+   ]
+  },
+  "Spartak Comazzo": {
+   "match": {
+    "title": "Izanese – Spartak Comazzo",
+    "result": "8–9",
+    "note": "Analisi dal video della diretta. Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
+   },
+   "summary": "Squadra di qualità individuale, letale in conduzione e in ripartenza, con il n. 8 come riferimento. Soffre però la pressione alta e ha perso un vantaggio di 5–2 nella ripresa.",
+   "scores": {
+    "title": "Come segnano",
+    "points": [
+     "Conduzioni centrali da metà campo: il n. 8 e il n. 5 puntano l’uomo.",
+     "Ripartenze veloci, il n. 7 è letale in 3 contro 2.",
+     "Seguono sempre il tiro: 2 gol su ribattuta.",
+     "Colpiscono subito dopo aver subito gol (33 e 17 secondi)."
+    ],
+    "clips": [
+     "spa2",
+     "spa3",
+     "spa6",
+     "spa1",
+     "spa4",
+     "spa5"
+    ]
+   },
+   "concedes": {
+    "title": "Dove soffrono",
+    "points": [
+     "Pressing alto: 3 gol subiti su recuperi nella loro metà campo o al limite.",
+     "Il pivot avversario che si gira in area.",
+     "Tiri dal limite e azioni sulla loro fascia sinistra."
+    ],
+    "clips": [
+     "iza3",
+     "iza4",
+     "iza7",
+     "iza5",
+     "iza1",
+     "iza2"
+    ]
+   },
+   "players": "Da tenere d’occhio: n. 8 (coinvolto in almeno 2 gol), n. 5 (conduzione fino in area), n. 7 (ripartenze), n. 10 e n. 17 spesso nel vivo dell’azione.",
+   "plans": [
+    {
+     "title": "Pressing alto sulla loro uscita",
+     "tag": "Pressing",
+     "text": "Contro la pressione sbagliano: chiudere il passaggio centrale e spingere la palla verso la linea laterale, poi raddoppiare.",
+     "clips": [
+      "iza3",
+      "iza4",
+      "iza7"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 52,
+       "y": 50,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 70,
+       "y": 30,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 70,
+       "y": 70,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 84,
+       "y": 52,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 94,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 80,
+       "y": 22,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 80,
+       "y": 80,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 66,
+       "y": 50,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 40,
+       "y": 50,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 93,
+       "y": 46,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 84,
+       "y1": 52,
+       "x2": 88,
+       "y2": 46,
+       "kind": "run"
+      },
+      {
+       "x1": 70,
+       "y1": 70,
+       "x2": 78,
+       "y2": 78,
+       "kind": "run"
+      },
+      {
+       "x1": 70,
+       "y1": 30,
+       "x2": 76,
+       "y2": 28,
+       "kind": "run"
+      },
+      {
+       "x1": 52,
+       "y1": 50,
+       "x2": 62,
+       "y2": 50,
+       "kind": "run"
+      }
+     ]
+    },
+    {
+     "title": "Fermare le conduzioni del n. 8 e del n. 5",
+     "tag": "Difesa",
+     "text": "Non aspettarli: aggressione sul primo controllo, il secondo uomo chiude la linea centrale. Fallo tattico solo con pochi falli accumulati.",
+     "clips": [
+      "spa2",
+      "spa3"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 36,
+       "y": 48,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 26,
+       "y": 60,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 30,
+       "y": 26,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 56,
+       "y": 74,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 48,
+       "y": 50,
+       "side": "b",
+       "label": "8"
+      },
+      {
+       "x": 46,
+       "y": 22,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 60,
+       "y": 64,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 70,
+       "y": 40,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 94,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 46,
+       "y": 50,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 36,
+       "y1": 48,
+       "x2": 44,
+       "y2": 50,
+       "kind": "run"
+      },
+      {
+       "x1": 26,
+       "y1": 60,
+       "x2": 34,
+       "y2": 54,
+       "kind": "run"
+      }
+     ]
+    },
+    {
+     "title": "Due dietro la palla",
+     "tag": "Transizione",
+     "text": "Contro il n. 7 in ripartenza: quando attacchiamo, il centrale resta sempre dietro la linea della palla e il laterale opposto rientra subito.",
+     "clips": [
+      "spa6"
+     ],
+     "tokens": [
+      {
+       "x": 6,
+       "y": 50,
+       "side": "gk",
+       "label": "P"
+      },
+      {
+       "x": 42,
+       "y": 50,
+       "side": "a",
+       "label": "2"
+      },
+      {
+       "x": 68,
+       "y": 24,
+       "side": "a",
+       "label": "3"
+      },
+      {
+       "x": 70,
+       "y": 74,
+       "side": "a",
+       "label": "4"
+      },
+      {
+       "x": 84,
+       "y": 50,
+       "side": "a",
+       "label": "5"
+      },
+      {
+       "x": 62,
+       "y": 40,
+       "side": "b",
+       "label": "7"
+      },
+      {
+       "x": 78,
+       "y": 60,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 86,
+       "y": 30,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 60,
+       "y": 70,
+       "side": "b",
+       "label": ""
+      },
+      {
+       "x": 94,
+       "y": 50,
+       "side": "gk2",
+       "label": ""
+      },
+      {
+       "x": 70,
+       "y": 26,
+       "side": "ball",
+       "label": ""
+      }
+     ],
+     "arrows": [
+      {
+       "x1": 70,
+       "y1": 74,
+       "x2": 48,
+       "y2": 66,
+       "kind": "run"
+      },
+      {
+       "x1": 42,
+       "y1": 50,
+       "x2": 34,
+       "y2": 46,
+       "kind": "run"
+      }
+     ]
+    },
+    {
+     "title": "Pulire le respinte",
+     "tag": "Portiere",
+     "text": "Seguono ogni tiro. Il nostro portiere respinge di lato, non al centro, e i difensori marcano l’uomo in area prima di guardare la palla.",
+     "clips": [
+      "spa1",
+      "spa4",
+      "spa5"
+     ]
+    }
+   ]
+  }
+ }
+}

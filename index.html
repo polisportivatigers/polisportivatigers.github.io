@@ -466,6 +466,13 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .tr-burst{position:absolute;width:150vmax;height:150vmax;background:repeating-conic-gradient(from 0deg,rgba(240,78,35,.16) 0 6deg,transparent 6deg 18deg);animation:trspin 14s linear infinite;pointer-events:none}
 @keyframes trleft{from{transform:translateX(-100%)}to{transform:none}}
 @keyframes trright{from{transform:translateX(100%)}to{transform:none}}
+/* analisi video avversari */
+.scout-list{margin:0;padding-left:20px;display:grid;gap:6px}
+.clipchips{display:grid;gap:6px}
+.clipchip{display:flex;align-items:center;gap:10px;text-align:left;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;font-size:14px;color:var(--text)}
+.clipchip:hover{border-color:var(--accent)}
+.clipchip svg{width:16px;height:16px;flex:none;color:var(--accent-ink)}
+.pill svg{width:12px;height:12px}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -1915,8 +1922,9 @@ function teamProfile(name, ms) {
   const index = n ? Math.max(0, Math.min(100, Math.round(ppg / 3 * 50 + Math.max(-3, Math.min(3, gfp - gap)) / 6 * 30 + 15 + form / 3 * 20 - 10))) : null;
   return { name, n, ppg, gfp, gap, form, index, rows };
 }
-function Avversari({ arg }) {
+function Avversari({ arg, go }) {
   useStore();
+  useEffect(() => { loadScouting(); }, []);
   const ms = leagueMatches();
   const teams = [...new Set(ms.flatMap((m) => [m.home, m.away]))].filter((t) => !isTigers(t)).sort();
   const us = teamProfile(TEAM_CSI, ms);
@@ -1957,9 +1965,10 @@ function Avversari({ arg }) {
       <article class="card stack"><span class="eyebrow">Risultati di ${short(T.name)}</span>
         ${T.rows.length ? html`<div class="list">${[...T.rows].reverse().map((r) => html`<div class="lrow"><span class=${'res ' + r.r}>${r.r}</span><div><div class="ttl">${short(r.opponent)}</div><div class="small muted">${fmtDate(r.date)}</div></div><span class="bigscore" style="font-size:22px">${r.gf}–${r.ga}</span></div>`)}</div>` : html`<p class="muted">Nessun risultato registrato.</p>`}
       </article></div>` : null}
+    ${T && html`<${ScoutPanel} name=${T.name} go=${go}/>`}
     <div class="tablewrap"><table><thead><tr><th>Squadra</th><th class="num">Indice</th><th class="num">Pt/g</th><th class="num">GF/g</th><th class="num">GS/g</th><th>Forma</th><th>Rispetto a noi</th></tr></thead><tbody>
       <tr class="us"><td>Tigers</td><td class="num">${us.index ?? '—'}</td><td class="num">${us.ppg.toFixed(2)}</td><td class="num">${us.gfp.toFixed(1)}</td><td class="num">${us.gap.toFixed(1)}</td><td><div class="row" style="gap:3px;flex-wrap:nowrap">${us.rows.slice(-5).map((r) => html`<span class=${'res ' + r.r}>${r.r}</span>`)}</div></td><td>—</td></tr>
-      ${all.map((p) => html`<tr style="cursor:pointer" onClick=${() => { setSel(p.name); scrollTo({ top: 0, behavior: 'smooth' }); }}><td>${p.name}</td><td class="num"><b>${p.index ?? '—'}</b></td><td class="num">${p.ppg.toFixed(2)}</td><td class="num">${p.gfp.toFixed(1)}</td><td class="num">${p.gap.toFixed(1)}</td><td><div class="row" style="gap:3px;flex-wrap:nowrap">${p.rows.slice(-5).map((r) => html`<span class=${'res ' + r.r}>${r.r}</span>`)}</div></td><td><span class=${'pill ' + verdict(p)[0]}>${verdict(p)[1].split(' · ')[0]}</span></td></tr>`)}
+      ${all.map((p) => html`<tr style="cursor:pointer" onClick=${() => { setSel(p.name); scrollTo({ top: 0, behavior: 'smooth' }); }}><td>${p.name}${scoutFor(p.name) && html` <span class="pill fire" title="Analisi video disponibile"><${Icon} n="video"/>Video</span>`}</td><td class="num"><b>${p.index ?? '—'}</b></td><td class="num">${p.ppg.toFixed(2)}</td><td class="num">${p.gfp.toFixed(1)}</td><td class="num">${p.gap.toFixed(1)}</td><td><div class="row" style="gap:3px;flex-wrap:nowrap">${p.rows.slice(-5).map((r) => html`<span class=${'res ' + r.r}>${r.r}</span>`)}</div></td><td><span class=${'pill ' + verdict(p)[0]}>${verdict(p)[1].split(' · ')[0]}</span></td></tr>`)}
     </tbody></table></div>
     <details class="drill"><summary><${Icon} n="info"/><b>Come viene calcolata</b><span></span></summary><div class="modal-b"><p>L’indice da 0 a 100 combina punti per partita (50%), differenza reti per partita (30%) e forma nelle ultime tre gare (20%). Lo scarto con l’indice dei Tigers decide il giudizio: oltre 15 punti sopra “più forte”, oltre 15 sotto “più debole”, altrimenti “alla pari”. Con meno di 5 gare giocate l’affidabilità è bassa. I risultati vengono dal portale CSI e dalle correzioni dello staff nella sezione Campionato.</p></div></details>
   </div>`;
@@ -2130,6 +2139,90 @@ function DropScene({ d, beat, kind }) {
   return html`<div class=${'tr-strobe' + (i % 2 ? ' alt' : '')} key=${'s' + Math.floor((k - 28) / 2)}>
     <span class="tr-strobe-num">${p.num}</span>
     <div class="tr-strobe-txt"><span class="tr-first">${p.first} ${p.last}</span><h2 class="tr-strobe-nick tr-pop">${p.nick}!</h2></div></div>`;
+}
+
+/* ===== QUINTO · analisi video degli avversari =====
+   I dati sono in scouting/index.json (squadre per nome CSI), le clip in scouting/clips/. */
+
+let SCOUT = null;
+async function loadScouting() {
+  if (SCOUT) return SCOUT;
+  try { const r = await fetch('scouting/index.json', { cache: 'no-cache' }); SCOUT = r.ok ? await r.json() : { teams: {}, clips: {} }; } catch (e) { SCOUT = { teams: {}, clips: {} }; }
+  bump(); return SCOUT;
+}
+function scoutFor(name) { return SCOUT && SCOUT.teams && SCOUT.teams[name] || null; }
+
+/* lavagna statica con frecce: Tigers arancio, avversari blu, attacco Tigers verso destra */
+function ScoutBoard({ p }) {
+  const col = { a: '#F04E23', gk: '#F5C518', b: '#2A3AB8', gk2: '#8A90AE', ball: '#fff' };
+  const mk = 'sb-' + p.title.replace(/\W/g, '').slice(0, 12);
+  return html`<svg viewBox="0 0 200 100" class="diagram" role="img" aria-label=${'Schema: ' + p.title}>
+    <defs><marker id=${mk} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#fff"/></marker></defs>
+    <rect width="200" height="100" rx="6" fill="#1D6B4E"/>
+    <g fill="none" stroke="rgba(255,255,255,.55)" stroke-width=".7"><rect x="2" y="2" width="196" height="96"/><line x1="100" y1="2" x2="100" y2="98"/><circle cx="100" cy="50" r="10"/>
+      <path d="M2 30a20 20 0 0 1 0 40"/><path d="M2 32h14a18 18 0 0 1 0 36H2" /><path d="M198 32h-14a18 18 0 0 0 0 36h14"/><rect x="-2" y="44" width="4" height="12"/><rect x="198" y="44" width="4" height="12"/></g>
+    ${(p.arrows || []).map((a) => html`<line x1=${a.x1 * 2} y1=${a.y1} x2=${a.x2 * 2} y2=${a.y2} stroke="#fff" stroke-width="1.1" stroke-dasharray=${a.kind === 'pass' ? '3 2' : ''} marker-end=${`url(#${mk})`}/>`)}
+    ${(p.tokens || []).map((k) => k.side === 'ball'
+      ? html`<circle cx=${k.x * 2} cy=${k.y} r="2.4" fill="#fff" stroke="#111" stroke-width=".5"/>`
+      : html`<g><circle cx=${k.x * 2} cy=${k.y} r="5" fill=${col[k.side] || col.a} stroke="#fff" stroke-width=".8"/>${k.label && html`<text x=${k.x * 2} y=${k.y + 1.9} text-anchor="middle" font-size=${k.label.length > 1 ? 4.2 : 5.2} font-weight="700" font-family="Barlow Condensed,sans-serif" fill=${k.side === 'gk' ? '#0B1257' : '#fff'}>${k.label}</text>`}</g>`)}
+  </svg>`;
+}
+
+function ClipPlayer({ ids, start, onClose }) {
+  const [i, setI] = useState(Math.max(0, ids.indexOf(start)));
+  const [rate, setRate] = useState(1);
+  const v = useRef();
+  const c = SCOUT.clips[ids[i]] || {};
+  useEffect(() => { if (v.current) { v.current.playbackRate = rate; } }, [rate, i]);
+  return html`<${Modal} title=${'Gol ' + c.scorer} onClose=${onClose} wide>
+    <div class="stack">
+      <video ref=${v} key=${ids[i]} src=${c.file} controls autoplay muted playsinline loop preload="auto" onLoadedData=${(e) => { e.target.playbackRate = rate; }} style="width:100%;border-radius:10px;background:#000;aspect-ratio:16/9"></video>
+      <p><b>${c.title}</b></p>
+      <div class="row between">
+        <${Seg} value=${String(rate)} onChange=${(x) => setRate(+x)} options=${[['1', 'Normale'], ['0.5', 'Lento'], ['0.25', 'Moviola']]}/>
+        ${ids.length > 1 && html`<div class="row"><button class="btn line sm" disabled=${i === 0} onClick=${() => setI(i - 1)}>‹ Precedente</button><span class="small muted">${i + 1} / ${ids.length}</span><button class="btn line sm" disabled=${i === ids.length - 1} onClick=${() => setI(i + 1)}>Successiva ›</button></div>`}
+      </div>
+    </div></${Modal}>`;
+}
+
+function ClipChips({ ids, onPlay }) {
+  return html`<div class="clipchips">${ids.map((id) => { const c = SCOUT.clips[id]; return c && html`<button class="clipchip" onClick=${() => onPlay(ids, id)}><${Icon} n="play"/><span>${c.title}</span></button>`; })}</div>`;
+}
+
+function ScoutPanel({ name, go }) {
+  const d = scoutFor(name);
+  const [play, setPlay] = useState(null);
+  if (!d) return null;
+  const onPlay = (ids, id) => setPlay({ ids, id });
+  const copy = async (p) => {
+    const id = uid('t');
+    await put('tactics', id, { id, title: p.title + ' · ' + short(name), formation: '1-2-1', matchId: '', notes: p.text, arrows: (p.arrows || []).map((a) => ({ id: uid('a'), ...a })),
+      tokens: (p.tokens || []).map((k, i) => ({ id: k.side === 'ball' ? 'ball' : (k.side === 'b' || k.side === 'gk2' ? 'opp-' : 'ours-') + i, side: k.side === 'gk2' ? 'b' : k.side, x: k.x, y: k.y, label: k.label || '', playerId: '' })) });
+    toast('Schema copiato nella lavagna'); go && go('davide', 'lavagna:' + id);
+  };
+  return html`<section class="stack" style="gap:16px">
+    <div class="card stack scout-head">
+      <div class="card-h"><span class="eyebrow"><${Icon} n="video"/>Analisi video</span><span class="pill fire">${d.match.title} ${d.match.result}</span></div>
+      <p style="font-size:17px">${d.summary}</p>
+      <p class="small muted">${d.match.note}</p>
+      ${d.players && html`<div class="callout"><${Icon} n="target"/><span><b>Giocatori:</b> ${d.players}</span></div>`}
+    </div>
+    <div class="grid g2">
+      ${[[d.scores, 'bad'], [d.concedes, 'ok']].map(([b, k]) => html`<article class="card stack">
+        <div class="card-h"><h3>${b.title}</h3><span class=${'pill ' + k}>${b.clips.length} clip</span></div>
+        <ul class="scout-list">${b.points.map((x) => html`<li>${x}</li>`)}</ul>
+        <${ClipChips} ids=${b.clips} onPlay=${onPlay}/></article>`)}
+    </div>
+    <div class="card-h" style="margin:8px 0 0"><h2>Schemi e rimedi</h2><span class="small muted"><b style="color:#F04E23">●</b> Tigers · <b style="color:#2A3AB8">●</b> ${short(name)} · tratteggio passaggio, continuo corsa · noi attacchiamo verso destra</span></div>
+    <div class="grid g2">${d.plans.map((p) => html`<article class="card stack">
+      <div class="card-h"><h3>${p.title}</h3><span class="pill">${p.tag}</span></div>
+      ${p.tokens && html`<${ScoutBoard} p=${p}/>`}
+      <p>${p.text}</p>
+      ${p.clips && p.clips.length && html`<div class="row"><span class="small muted">Esempi dal video:</span>${p.clips.map((id, j) => html`<button class="btn line sm" onClick=${() => onPlay(p.clips, id)}><${Icon} n="play"/>Clip ${j + 1}</button>`)}</div>`}
+      ${S.canWrite && p.tokens && html`<div><button class="btn line sm" onClick=${() => copy(p)}><${Icon} n="copy"/>Copia nella lavagna</button></div>`}
+    </article>`)}</div>
+    ${play && html`<${ClipPlayer} ids=${play.ids} start=${play.id} onClose=${() => setPlay(null)}/>`}
+  </section>`;
 }
 
 /* ===== QUINTO · allenamenti, generatore, area Davide, impostazioni, intro, shell ===== */
