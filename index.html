@@ -473,6 +473,67 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .clipchip:hover{border-color:var(--accent)}
 .clipchip svg{width:16px;height:16px;flex:none;color:var(--accent-ink)}
 .pill svg{width:12px;height:12px}
+/* ---------- Live a tocchi ---------- */
+.lv-clock{border:0;cursor:pointer;font-variant-numeric:tabular-nums}
+.lv-fouls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lv-fouls>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--f-data);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#AEB3D6;background:rgba(255,255,255,.05);border-radius:10px;padding:6px 8px 6px 12px}
+.lv-fouls .pips{margin-left:0}
+.lv-plus{margin-left:auto;width:42px;height:36px;border-radius:9px;border:0;background:rgba(255,255,255,.16);color:#fff;font:700 22px var(--f-data);cursor:pointer}
+.lv-big{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lv-bigbtn{border:0;border-radius:16px;padding:18px 10px;font-family:var(--f-display);font-size:clamp(22px,5vw,28px);font-weight:800;text-transform:uppercase;cursor:pointer;color:#fff;line-height:1;overflow-wrap:anywhere}
+.lv-bigbtn small{display:block;font-family:var(--f-data);font-size:12px;font-weight:600;letter-spacing:.12em;margin-top:5px;opacity:.85}
+.lv-bigbtn.us{background:var(--fiamma)}.lv-bigbtn.them{background:#2A3AB8}
+.lv-ask{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:20;background:var(--fiamma);color:#fff;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 10px 24px -12px rgba(0,0,0,.5)}
+.lv-ask b{font-size:17px}
+.lv-ask .btn{background:rgba(0,0,0,.22);color:#fff;border-color:transparent}
+.lv-card{gap:12px}
+.lv-field{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lv-tile{border:0;border-radius:14px;background:var(--blu);color:#fff;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;text-align:left;cursor:pointer;font:inherit;min-height:64px;position:relative}
+.lv-tile.gk{grid-column:1/-1;background:#26306F}
+.lv-num{font-family:var(--f-display);font-size:34px;font-weight:900;line-height:.9;color:var(--fiamma);min-width:40px;text-align:center}
+.lv-tile.gk .lv-num{color:var(--giallo)}
+.lv-nm{font-family:var(--f-data);font-size:18px;font-weight:700;line-height:1.05;overflow-wrap:anywhere}
+.lv-nm small{display:block;font-size:11px;letter-spacing:.14em;color:#B9BEE6;text-transform:uppercase;font-weight:600}
+.lv-yc{position:absolute;top:8px;right:10px;width:9px;height:13px;border-radius:2px;background:var(--giallo)}
+.lv-tile.pick{outline:3px solid var(--fiamma);outline-offset:1px;animation:lvpulse 1.2s ease-in-out infinite}
+.lv-tile.dim{opacity:.35;cursor:default}
+@keyframes lvpulse{50%{outline-color:rgba(240,78,35,.3)}}
+.lv-bench{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}
+.lv-chip{border:1px solid var(--line);background:var(--surface-2);color:var(--text);border-radius:12px;padding:6px 4px;font-family:var(--f-data);font-size:14px;font-weight:600;cursor:pointer;display:grid;justify-items:center;line-height:1.05;min-height:54px;align-content:center;overflow-wrap:anywhere}
+.lv-chip b{color:var(--accent-ink);font-family:var(--f-display);font-size:22px}
+.lv-chip.sel{background:var(--fiamma);border-color:var(--fiamma);color:#fff}.lv-chip.sel b{color:#fff}
+.lv-more{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.lv-acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.lv-acts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lv-act{border:0;border-radius:12px;padding:16px 6px;background:var(--surface-2);color:var(--fg);font-family:var(--f-data);font-size:17px;font-weight:700;cursor:pointer;display:grid;justify-items:center;gap:4px;overflow-wrap:anywhere}
+.lv-act.hot{background:var(--fiamma);color:#fff}.lv-act.them{background:#2A3AB8;color:#fff}
+.lv-bn{font-family:var(--f-display);font-size:30px;font-weight:900;color:var(--accent-ink);line-height:.9}
+.lv-to{background:var(--giallo);color:var(--blu);border-radius:18px;padding:16px;display:grid;gap:8px;justify-items:center;text-align:center;position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:25;box-shadow:0 14px 30px -14px rgba(0,0,0,.5)}
+.lv-toh{font-family:var(--f-data);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:14px}
+.lv-toh b{font-family:var(--f-display);font-size:24px;letter-spacing:.02em}
+.lv-toc{font-family:var(--f-display);font-weight:900;font-size:72px;line-height:.85;font-variant-numeric:tabular-nums}
+.lv-to p{font-weight:600;font-size:14px}
+.lv-tobtn{border:0;border-radius:12px;background:var(--blu);color:#fff;font-family:var(--f-display);font-size:24px;font-weight:800;text-transform:uppercase;padding:14px 18px;cursor:pointer;width:100%;max-width:420px}
+.lv-to.late{animation:lvblink 1s steps(2) infinite}.lv-to.late .lv-tobtn{background:var(--fiamma)}
+@keyframes lvblink{50%{background:#FFE27A}}
+.lv-undo{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:95;background:var(--notte);color:#fff;border-radius:12px;padding:10px 12px 10px 16px;display:flex;gap:14px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.35);width:min(440px,calc(100vw - 32px));justify-content:space-between;font-weight:600}
+.lv-undo button{border:0;background:var(--fiamma);color:#fff;border-radius:8px;padding:7px 12px;font-family:var(--f-data);font-weight:700;letter-spacing:.06em;cursor:pointer;flex:none}
+.lv-start{padding:16px 22px;font-size:18px}
+.lv-sumbar{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.lv-flow svg{width:100%;height:auto;display:block}
+.lv-flow .grid{stroke:var(--line);stroke-width:1}
+.lv-flow .half{stroke:var(--muted);stroke-dasharray:4 4}
+.lv-flow .lab{fill:var(--muted);font-family:var(--f-data);font-size:12px}
+.lv-flow path.us{stroke:var(--fiamma);stroke-width:3}.lv-flow path.them{stroke:#3B4CC0;stroke-width:3}
+.lv-flow circle.us{fill:var(--fiamma)}.lv-flow circle.them{fill:#3B4CC0}
+.lv-key{display:inline-block;width:12px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle}.lv-key.us{background:var(--fiamma)}.lv-key.them{background:#3B4CC0}
+.lv-chron{display:grid}
+.lv-line{display:grid;grid-template-columns:72px 22px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.lv-line time{font-family:var(--f-data);font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.lv-line.goal.us time,.lv-line.goal.us .sc{color:var(--accent-ink)}
+.lv-line .sc{font-family:var(--f-data);font-weight:700;font-size:18px}
+.lv-line.goal{font-size:15px}
+@media (prefers-reduced-motion:reduce){.lv-tile.pick,.lv-to.late{animation:none}}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -1451,6 +1512,8 @@ function CentroPartita({ go, arg }) {
   const id = arg && S.matches[arg] ? arg : (nextMatch() || lastPlayed() || matchList()[0] || {}).id;
   const m = S.matches[id];
   const [tab, setTab] = useState('convoca');
+  const [editId, setEditId] = useState(null);
+  const editing = editId === id;
   if (!m) return html`<div class="page"><${PageHead} eyebrow="Centro partita" title="Prepariamo la gara."/><${Empty} title="Qual è il prossimo avversario?">Aggiungi una partita al calendario.</${Empty}></div>`;
   return html`<div class="page">
     <${PageHead} eyebrow="Centro partita" title="Prepariamo la gara." lead="Disponibilità, convocati, quintetto e referto nello stesso posto.">
@@ -1466,7 +1529,8 @@ function CentroPartita({ go, arg }) {
       <div class="row"><${NavLinks} venue=${m.venue}/>${gcalUrl(m) && html`<a class="btn line sm" href=${gcalUrl(m)} target="_blank" rel="noopener"><${Icon} n="cal"/>Aggiungi al calendario</a>`}${m.sourceUrl && html`<a class="btn line sm" href=${m.sourceUrl} target="_blank" rel="noopener"><${Icon} n="ext"/>Scheda CSI</a>`}<button class="btn blue sm" onClick=${() => go('live', m.id)}><${Icon} n="live"/>Live</button></div>
       ${m.sourceNote && html`<div class="callout warn"><${Icon} n="info"/>Variazione pubblicata dal CSI: ${m.sourceNote}</div>`}
     </article>
-    ${!S.canWrite ? html`<${ReadOnly}/>` : html`
+    ${m.status === 'played' && !editing ? html`<${MatchSummary} m=${m} onEdit=${() => { setEditId(id); setTab('referto'); }}/>` : !S.canWrite ? html`<${ReadOnly}/>` : html`
+      ${m.status === 'played' && html`<div class="row between lv-sumbar"><span class="muted small">Stai modificando la partita.</span><button class="btn line" onClick=${() => setEditId(null)}><${Icon} n="check"/>Torna al riepilogo</button></div>`}
       <${Tabs} value=${tab} onChange=${setTab} options=${[['convoca', 'Convocazioni'], ['quintetto', 'Quintetto'], ['referto', 'Risultato e referto']]}/>
       ${tab === 'convoca' && html`<${Convocazioni} m=${m}/>`}
       ${tab === 'quintetto' && html`<${Quintetto} m=${m} go=${go}/>`}
@@ -1669,42 +1733,6 @@ function liveElapsed(L, now) { return (L.elapsedMs || 0) + (L.runningSince ? now
 function liveScore(m) { const L = m.live || {}; let o = L.baseOurs || 0, t = L.baseOpponent || 0; (L.events || []).forEach((e) => { if (e.kind === 'goal' || (e.kind === 'penalty' && e.scored)) { const toUs = e.ownGoal ? e.side !== 'ours' : e.side === 'ours'; if (toUs) o++; else t++; } }); return [o, t]; }
 function foulsIn(L, side, period) { const ps = period === 'S1' || period === 'S2' ? ['2', 'S1', 'S2'] : [period]; return (L.events || []).filter((e) => e.kind === 'foul' && e.side === side && e.accumulated !== false && ps.includes(e.period)).length; }
 function useTick(on) { const [n, setN] = useState(Date.now()); useEffect(() => { if (!on) return; const h = setInterval(() => setN(Date.now()), 250); return () => clearInterval(h); }, [on]); return n; }
-function Live({ go, arg }) {
-  useStore();
-  const list = matchList();
-  const auto = list.find((m) => m.live && !m.live.finished && m.live.started) || nextMatch() || lastPlayed();
-  const id = arg && S.matches[arg] ? arg : auto?.id;
-  const m = S.matches[id];
-  const L = m?.live || {};
-  const now = useTick(!!L.runningSince);
-  const [trailer, setTrailer] = useState(false);
-  useEffect(() => { loadTrailerIndex(); }, []);
-  if (!m) return html`<div class="page"><${PageHead} eyebrow="Live" title="Dentro la partita."/><${Empty} title="Aggiungi una partita">Il live sarà disponibile per le gare del calendario.</${Empty}></div>`;
-  const [o, t] = liveScore(m);
-  const el = liveElapsed(L, now), dur = ((L.period === 'S1' || L.period === 'S2') ? (L.extraMinutes || 5) : (L.periodMinutes || 20)) * 60000;
-  const shown = L.countdown ? Math.max(0, dur - el) : el;
-  const fo = foulsIn(L, 'ours', L.period || '1'), ft = foulsIn(L, 'opponent', L.period || '1');
-  const pips = (n) => html`<span class="pips">${[0, 1, 2, 3, 4].map((i) => html`<i class=${i < n ? (n > 5 ? 'over' : 'on') : ''}></i>`)}</span>${n > 5 ? html` <b style="color:#FF8A66">+${n - 5}</b>` : ''}`;
-  return html`<div class="page">
-    <${PageHead} eyebrow="Live partita" title="Dentro la partita." lead="Cronometro di supporto e taccuino live. Il tempo ufficiale e le decisioni restano all’arbitro.">
-      <${MatchPicker} id=${id} onPick=${(v) => go('live', v)}/>
-    </${PageHead}>
-    ${hasTrailer(m.id) && html`<button class="btn fire" style="justify-self:start;padding:13px 20px;font-size:17px" onClick=${() => setTrailer(true)}><${Icon} n="play"/>Trailer della partita</button>`}
-    ${trailer && html`<${Trailer} id=${m.id} onClose=${() => setTrailer(false)}/>`}
-    <section class="board">
-      <${Stripes} seed=${11} count=${10} alpha=${.05}/>
-      <div class="sc">
-        <div><div class="n">${o}</div><div class="t">Tigers</div></div>
-        <div class="stack" style="justify-items:center;gap:6px"><span class="period">${L.started ? (L.finished ? 'Finale' : PERIODS[L.period || '1']) : 'In attesa'}</span><span class=${'clock' + (L.runningSince ? ' run' : '')}>${fmtClock(shown)}</span><span class="period">${m.home ? 'In casa' : 'Trasferta'}</span></div>
-        <div><div class="n">${t}</div><div class="t">${m.opponent}</div></div>
-      </div>
-      <div class="fouls"><span>Falli Tigers ${pips(fo)}</span><span>Falli ${m.opponent} ${pips(ft)}</span></div>
-      ${el >= dur && L.runningSince && html`<div class="callout warn" style="color:var(--text)"><${Icon} n="clock"/>Durata impostata raggiunta: attendi il fischio e ferma il cronometro.</div>`}
-    </section>
-    ${S.canWrite ? html`<${LiveControls} m=${m} el=${el}/>` : html`<p class="muted small">${L.started ? 'Aggiornamento automatico dalle annotazioni dello staff · cronometro non ufficiale.' : 'Il tabellone si attiva quando lo staff prepara il live della partita.'}</p>`}
-    <${LiveFeed} m=${m}/>
-  </div>`;
-}
 function LiveFeed({ m }) {
   const ev = [...(m.live?.events || [])].reverse();
   return html`<article class="card"><div class="card-h"><span class="eyebrow">Il taccuino live</span></div>
@@ -1716,80 +1744,6 @@ function LiveFeed({ m }) {
 }
 async function saveLive(m, L, extra) { await put('matches', m.id, { ...S.matches[m.id], live: L, ...(extra || {}) }); if (S.canPublish) autoPublish(6000); }
 async function removeEvent(m, eid) { const L = clone(m.live); L.events = L.events.filter((e) => e.id !== eid); await saveLive(m, L); }
-function LiveControls({ m, el }) {
-  const L = m.live || {};
-  const r = staffOf(m.id);
-  const called = (r.called || []).filter((id) => S.players[id]);
-  const [ev, setEv] = useState(null), [cfg, setCfg] = useState(false), [lineup, setLineup] = useState(false), [fin, setFin] = useState(false);
-  const onField = L.onField || [];
-  const label = (id) => { const p = S.players[id]; return p ? `${pName(p)}${p.number != null ? ' #' + p.number : ''}` : ''; };
-  const prepare = async () => { const starters = (r.starters || []).filter(Boolean); await saveLive(m, { period: '1', periodMinutes: 20, extraMinutes: 5, countdown: false, elapsedMs: 0, runningSince: null, events: [], onField: starters, initialLineup: starters, baseOurs: 0, baseOpponent: 0, started: true, finished: false }); toast('Live pronto'); };
-  if (!L.started) return html`<article class="card stack"><span class="eyebrow">Prepara il live</span>
-    ${m.status === 'played' ? html`<p class="muted">Questa gara ha già un referto. Per conservarlo, il live si prepara sulle gare non ancora refertate.</p>`
-    : html`<p class="muted">Prepara i convocati nel Centro partita: il quintetto iniziale verrà importato qui e potrai aggiornare i cambi durante la gara. Durata proposta: 20 minuti per tempo, modificabile secondo le disposizioni CSI.</p>
-      <div class="row"><button class="btn fire" onClick=${prepare}><${Icon} n="live"/>Prepara il live</button><span class="muted small">${called.length} convocati · ${(r.starters || []).filter(Boolean).length} titolari</span></div>`}</article>`;
-  const toggleClock = async () => { const N = Date.now(); const nl = clone(L); if (L.runningSince) { nl.elapsedMs = (L.elapsedMs || 0) + (N - L.runningSince); nl.runningSince = null; } else nl.runningSince = N; await saveLive(m, nl); };
-  const add = async (e) => { const nl = clone(L); const ent = { id: uid('e'), period: L.period || '1', elapsedMs: Math.round(el), createdAt: new Date().toISOString(), ...e }; nl.events = (nl.events || []).concat([ent]);
-    if (e.kind === 'sub' && e.playerId && e.inId) nl.onField = (nl.onField || []).map((x) => (x === e.playerId ? e.inId : x));
-    if (e.kind === 'red' && e.playerId) nl.onField = (nl.onField || []).filter((x) => x !== e.playerId);
-    await saveLive(m, nl);
-    if (e.kind === 'foul' && e.playerId) { const n = nl.events.filter((x) => x.kind === 'foul' && x.playerId === e.playerId).length; if (n >= 5) toast(`${label(e.playerId)} ha commesso ${n} falli: va sostituito (regolamento CSI).`, true); }
-    const fo = foulsIn(nl, e.side, nl.period); if (e.kind === 'foul' && fo >= 5) toast(`${e.side === 'ours' ? 'Tigers' : m.opponent}: ${fo} falli accumulati nel tempo.`, true);
-  };
-  const finalize = async () => {
-    const [o, t] = liveScore(m); const nl = clone(L); if (nl.runningSince) { nl.elapsedMs += Date.now() - nl.runningSince; nl.runningSince = null; } nl.finished = true; nl.finalizedAt = new Date().toISOString();
-    const rep = clone(r.report || {}); const played = new Set([...(L.initialLineup || []), ...(L.events || []).filter((e) => e.kind === 'sub').map((e) => e.inId)].filter(Boolean));
-    called.forEach((id) => { rep[id] = { played: played.has(id), goals: 0, assists: 0, minutes: rep[id]?.minutes || 0, yellow: 0, red: 0 }; });
-    (L.events || []).forEach((e) => { if (e.side !== 'ours' || !e.playerId || !rep[e.playerId]) return; if ((e.kind === 'goal' && !e.ownGoal) || (e.kind === 'penalty' && e.scored)) rep[e.playerId].goals++; if (e.kind === 'yellow') rep[e.playerId].yellow++; if (e.kind === 'red') rep[e.playerId].red++; if (e.assistId && rep[e.assistId] && e.kind === 'goal') rep[e.assistId].assists++; });
-    await put('staffmatches', m.id, { availability: {}, called, starters: [], ...clone(r), report: rep });
-    await saveLive(m, nl, { status: 'played', ourScore: o, theirScore: t }); setFin(false); toast('Referto confermato: risultato e statistiche aggiornati');
-  };
-  const reopen = async () => { const nl = clone(L); nl.finished = false; await saveLive(m, nl); };
-  if (L.finished) return html`<article class="card row between"><span>Live chiuso, referto confermato ${L.finalizedAt ? 'il ' + fmtDate(L.finalizedAt.slice(0, 10)) : ''}.</span><button class="btn line sm" onClick=${reopen}>Riapri per correggere</button></article>`;
-  return html`<div class="stack" style="gap:16px">
-    <article class="card stack">
-      <div class="row between"><div class="row"><button class=${'btn ' + (L.runningSince ? 'blue' : 'fire')} onClick=${toggleClock}><${Icon} n=${L.runningSince ? 'pause' : 'play'}/>${L.runningSince ? 'Ferma' : 'Avvia'} cronometro</button><button class="btn line" onClick=${() => setCfg(true)}><${Icon} n="clock"/>Tempi</button></div><button class="btn line" onClick=${() => setFin(true)}><${Icon} n="check"/>Fine partita</button></div>
-      <div class="liveact">
-        <button class="btn fire" onClick=${() => setEv({ kind: 'goal', side: 'ours' })}>+ Gol Tigers</button>
-        <button class="btn blue" onClick=${() => setEv({ kind: 'goal', side: 'opponent' })}>+ Gol avversari</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'foul', side: 'ours', accumulated: true })}>+ Fallo nostro</button>
-        <button class="btn" onClick=${() => add({ kind: 'foul', side: 'opponent', accumulated: true })}>+ Fallo loro</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'sub', side: 'ours' })}><${Icon} n="swap"/>Cambio</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'yellow', side: 'ours' })}><i class="card-y"></i>Giallo</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'red', side: 'ours' })}><i class="card-r"></i>Rosso</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'penalty', side: 'ours', scored: true })}>Rigore / tiro libero</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'timeout', side: 'ours' })}>Timeout</button>
-        <button class="btn" onClick=${() => setEv({ kind: 'note', side: 'ours' })}>+ Annotazione</button>
-      </div>
-    </article>
-    <article class="card stack"><div class="row between"><span class="eyebrow">Quintetto in campo</span><button class="btn line sm" onClick=${() => setLineup(true)}>Modifica quintetto</button></div>
-      <div class="onfield">${onField.length ? onField.map((id) => html`<span class="pill fire">${label(id)}</span>`) : html`<span class="muted">Imposta il quintetto prima del calcio d’inizio.</span>`}</div>
-      <div class="onfield"><span class="small muted">Panchina:</span>${called.filter((id) => !onField.includes(id)).map((id) => html`<span class="pill">${label(id)}</span>`)}</div></article>
-    ${ev && html`<${EventForm} m=${m} ev=${ev} called=${called} onField=${onField} label=${label} onClose=${() => setEv(null)} onSave=${async (e) => { await add(e); setEv(null); }}/>`}
-    ${cfg && html`<${ClockForm} m=${m} el=${el} onClose=${() => setCfg(false)}/>`}
-    ${lineup && html`<${LineupForm} m=${m} called=${called} label=${label} onClose=${() => setLineup(false)}/>`}
-    ${fin && html`<${Modal} title="Fine partita" onClose=${() => setFin(false)}><p>Confermando, il risultato ${liveScore(m).join('–')} viene registrato e il referto (presenze, gol, cartellini) si compila dagli eventi. Puoi correggerlo dopo nel Centro partita.</p><div class="row"><button class="btn line" onClick=${() => setFin(false)}>Annulla</button><button class="btn fire" onClick=${finalize}>Conferma il referto</button></div></${Modal}>`}
-  </div>`;
-}
-function EventForm({ m, ev, called, onField, label, onClose, onSave }) {
-  const [e, setE] = useState({ playerId: '', inId: '', note: '', opponentNumber: '', ownGoal: false, assistId: '', ...ev });
-  const up = (k, v) => setE((o) => ({ ...o, [k]: v }));
-  const who = e.kind === 'sub' ? onField : called;
-  const submit = (x) => { x.preventDefault(); if (e.kind === 'sub' && (!e.playerId || !e.inId)) { toast('Scegli chi esce e chi entra.', true); return; } const lb = e.side === 'ours' ? (e.kind === 'sub' ? `entra ${label(e.inId)}, esce ${label(e.playerId)}` : label(e.playerId)) : (e.opponentNumber ? 'n. ' + e.opponentNumber : ''); onSave({ ...e, label: lb }); };
-  return html`<${Modal} title=${EVK[e.kind]} onClose=${onClose}>
-    <form class="form" onSubmit=${submit}>
-      ${!['sub'].includes(e.kind) && html`<${Field} label="Squadra"><${Seg} value=${e.side} onChange=${(v) => up('side', v)} options=${[['ours', 'Tigers'], ['opponent', m.opponent]]}/></${Field}>`}
-      ${e.side === 'ours' ? html`<${Field} label=${e.kind === 'sub' ? 'Esce' : 'Giocatore'}><select value=${e.playerId} onChange=${(x) => up('playerId', x.target.value)}><option value="">${e.kind === 'note' || e.kind === 'timeout' ? 'Nessuno' : 'Senza autore'}</option>${who.map((id) => html`<option value=${id}>${label(id)}</option>`)}</select></${Field}>`
-        : html`<${Field} label="Numero avversario (facoltativo)"><input inputmode="numeric" value=${e.opponentNumber} onInput=${(x) => up('opponentNumber', x.target.value)}/></${Field}>`}
-      ${e.kind === 'sub' && html`<${Field} label="Entra dalla panchina *"><select value=${e.inId} onChange=${(x) => up('inId', x.target.value)}><option value="">Scegli chi entra</option>${called.filter((id) => !onField.includes(id) && !(m.live.events || []).some((x) => x.kind === 'red' && x.playerId === id)).map((id) => html`<option value=${id}>${label(id)}</option>`)}</select></${Field}>`}
-      ${e.kind === 'goal' && e.side === 'ours' && html`<${Field} label="Assist"><select value=${e.assistId} onChange=${(x) => up('assistId', x.target.value)}><option value="">Nessuno</option>${called.filter((id) => id !== e.playerId).map((id) => html`<option value=${id}>${label(id)}</option>`)}</select></${Field}>`}
-      ${e.kind === 'goal' && html`<label class="check"><input type="checkbox" checked=${e.ownGoal} onChange=${(x) => up('ownGoal', x.target.checked)}/>Autorete (il gol va all’altra squadra)</label>`}
-      ${e.kind === 'penalty' && html`<${Seg} value=${e.scored} onChange=${(v) => up('scored', v)} options=${[[true, 'Segnato'], [false, 'Sbagliato']]}/>`}
-      ${e.kind === 'foul' && html`<${Seg} value=${e.accumulated} onChange=${(v) => up('accumulated', v)} options=${[[true, 'Fallo accumulato'], [false, 'Non accumulato']]}/>`}
-      <${Field} label="Annotazione"><input value=${e.note} onInput=${(x) => up('note', x.target.value)} placeholder="Occasione, decisione arbitrale, motivo del cambio…"/></${Field}>
-      <div class="row between"><span class="small muted">Istante: ${PERIODS[m.live.period || '1']} · ${fmtClock(liveElapsed(m.live, Date.now()))}</span><button class="btn fire" type="submit">Registra</button></div>
-    </form></${Modal}>`;
-}
 function ClockForm({ m, el, onClose }) {
   const L = m.live;
   const [f, setF] = useState({ period: L.period || '1', periodMinutes: L.periodMinutes || 20, extraMinutes: L.extraMinutes || 5, countdown: !!L.countdown, min: Math.floor(el / 60000), sec: Math.floor(el / 1000) % 60 });
@@ -2000,6 +1954,267 @@ function NoteForm({ n, onClose }) {
     <${Field} label="Scadenza (facoltativa)"><input type="date" value=${f.due} onInput=${(e) => up('due', e.target.value)}/></${Field}>
     <${Field} label="Appunti" full><textarea rows="5" value=${f.body} onInput=${(e) => up('body', e.target.value)} placeholder="Dettagli, idee, riferimenti ai comunicati…"></textarea></${Field}></div>
     <div class="row between">${n.id ? html`<${ConfirmBtn} label="Elimina" onConfirm=${() => { del('notes', n.id); onClose(); }}/>` : html`<span></span>`}<button class="btn fire" type="submit">Salva nota</button></div></form></${Modal}>`;
+}
+
+/* ===== QUINTO · Live partita (versione a tocchi) e riepilogo delle gare finite =====
+   Dati invariati: m.live = { period, periodMinutes, extraMinutes, countdown, elapsedMs, runningSince, events, onField,
+   initialLineup, baseOurs, baseOpponent, started, finished, timeout? }. Gli eventi alimentano il referto a fine gara. */
+
+const TIMEOUT_MS = 60000;
+function useWakeLock(on) {
+  useEffect(() => {
+    if (!on || !navigator.wakeLock) return;
+    let lock = null, alive = true;
+    const req = async () => { try { if (alive && document.visibilityState === 'visible') lock = await navigator.wakeLock.request('screen'); } catch (e) {} };
+    const vis = () => { if (document.visibilityState === 'visible') req(); };
+    req(); document.addEventListener('visibilitychange', vis);
+    return () => { alive = false; document.removeEventListener('visibilitychange', vis); try { lock && lock.release(); } catch (e) {} };
+  }, [on]);
+}
+function periodShort(p) { return p === '2' ? '2T' : p === '1' ? '1T' : p; }
+
+function Live({ go, arg }) {
+  useStore();
+  const list = matchList();
+  const auto = list.find((m) => m.live && !m.live.finished && m.live.started) || nextMatch() || lastPlayed();
+  const id = arg && S.matches[arg] ? arg : auto?.id;
+  const m = S.matches[id];
+  const L = m?.live || {};
+  const now = useTick(!!L.runningSince || !!L.timeout);
+  const [trailer, setTrailer] = useState(false);
+  useEffect(() => { loadTrailerIndex(); }, []);
+  useWakeLock(!!(S.canWrite && L.started && !L.finished));
+  if (!m) return html`<div class="page"><${PageHead} eyebrow="Live" title="Dentro la partita."/><${Empty} title="Aggiungi una partita">Il live sarà disponibile per le gare del calendario.</${Empty}></div>`;
+  const [o, t] = liveScore(m);
+  const el = liveElapsed(L, now), dur = ((L.period === 'S1' || L.period === 'S2') ? (L.extraMinutes || 5) : (L.periodMinutes || 20)) * 60000;
+  const shown = L.countdown ? Math.max(0, dur - el) : el;
+  const fo = foulsIn(L, 'ours', L.period || '1'), ft = foulsIn(L, 'opponent', L.period || '1');
+  const pips = (n) => html`<span class="pips">${[0, 1, 2, 3, 4].map((i) => html`<i class=${i < n ? (n > 5 ? 'over' : 'on') : ''}></i>`)}</span>${n > 5 ? html` <b style="color:#FF8A66">+${n - 5}</b>` : ''}`;
+  const live = L.started && !L.finished;
+  const ed = S.canWrite && live;
+  const toggleClock = async () => { if (!ed || L.timeout) return; const N = Date.now(); const nl = clone(L); if (L.runningSince) { nl.elapsedMs = (L.elapsedMs || 0) + (N - L.runningSince); nl.runningSince = null; } else nl.runningSince = N; await saveLive(m, nl); };
+  const addFoul = async (side) => { const nl = clone(L); nl.events = (nl.events || []).concat([{ id: uid('e'), kind: 'foul', side, accumulated: true, period: L.period || '1', elapsedMs: Math.round(el), createdAt: new Date().toISOString() }]); await saveLive(m, nl);
+    const n = foulsIn(nl, side, nl.period || '1'); liveUndo(m, nl.events[nl.events.length - 1].id, `Fallo ${side === 'ours' ? 'Tigers' : m.opponent} (${n})${n === 5 ? ' · dal prossimo tiro libero' : ''}`); };
+  const toLeft = L.timeout ? Math.max(0, TIMEOUT_MS - (now - L.timeout.startedAt)) : 0;
+  return html`<div class="page">
+    <${PageHead} eyebrow="Live partita" title="Dentro la partita." lead="Cronometro di supporto e cronaca della gara. Il tempo ufficiale e le decisioni restano all’arbitro.">
+      <${MatchPicker} id=${id} onPick=${(v) => go('live', v)}/>
+    </${PageHead}>
+    ${hasTrailer(m.id) && html`<button class="btn fire" style="justify-self:start;padding:13px 20px;font-size:17px" onClick=${() => setTrailer(true)}><${Icon} n="play"/>Trailer della partita</button>`}
+    ${trailer && html`<${Trailer} id=${m.id} onClose=${() => setTrailer(false)}/>`}
+    ${L.timeout && html`<section class=${'lv-to' + (toLeft === 0 ? ' late' : '')} aria-live="polite">
+      <div class="lv-toh">Timeout <b>${L.timeout.side === 'ours' ? 'Tigers' : m.opponent}</b></div>
+      <div class="lv-toc">${Math.floor(toLeft / 60000)}:${String(Math.floor(toLeft / 1000) % 60).padStart(2, '0')}</div>
+      <p>${toLeft === 0 ? 'Minuto finito: fai ripartire il cronometro al fischio.' : `Cronometro fermo a ${fmtClock(shown)}.${ed ? ' Puoi fare i cambi qui sotto.' : ''}`}</p>
+      ${ed && html`<button class="lv-tobtn" onClick=${() => endTimeout(m)}>Fine timeout · riparti</button>`}
+    </section>`}
+    <section class="board">
+      <${Stripes} seed=${11} count=${10} alpha=${.05}/>
+      <div class="sc">
+        <div><div class="n">${o}</div><div class="t">Tigers</div></div>
+        <div class="stack" style="justify-items:center;gap:6px"><span class="period">${L.started ? (L.finished ? 'Finale' : PERIODS[L.period || '1']) : 'In attesa'}</span>
+          ${ed ? html`<button class=${'clock lv-clock' + (L.runningSince ? ' run' : '')} onClick=${toggleClock} aria-label=${L.runningSince ? 'Ferma il cronometro' : 'Avvia il cronometro'}>${fmtClock(shown)}</button>` : html`<span class=${'clock' + (L.runningSince ? ' run' : '')}>${fmtClock(shown)}</span>`}
+          <span class="period">${ed ? (L.timeout ? 'Timeout in corso' : L.runningSince ? 'Tocca per fermare' : 'Tocca per avviare') : m.home ? 'In casa' : 'Trasferta'}</span></div>
+        <div><div class="n">${t}</div><div class="t">${m.opponent}</div></div>
+      </div>
+      <div class="lv-fouls">
+        <div><span>Falli Tigers</span>${pips(fo)}${ed && html`<button class="lv-plus" aria-label="Fallo dei Tigers" onClick=${() => addFoul('ours')}>+</button>`}</div>
+        <div><span>Falli ${short(m.opponent)}</span>${pips(ft)}${ed && html`<button class="lv-plus" aria-label=${'Fallo di ' + m.opponent} onClick=${() => addFoul('opponent')}>+</button>`}</div>
+      </div>
+      ${el >= dur && L.runningSince && html`<div class="callout warn" style="color:var(--text)"><${Icon} n="clock"/>Durata impostata raggiunta: attendi il fischio e ferma il cronometro.</div>`}
+    </section>
+    ${S.canWrite ? html`<${LiveControls} m=${m} el=${el} go=${go}/>` : html`<p class="muted small">${L.started ? 'Aggiornamento automatico dalla panchina · cronometro non ufficiale.' : 'Il tabellone si attiva quando lo staff inizia il live della partita.'}</p>`}
+    <${LiveFeed} m=${m}/>
+    <${LiveUndo}/>
+  </div>`;
+}
+async function endTimeout(m) { const nl = clone(m.live); delete nl.timeout; nl.runningSince = Date.now(); await saveLive(m, nl); toast('Si riparte: cronometro avviato'); }
+
+/* annulla l'ultimo evento: un messaggio in basso per qualche secondo */
+let undoFn = null;
+function liveUndo(m, eid, msg) { undoFn && undoFn({ m, eid, msg, k: Date.now() }); }
+function LiveUndo() {
+  const [u, setU] = useState(null);
+  useEffect(() => { undoFn = (x) => setU(x); return () => { undoFn = null; }; }, []);
+  useEffect(() => { if (!u) return; const h = setTimeout(() => setU(null), 6000); return () => clearTimeout(h); }, [u && u.k]);
+  if (!u) return null;
+  return html`<div class="lv-undo" role="status"><span>${u.msg}</span><button onClick=${async () => { const mm = S.matches[u.m.id]; setU(null); if (mm) await removeEvent(mm, u.eid); }}>Annulla</button></div>`;
+}
+
+function LiveControls({ m, el, go }) {
+  const L = m.live || {};
+  const r = staffOf(m.id);
+  const called = (r.called || []).filter((id) => S.players[id]);
+  const [pick, setPick] = useState(null), [sheet, setSheet] = useState(null), [cfg, setCfg] = useState(false), [lineup, setLineup] = useState(false), [fin, setFin] = useState(false), [note, setNote] = useState(null);
+  const onField = (L.onField || []).filter((id) => S.players[id]);
+  const reds = new Set((L.events || []).filter((e) => e.kind === 'red').map((e) => e.playerId));
+  const bench = called.filter((id) => !onField.includes(id) && !reds.has(id));
+  const nm = (id) => { const p = S.players[id]; return p ? (p.nick || pName(p)) : ''; };
+  const label = (id) => { const p = S.players[id]; return p ? `${pName(p)}${p.number != null ? ' #' + p.number : ''}` : ''; };
+  const prepare = async () => { const starters = (r.starters || []).filter(Boolean); await saveLive(m, { period: '1', periodMinutes: 20, extraMinutes: 5, countdown: false, elapsedMs: 0, runningSince: null, events: [], onField: starters, initialLineup: starters, baseOurs: 0, baseOpponent: 0, started: true, finished: false }); toast('Live iniziato: tocca il cronometro al fischio'); };
+  if (!L.started) return html`<article class="card stack"><span class="eyebrow">Inizia il live</span>
+    ${m.status === 'played' ? html`<p class="muted">Questa gara ha già un referto. Per conservarlo, il live si usa sulle gare non ancora giocate. Il riepilogo è nel Centro partita.</p>`
+    : html`<p class="muted">Il quintetto iniziale va in campo e gli altri convocati in panchina. Il cronometro parte quando tocchi il tempo al fischio d’inizio. Durata proposta: 20 minuti per tempo, modificabile in “Tempi”.</p>
+      <div class="row"><button class="btn fire lv-start" onClick=${prepare}><${Icon} n="live"/>Inizia il live</button><span class="muted small">${called.length} convocati · ${(r.starters || []).filter(Boolean).length} titolari</span></div>
+      ${!called.length && html`<div class="callout warn"><${Icon} n="info"/><span>Nessun convocato: sceglili nel <button class="btn ghost sm" onClick=${() => go('partita', m.id)}>Centro partita</button> così la panchina sarà pronta.</span></div>`}`}</article>`;
+  const reopen = async () => { const nl = clone(L); nl.finished = false; await saveLive(m, nl); };
+  if (L.finished) return html`<article class="card row between"><span>Live chiuso, referto confermato ${L.finalizedAt ? 'il ' + fmtDate(L.finalizedAt.slice(0, 10)) : ''}. Il riepilogo è nel Centro partita.</span><div class="row"><button class="btn line sm" onClick=${() => go('partita', m.id)}>Vedi il riepilogo</button><button class="btn line sm" onClick=${reopen}>Riapri per correggere</button></div></article>`;
+
+  const add = async (e, msg) => {
+    const cur = S.matches[m.id].live; const nl = clone(cur);
+    const ent = { id: uid('e'), period: cur.period || '1', elapsedMs: Math.round(liveElapsed(cur, Date.now())), createdAt: new Date().toISOString(), ...e };
+    nl.events = (nl.events || []).concat([ent]);
+    if (e.kind === 'sub' && e.inId) { if (e.playerId) nl.onField = (nl.onField || []).map((x) => (x === e.playerId ? e.inId : x)); else if ((nl.onField || []).length < 5) nl.onField = (nl.onField || []).concat([e.inId]); }
+    if (e.kind === 'red' && e.playerId) nl.onField = (nl.onField || []).filter((x) => x !== e.playerId);
+    await saveLive(m, nl); if (msg) liveUndo(m, ent.id, msg); return ent;
+  };
+  const patch = async (eid, f) => { const nl = clone(S.matches[m.id].live); nl.events = nl.events.map((x) => (x.id === eid ? { ...x, ...f } : x)); await saveLive(m, nl); };
+  const score = () => liveScore(S.matches[m.id]).join('–');
+  // tocco su un giocatore in campo
+  const tapField = async (id) => {
+    if (!pick) { setSheet({ kind: 'player', id }); return; }
+    const p = pick; setPick(null);
+    if (p.kind === 'goal') { const ent = await add({ kind: 'goal', side: 'ours', playerId: id, label: label(id) }); setPick({ kind: 'assist', ev: ent.id, scorer: id }); return; }
+    if (p.kind === 'assist') { await patch(p.ev, { assistId: id, label: label(p.scorer) + ' · assist ' + nm(id) }); liveUndo(m, p.ev, `Gol di ${nm(p.scorer)}, assist ${nm(id)} · ${score()}`); return; }
+    if (p.kind === 'penalty') { await add({ kind: 'penalty', side: 'ours', scored: true, playerId: id, label: label(id) }, `Tiro libero segnato da ${nm(id)} · ${score()}`); return; }
+    if (p.kind === 'sub') { await add({ kind: 'sub', side: 'ours', playerId: id, inId: p.inId, label: `entra ${label(p.inId)}, esce ${label(id)}` }, `Entra ${nm(p.inId)}, esce ${nm(id)}`); }
+  };
+  const skip = async () => {
+    const p = pick; setPick(null);
+    if (p.kind === 'goal') { const ent = await add({ kind: 'goal', side: 'ours', playerId: '', label: '' }); liveUndo(m, ent.id, `Gol Tigers · ${score()}`); }
+    if (p.kind === 'assist') liveUndo(m, p.ev, `Gol di ${nm(p.scorer)} · ${score()}`);
+    if (p.kind === 'penalty') { await add({ kind: 'penalty', side: 'ours', scored: true, playerId: '', label: '' }, `Tiro libero segnato · ${score()}`); }
+  };
+  const fillIn = async () => { const p = pick; setPick(null); await add({ kind: 'sub', side: 'ours', playerId: '', inId: p.inId, label: `entra ${label(p.inId)}` }, `Entra ${nm(p.inId)}`); };
+  const ask = pick && { goal: 'Chi ha segnato?', assist: 'Assist di chi?', penalty: 'Chi ha segnato il tiro libero?', sub: `Entra ${nm(pick.inId)}: chi esce?` }[pick.kind];
+  const skipLabel = pick && { goal: 'Senza autore', assist: 'Nessuno', penalty: 'Senza autore', sub: 'Annulla' }[pick.kind];
+  const exclude = pick && pick.kind === 'assist' ? [pick.scorer] : [];
+  const startTimeout = async (side) => { const cur = S.matches[m.id].live; const nl = clone(cur); const N = Date.now(); if (nl.runningSince) { nl.elapsedMs = (nl.elapsedMs || 0) + (N - nl.runningSince); nl.runningSince = null; }
+    nl.timeout = { side, startedAt: N }; nl.events = (nl.events || []).concat([{ id: uid('e'), kind: 'timeout', side, period: nl.period || '1', elapsedMs: Math.round(nl.elapsedMs || 0), createdAt: new Date().toISOString() }]); await saveLive(m, nl); scrollTo({ top: 0, behavior: 'smooth' }); };
+  const endPeriod = async () => { const cur = S.matches[m.id].live; if (cur.period === '1') { const nl = clone(cur); if (nl.runningSince) { nl.elapsedMs += Date.now() - nl.runningSince; nl.runningSince = null; } nl.period = '2'; nl.elapsedMs = 0; delete nl.timeout; await saveLive(m, nl); toast('Inizia il 2º tempo: falli azzerati, cronometro da 00:00'); } else setFin(true); };
+  const finalize = async () => {
+    const cur = S.matches[m.id].live; const [o, t] = liveScore(S.matches[m.id]); const nl = clone(cur); if (nl.runningSince) { nl.elapsedMs += Date.now() - nl.runningSince; nl.runningSince = null; } delete nl.timeout; nl.finished = true; nl.finalizedAt = new Date().toISOString();
+    const rep = clone(r.report || {}); const played = new Set([...(cur.initialLineup || []), ...(cur.events || []).filter((e) => e.kind === 'sub').map((e) => e.inId)].filter(Boolean));
+    called.forEach((id) => { rep[id] = { played: played.has(id), goals: 0, assists: 0, minutes: rep[id]?.minutes || 0, yellow: 0, red: 0 }; });
+    (cur.events || []).forEach((e) => { if (e.side !== 'ours' || !e.playerId || !rep[e.playerId]) return; if ((e.kind === 'goal' && !e.ownGoal) || (e.kind === 'penalty' && e.scored)) rep[e.playerId].goals++; if (e.kind === 'yellow') rep[e.playerId].yellow++; if (e.kind === 'red') rep[e.playerId].red++; if (e.assistId && rep[e.assistId] && e.kind === 'goal') rep[e.assistId].assists++; });
+    await put('staffmatches', m.id, { availability: {}, called, starters: [], ...clone(r), report: rep });
+    await saveLive(m, nl, { status: 'played', ourScore: o, theirScore: t }); setFin(false); toast('Referto confermato: risultato e statistiche aggiornati');
+  };
+  const tile = (id) => { const p = S.players[id]; const gk = p.role === 'Portiere' || /portier/i.test(p.role || ''); const y = (L.events || []).filter((e) => e.kind === 'yellow' && e.playerId === id).length;
+    const dim = pick && exclude.includes(id);
+    return html`<button class=${'lv-tile' + (gk ? ' gk' : '') + (pick && !dim ? ' pick' : '') + (dim ? ' dim' : '')} disabled=${dim} onClick=${() => tapField(id)}>
+      <span class="lv-num">${p.number ?? '–'}</span><span class="lv-nm">${nm(id)}<small>${p.role || ''}</small></span>${y ? html`<i class="lv-yc" aria-label="Ammonito"></i>` : null}</button>`; };
+  const acts = sheet && sheet.kind === 'player' ? [
+    ['hot', 'Gol', async () => { const ent = await add({ kind: 'goal', side: 'ours', playerId: sheet.id, label: label(sheet.id) }); setPick({ kind: 'assist', ev: ent.id, scorer: sheet.id }); }],
+    ['', html`<i class="card-y"></i>Giallo`, () => add({ kind: 'yellow', side: 'ours', playerId: sheet.id, label: label(sheet.id) }, `Giallo a ${nm(sheet.id)}`)],
+    ['', html`<i class="card-r"></i>Rosso`, () => add({ kind: 'red', side: 'ours', playerId: sheet.id, label: label(sheet.id) }, `Rosso a ${nm(sheet.id)}: in quattro per 2 minuti o fino a un gol`)],
+    ['', 'Esce', () => setSheet({ kind: 'bench', out: sheet.id })],
+    ['', 'Nota', () => setNote({ playerId: sheet.id })],
+  ] : null;
+  return html`<div class="stack" style="gap:14px">
+    ${!L.timeout && html`<div class="lv-big">
+      <button class="lv-bigbtn us" onClick=${() => setPick({ kind: 'goal' })}>Gol Tigers<small>scegli chi ha segnato</small></button>
+      <button class="lv-bigbtn them" onClick=${async () => { const ent = await add({ kind: 'goal', side: 'opponent' }); liveUndo(m, ent.id, `Gol ${m.opponent} · ${score()}`); }}>Gol ${short(m.opponent)}<small>un tocco</small></button>
+    </div>`}
+    ${pick && html`<div class="lv-ask" role="status"><b>${ask}</b><div class="row">${pick.kind === 'sub' && onField.length < 5 && html`<button class="btn sm" onClick=${fillIn}>Entra senza cambio</button>`}<button class="btn line sm" onClick=${skip}>${skipLabel}</button></div></div>`}
+    <article class="card stack lv-card">
+      <div class="row between"><span class="eyebrow">In campo · tocca un giocatore</span><button class="btn line sm" onClick=${() => setLineup(true)}>Modifica quintetto</button></div>
+      ${onField.length ? html`<div class="lv-field">${onField.map(tile)}</div>` : html`<p class="muted">Nessuno in campo: imposta il quintetto con “Modifica quintetto”.</p>`}
+      <span class="eyebrow">Panchina · tocca chi entra</span>
+      ${bench.length ? html`<div class="lv-bench">${bench.map((id) => html`<button class=${'lv-chip' + (pick && pick.kind === 'sub' && pick.inId === id ? ' sel' : '')} onClick=${() => setPick({ kind: 'sub', inId: id })}><b>${S.players[id].number ?? '–'}</b>${nm(id)}</button>`)}</div>` : html`<p class="muted small">Nessun giocatore in panchina.</p>`}
+    </article>
+    <div class="lv-more">
+      <button class="btn" disabled=${!!L.timeout} onClick=${() => setSheet({ kind: 'timeout' })}><${Icon} n="clock"/>Timeout</button>
+      <button class="btn" onClick=${() => setSheet({ kind: 'penalty' })}>Tiro libero</button>
+      <button class="btn" onClick=${() => setNote({})}><${Icon} n="note"/>Nota</button>
+      <button class="btn" onClick=${() => setCfg(true)}>Tempi</button>
+      <button class="btn" onClick=${endPeriod}>${L.period === '1' ? 'Fine 1º tempo' : 'Fine partita'}</button>
+    </div>
+    ${sheet && html`<${Modal} title=${sheet.kind === 'player' ? `${nm(sheet.id)} · ${S.players[sheet.id]?.number ?? ''}` : sheet.kind === 'bench' ? `Esce ${nm(sheet.out)}` : sheet.kind === 'timeout' ? 'Timeout di chi?' : 'Tiro libero'} onClose=${() => setSheet(null)}>
+      ${sheet.kind === 'player' && html`<div class="lv-acts">${acts.map(([c, l, f]) => html`<button class=${'lv-act ' + c} onClick=${() => { setSheet(null); f(); }}>${l}</button>`)}</div>`}
+      ${sheet.kind === 'bench' && html`<p class="muted">Chi entra al suo posto?</p><div class="lv-acts">${bench.map((id) => html`<button class="lv-act" onClick=${() => { const out = sheet.out; setSheet(null); add({ kind: 'sub', side: 'ours', playerId: out, inId: id, label: `entra ${label(id)}, esce ${label(out)}` }, `Entra ${nm(id)}, esce ${nm(out)}`); }}><span class="lv-bn">${S.players[id].number ?? '–'}</span>${nm(id)}</button>`)}</div>`}
+      ${sheet.kind === 'timeout' && html`<div class="lv-acts two"><button class="lv-act hot" onClick=${() => { setSheet(null); startTimeout('ours'); }}>Tigers</button><button class="lv-act them" onClick=${() => { setSheet(null); startTimeout('opponent'); }}>${m.opponent}</button></div><p class="small muted">Il cronometro si ferma e parte il minuto di timeout. Al termine tocca “Fine timeout · riparti”.</p>`}
+      ${sheet.kind === 'penalty' && html`<div class="lv-acts two">
+        <button class="lv-act hot" onClick=${() => { setSheet(null); setPick({ kind: 'penalty' }); }}>Tigers · segnato</button>
+        <button class="lv-act" onClick=${() => { setSheet(null); add({ kind: 'penalty', side: 'ours', scored: false }, 'Tiro libero Tigers sbagliato'); }}>Tigers · sbagliato</button>
+        <button class="lv-act them" onClick=${() => { setSheet(null); add({ kind: 'penalty', side: 'opponent', scored: true }, `Tiro libero ${m.opponent} segnato · ${score()}`); }}>${short(m.opponent)} · segnato</button>
+        <button class="lv-act" onClick=${() => { setSheet(null); add({ kind: 'penalty', side: 'opponent', scored: false }, `Tiro libero ${m.opponent} sbagliato`); }}>${short(m.opponent)} · sbagliato</button></div>`}
+    </${Modal}>`}
+    ${note && html`<${NoteEvent} who=${note.playerId ? label(note.playerId) : ''} onClose=${() => setNote(null)} onSave=${async (txt) => { await add({ kind: 'note', side: 'ours', playerId: note.playerId || '', label: note.playerId ? label(note.playerId) : '', note: txt }, 'Nota aggiunta'); setNote(null); }}/>`}
+    ${cfg && html`<${ClockForm} m=${m} el=${el} onClose=${() => setCfg(false)}/>`}
+    ${lineup && html`<${LineupForm} m=${m} called=${called} label=${label} onClose=${() => setLineup(false)}/>`}
+    ${fin && html`<${Modal} title="Fine partita" onClose=${() => setFin(false)}><p>Confermando, il risultato ${liveScore(m).join('–')} viene registrato e il referto (presenze, gol, assist, cartellini) si compila dagli eventi. Puoi correggerlo dopo dal riepilogo della partita.</p><div class="row"><button class="btn line" onClick=${() => setFin(false)}>Annulla</button><button class="btn fire" onClick=${finalize}>Conferma il referto</button></div></${Modal}>`}
+  </div>`;
+}
+function NoteEvent({ who, onClose, onSave }) {
+  const [t, setT] = useState('');
+  return html`<${Modal} title=${who ? 'Nota su ' + who : 'Nota della partita'} onClose=${onClose}><form class="form" onSubmit=${(e) => { e.preventDefault(); if (t.trim()) onSave(t.trim()); }}>
+    <${Field} label="Cosa è successo"><input id="lv-note" value=${t} onInput=${(e) => setT(e.target.value)} placeholder="Occasione, decisione arbitrale, infortunio…" autofocus/></${Field}>
+    <div><button class="btn fire" type="submit" disabled=${!t.trim()}>Aggiungi nota</button></div></form></${Modal}>`;
+}
+
+/* ---------- riepilogo di una gara finita ---------- */
+function eventAt(L, e) { const pm = (L.periodMinutes || 20) * 60000, xm = (L.extraMinutes || 5) * 60000; const off = { '1': 0, '2': pm, S1: 2 * pm, S2: 2 * pm + xm }[e.period || '1'] || 0; return off + (e.elapsedMs || 0); }
+function goalEvents(m) { const L = m.live || {}; return (L.events || []).filter((e) => e.kind === 'goal' || (e.kind === 'penalty' && e.scored)).map((e) => ({ ...e, toUs: e.ownGoal ? e.side !== 'ours' : e.side === 'ours', at: eventAt(L, e) })).sort((a, b) => a.at - b.at); }
+function ScoreFlow({ m }) {
+  const L = m.live || {}; const g = goalEvents(m);
+  const pm = (L.periodMinutes || 20); const extra = (L.events || []).some((e) => e.period === 'S1' || e.period === 'S2');
+  const total = (2 * pm + (extra ? 2 * (L.extraMinutes || 5) : 0)) * 60000;
+  let o = L.baseOurs || 0, t = L.baseOpponent || 0; const steps = [{ at: 0, o, t }];
+  g.forEach((e) => { if (e.toUs) o++; else t++; steps.push({ at: e.at, o, t, e }); });
+  const max = Math.max(1, o, t), W = 600, H = 170, padL = 28, padR = 12, padT = 12, padB = 26;
+  const x = (ms) => padL + Math.min(1, ms / total) * (W - padL - padR), y = (v) => padT + (1 - v / max) * (H - padT - padB);
+  const path = (k) => { let d = `M${x(0)},${y(steps[0][k])}`; steps.slice(1).forEach((s) => { d += `H${x(s.at)}V${y(s[k])}`; }); return d + `H${x(total)}`; };
+  const ticks = []; for (let v = 0; v <= max; v += max > 6 ? 2 : 1) ticks.push(v);
+  return html`<div class="lv-flow"><svg viewBox=${`0 0 ${W} ${H}`} role="img" aria-label=${`Andamento del punteggio: finale ${o} a ${t}`}>
+    ${ticks.map((v) => html`<g><line x1=${padL} x2=${W - padR} y1=${y(v)} y2=${y(v)} class="grid"/><text x=${padL - 8} y=${y(v) + 4} text-anchor="end" class="lab">${v}</text></g>`)}
+    <line x1=${x(pm * 60000)} x2=${x(pm * 60000)} y1=${padT} y2=${H - padB} class="half"/>
+    <text x=${x(pm * 30000)} y=${H - 8} text-anchor="middle" class="lab">1º tempo</text><text x=${x(pm * 90000)} y=${H - 8} text-anchor="middle" class="lab">2º tempo</text>
+    <path d=${path('t')} class="them" fill="none"/><path d=${path('o')} class="us" fill="none"/>
+    ${steps.slice(1).map((s) => html`<circle cx=${x(s.at)} cy=${y(s.e.toUs ? s.o : s.t)} r="4.5" class=${s.e.toUs ? 'us' : 'them'}><title>${fmtClock(s.e.elapsedMs)} ${periodShort(s.e.period)} · ${s.o}–${s.t}</title></circle>`)}
+  </svg><div class="row small muted"><span><i class="lv-key us"></i>Tigers</span><span><i class="lv-key them"></i>${m.opponent}</span></div></div>`;
+}
+function MatchSummary({ m, onEdit }) {
+  const L = m.live || {}; const ev = L.events || [];
+  const has = ev.length > 0;
+  const g = goalEvents(m);
+  let o = L.baseOurs || 0, t = L.baseOpponent || 0;
+  const scorers = {}; g.filter((e) => e.toUs && e.side === 'ours' && e.playerId).forEach((e) => { scorers[e.playerId] = (scorers[e.playerId] || 0) + 1; });
+  const rep = S.canWrite ? (staffOf(m.id).report || {}) : {};
+  if (!has) Object.entries(rep).forEach(([id, v]) => { if (v.goals) scorers[id] = v.goals; });
+  const nm = (id) => { const p = S.players[id]; return p ? (p.nick || pName(p)) + (p.number != null ? ' #' + p.number : '') : 'Giocatore'; };
+  const fouls = ['1', '2'].map((p) => [foulsIn(L, 'ours', p), foulsIn(L, 'opponent', p)]);
+  const cards = ev.filter((e) => e.kind === 'yellow' || e.kind === 'red');
+  const tos = ev.filter((e) => e.kind === 'timeout');
+  const shown = ev.filter((e) => e.kind !== 'foul').map((e) => ({ ...e, at: eventAt(L, e) })).sort((a, b) => a.at - b.at);
+  const line = (e) => { if (e.kind === 'goal' || (e.kind === 'penalty' && e.scored)) { const toUs = e.ownGoal ? e.side !== 'ours' : e.side === 'ours'; if (toUs) o++; else t++; }
+    const icon = e.kind === 'yellow' ? html`<i class="card-y"></i>` : e.kind === 'red' ? html`<i class="card-r"></i>` : html`<${Icon} n=${e.kind === 'goal' || e.kind === 'penalty' ? 'ball' : e.kind === 'sub' ? 'swap' : e.kind === 'timeout' ? 'clock' : 'note'} s=${16}/>`;
+    const goal = e.kind === 'goal' || (e.kind === 'penalty' && e.scored);
+    const who = e.side === 'ours' ? 'Tigers' : m.opponent;
+    const txt = e.kind === 'goal' ? `Gol ${who}${e.ownGoal ? ' (autorete)' : ''}` : e.kind === 'penalty' ? `Tiro libero ${who} ${e.scored ? 'segnato' : 'sbagliato'}` : e.kind === 'sub' ? 'Cambio' : e.kind === 'timeout' ? `Timeout ${who}` : EVK[e.kind];
+    return html`<div class=${'lv-line' + (goal ? ' goal ' + ((e.ownGoal ? e.side !== 'ours' : e.side === 'ours') ? 'us' : 'them') : '')}>
+      <time>${periodShort(e.period)} ${fmtClock(e.elapsedMs)}</time><span class="ic">${icon}</span>
+      <span><b>${txt}</b>${e.label ? ' · ' + e.label : ''}${e.note ? ' — ' + e.note : ''}</span>${goal ? html`<span class="sc">${o}–${t}</span>` : html`<span></span>`}</div>`; };
+  return html`<div class="stack" style="gap:16px">
+    ${S.canWrite && html`<div class="row between lv-sumbar"><span class="muted small">Partita giocata. Qui trovi la cronaca e l’andamento.</span><button class="btn fire" onClick=${onEdit}><${Icon} n="edit"/>Modifica</button></div>`}
+    ${has ? html`
+      <article class="card stack"><span class="eyebrow">Andamento della partita</span>${g.length ? html`<${ScoreFlow} m=${m}/>` : html`<p class="muted">Nessun gol registrato nel live.</p>`}</article>
+      <div class="grid g2">
+        <article class="card stack"><span class="eyebrow">Marcatori Tigers</span>
+          ${Object.keys(scorers).length ? html`<div class="list">${sortBy(Object.entries(scorers), ([, n]) => -n).map(([id, n]) => html`<div class="lrow"><${Icon} n="ball"/><div class="ttl">${nm(id)}</div><b class="bigscore" style="font-size:22px">${n}</b></div>`)}</div>` : html`<p class="muted">Nessun marcatore indicato.</p>`}
+          ${g.some((e) => e.toUs && !e.playerId) && html`<p class="small muted">${g.filter((e) => e.toUs && !e.playerId).length} gol senza autore.</p>`}</article>
+        <article class="card stack"><span class="eyebrow">Falli, cartellini e timeout</span>
+          <div class="tablewrap"><table><thead><tr><th></th><th class="num">Tigers</th><th class="num">${short(m.opponent)}</th></tr></thead><tbody>
+            <tr><td>Falli 1º tempo</td><td class="num">${fouls[0][0]}</td><td class="num">${fouls[0][1]}</td></tr>
+            <tr><td>Falli 2º tempo</td><td class="num">${fouls[1][0]}</td><td class="num">${fouls[1][1]}</td></tr>
+            <tr><td>Timeout</td><td class="num">${tos.filter((e) => e.side === 'ours').length}</td><td class="num">${tos.filter((e) => e.side !== 'ours').length}</td></tr>
+          </tbody></table></div>
+          ${cards.length ? html`<div class="stack small">${cards.map((e) => html`<span>${e.kind === 'yellow' ? html`<i class="card-y"></i>` : html`<i class="card-r"></i>`} ${e.label || (e.side === 'ours' ? 'Tigers' : m.opponent)} · ${periodShort(e.period)} ${fmtClock(e.elapsedMs)}</span>`)}</div>` : html`<p class="small muted">Nessun cartellino.</p>`}</article>
+      </div>
+      <article class="card stack"><span class="eyebrow">Cronaca</span><div class="lv-chron">${shown.map(line)}</div></article>`
+    : html`<article class="card stack"><span class="eyebrow">Cronaca</span><p class="muted">Questa partita non è stata seguita con il Live: c’è solo il risultato${Object.keys(scorers).length ? ' e i marcatori del referto' : ''}.</p>
+        ${Object.keys(scorers).length ? html`<div class="list">${Object.entries(scorers).map(([id, n]) => html`<div class="lrow"><${Icon} n="ball"/><div class="ttl">${nm(id)}</div><b>${n}</b></div>`)}</div>` : null}</article>`}
+  </div>`;
 }
 
 /* ===== QUINTO · trailer della partita =====
