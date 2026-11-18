@@ -64,6 +64,31 @@
    "file": "scouting/clips/spa6.mp4",
    "scorer": "Spartak Comazzo",
    "title": "Ripartenza: superato il n. 7 dell’Izanese, tiro dal centro dell’area"
+  },
+  "ts-tig1": {
+   "file": "scouting/clips/ts-tig1.mp4",
+   "scorer": "Tigers",
+   "title": "Conduzione sulla fascia vicina alla telecamera e tiro del n. 11 dal vertice dell’area"
+  },
+  "ts-spa1": {
+   "file": "scouting/clips/ts-spa1.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "Il n. 9 attira tre dei nostri al limite, palla sul secondo palo e pareggio"
+  },
+  "ts-ch1": {
+   "file": "scouting/clips/ts-ch1.mp4",
+   "scorer": "Tigers",
+   "title": "Due contro uno al limite della loro area: pressione sul portatore e tiro"
+  },
+  "ts-ch2": {
+   "file": "scouting/clips/ts-ch2.mp4",
+   "scorer": "Tigers",
+   "title": "Azione in area dello Spartak, scivolata del difensore e giocatore a terra"
+  },
+  "ts-ch3": {
+   "file": "scouting/clips/ts-ch3.mp4",
+   "scorer": "Spartak Comazzo",
+   "title": "Conduzione del n. 7 nella nostra metà campo, tiro e parata del nostro portiere"
   }
  },
  "teams": {
@@ -531,7 +556,28 @@
     "result": "8–9",
     "note": "Analisi dal video della diretta. Izanese in blu (portiere grigio), Spartak Comazzo in rosso e a righe biancorosse (portiere azzurro). Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
    },
-   "summary": "Squadra in rosso e a righe biancorosse, forte negli uno contro uno, in conduzione e in ripartenza, e sempre pronta sulle respinte. Soffre però i contrasti a metà campo: ha perso un vantaggio di 5–2 nella ripresa.",
+   "summary": "Analizzata in due partite: contro l’Izanese (in rosso e a righe biancorosse) e contro di noi (in nero e blu). Forte negli uno contro uno e in conduzione, con il n. 9 come riferimento offensivo; sempre pronta sulle respinte e sul secondo palo. Soffre però i contrasti a metà campo: contro l’Izanese ha perso un vantaggio di 5–2.",
+   "ours": {
+    "title": "Tigers – Spartak Comazzo 1–1",
+    "date": "12 novembre, Sordio",
+    "note": "Tigers in arancione, Spartak in nero e blu (portiere n. 58 in azzurro), il nostro portiere in nero. La telecamera segue l’azione e si sposta: alcune fasi si vedono solo in parte.",
+    "good": [
+     "Il gol nasce da una conduzione sulla fascia e un tiro deciso dal vertice dell’area: il n. 11 ha puntato l’uomo e ha calciato subito.",
+     "Pressione alta sul portatore: nella loro metà campo abbiamo creato situazioni di due contro uno.",
+     "Il nostro portiere tiene in piedi il risultato sulle conduzioni del n. 7."
+    ],
+    "improve": [
+     "Sul pareggio tre dei nostri vanno sul n. 9 e nessuno copre il secondo palo: uno resta sempre sul lato debole.",
+     "Le loro conduzioni centrali (n. 9, n. 7) arrivano fino al limite: aggredire prima, sul primo controllo."
+    ],
+    "clips": [
+     "ts-tig1",
+     "ts-spa1",
+     "ts-ch1",
+     "ts-ch2",
+     "ts-ch3"
+    ]
+   },
    "scores": {
     "title": "Come segnano",
     "points": [
@@ -541,6 +587,8 @@
      "Colpiscono subito dopo aver subito gol (mezzo minuto e 17 secondi)."
     ],
     "clips": [
+     "ts-spa1",
+     "ts-ch3",
      "spa2",
      "spa3",
      "spa6",
@@ -566,7 +614,7 @@
      "iza6"
     ]
    },
-   "players": "I numeri non si leggono: le righe e la risoluzione li coprono. Usano sia maglie rosse sia a righe biancorosse. Il portiere è in azzurro.",
+   "players": "Contro di noi in nero e blu, numeri leggibili: n. 9 (attaccante, gol del pareggio), n. 7 (conduzione), n. 10, n. 11, n. 22, n. 8; portiere n. 58 in azzurro. Contro l’Izanese, in rosso e a righe, i numeri non si leggevano.",
    "plans": [
     {
      "title": "Aggredire a metà campo",
@@ -679,9 +727,10 @@
     {
      "title": "Fermare l’uno contro uno",
      "tag": "Difesa",
-     "text": "Puntano l’uomo: non aspettarli fermi. Aggressione sul primo controllo, il secondo uomo chiude la linea centrale e copre. Fallo tattico solo con pochi falli accumulati.",
+     "text": "Puntano l’uomo, soprattutto il n. 9 e il n. 7: non aspettarli fermi. Aggressione sul primo controllo, il secondo uomo chiude la linea centrale e copre; gli altri non vanno sulla palla ma restano sulle linee di passaggio. Fallo tattico solo con pochi falli accumulati.",
      "clips": [
-      "spa2",
+      "ts-spa1",
+      "ts-ch3",
       "spa3"
      ],
      "tokens": [
@@ -864,11 +913,11 @@
     {
      "title": "Pulire le respinte",
      "tag": "Portiere",
-     "text": "Seguono ogni tiro. Il nostro portiere respinge di lato, non al centro, e i difensori marcano l’uomo in area prima di guardare la palla.",
+     "text": "Seguono ogni tiro e attaccano il secondo palo. Il nostro portiere respinge di lato, non al centro, e i difensori marcano l’uomo in area prima di guardare la palla: uno resta sempre sul lato debole.",
      "clips": [
+      "ts-spa1",
       "spa4",
-      "spa5",
-      "spa1"
+      "spa5"
      ]
     },
     {
