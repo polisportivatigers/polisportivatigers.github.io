@@ -557,27 +557,6 @@
     "note": "Analisi dal video della diretta. Izanese in blu (portiere grigio), Spartak Comazzo in rosso e a righe biancorosse (portiere azzurro). Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
    },
    "summary": "Analizzata in due partite: contro l’Izanese (in rosso e a righe biancorosse) e contro di noi (in nero e blu). Forte negli uno contro uno e in conduzione, con il n. 9 come riferimento offensivo; sempre pronta sulle respinte e sul secondo palo. Soffre però i contrasti a metà campo: contro l’Izanese ha perso un vantaggio di 5–2.",
-   "ours": {
-    "title": "Tigers – Spartak Comazzo 1–1",
-    "date": "12 novembre, Sordio",
-    "note": "Tigers in arancione, Spartak in nero e blu (portiere n. 58 in azzurro), il nostro portiere in nero. La telecamera segue l’azione e si sposta: alcune fasi si vedono solo in parte.",
-    "good": [
-     "Il gol nasce da una conduzione sulla fascia e un tiro deciso dal vertice dell’area: il n. 11 ha puntato l’uomo e ha calciato subito.",
-     "Pressione alta sul portatore: nella loro metà campo abbiamo creato situazioni di due contro uno.",
-     "Il nostro portiere tiene in piedi il risultato sulle conduzioni del n. 7."
-    ],
-    "improve": [
-     "Sul pareggio tre dei nostri vanno sul n. 9 e nessuno copre il secondo palo: uno resta sempre sul lato debole.",
-     "Le loro conduzioni centrali (n. 9, n. 7) arrivano fino al limite: aggredire prima, sul primo controllo."
-    ],
-    "clips": [
-     "ts-tig1",
-     "ts-spa1",
-     "ts-ch1",
-     "ts-ch2",
-     "ts-ch3"
-    ]
-   },
    "scores": {
     "title": "Come segnano",
     "points": [
@@ -930,5 +909,30 @@
     }
    ]
   }
- }
+ },
+ "ours": [
+  {
+   "title": "Tigers – Spartak Comazzo 1–1",
+   "date": "12 novembre, Sordio",
+   "note": "Tigers in arancione, Spartak in nero e blu (portiere n. 58 in azzurro), il nostro portiere in nero. La telecamera segue l’azione e si sposta: alcune fasi si vedono solo in parte.",
+   "good": [
+    "Il gol nasce da una conduzione sulla fascia e un tiro deciso dal vertice dell’area: il n. 11 ha puntato l’uomo e ha calciato subito.",
+    "Pressione alta sul portatore: nella loro metà campo abbiamo creato situazioni di due contro uno.",
+    "Il nostro portiere tiene in piedi il risultato sulle conduzioni del n. 7."
+   ],
+   "improve": [
+    "Sul pareggio tre dei nostri vanno sul n. 9 e nessuno copre il secondo palo: uno resta sempre sul lato debole.",
+    "Le loro conduzioni centrali (n. 9, n. 7) arrivano fino al limite: aggredire prima, sul primo controllo."
+   ],
+   "clips": [
+    "ts-tig1",
+    "ts-spa1",
+    "ts-ch1",
+    "ts-ch2",
+    "ts-ch3"
+   ],
+   "opponent": "Spartak Comazzo",
+   "id": "csi-2615A22"
+  }
+ ]
 }

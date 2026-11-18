@@ -2207,14 +2207,6 @@ function ScoutPanel({ name, go }) {
       <p class="small muted">${d.match.note}</p>
       ${d.players && html`<div class="callout"><${Icon} n="target"/><span><b>Giocatori:</b> ${d.players}</span></div>`}
     </div>
-    ${d.ours && html`<article class="card stack">
-      <div class="card-h"><span class="eyebrow"><${Icon} n="whistle"/>La nostra partita contro di loro</span><span class="pill blue">${d.ours.title}</span></div>
-      <p class="small muted">${d.ours.date} · ${d.ours.note}</p>
-      <div class="grid g2">
-        <div class="stack"><h4>Cosa ha funzionato</h4><ul class="scout-list">${d.ours.good.map((x) => html`<li>${x}</li>`)}</ul></div>
-        <div class="stack"><h4>Da migliorare</h4><ul class="scout-list">${d.ours.improve.map((x) => html`<li>${x}</li>`)}</ul></div>
-      </div>
-      <${ClipChips} ids=${d.ours.clips} onPlay=${onPlay}/></article>`}
     <div class="grid g2">
       ${[[d.scores, 'bad'], [d.concedes, 'ok']].map(([b, k]) => html`<article class="card stack">
         <div class="card-h"><h3>${b.title}</h3><span class=${'pill ' + k}>${b.clips.length} clip</span></div>
@@ -2231,6 +2223,28 @@ function ScoutPanel({ name, go }) {
     </article>`)}</div>
     ${play && html`<${ClipPlayer} ids=${play.ids} start=${play.id} onClose=${() => setPlay(null)}/>`}
   </section>`;
+}
+
+/* ---------- area Davide: le analisi video delle nostre partite ---------- */
+function NostroGioco({ go }) {
+  useEffect(() => { loadScouting(); }, []);
+  const [play, setPlay] = useState(null);
+  if (!SCOUT) return html`<p class="muted">Caricamento delle analisi…</p>`;
+  const list = SCOUT.ours || [];
+  if (!list.length) return html`<${Empty} title="Nessuna analisi ancora">Le analisi video delle partite dei Tigers compariranno qui.</${Empty}>`;
+  const onPlay = (ids, id) => setPlay({ ids, id });
+  return html`<div class="stack" style="gap:16px">${list.map((o) => html`<article class="card stack">
+      <div class="card-h"><span class="eyebrow"><${Icon} n="video"/>${o.date}</span><span class="pill blue">${o.title}</span></div>
+      <p class="small muted">${o.note}</p>
+      <div class="grid g2">
+        <div class="stack"><h4>Cosa ha funzionato</h4><ul class="scout-list">${o.good.map((x) => html`<li>${x}</li>`)}</ul></div>
+        <div class="stack"><h4>Da migliorare</h4><ul class="scout-list">${o.improve.map((x) => html`<li>${x}</li>`)}</ul></div>
+      </div>
+      <${ClipChips} ids=${o.clips} onPlay=${onPlay}/>
+      ${o.opponent && go && html`<div><button class="btn line sm" onClick=${() => go('avversari', o.opponent)}><${Icon} n="target"/>Studia ${o.opponent}</button></div>`}
+    </article>`)}
+    ${play && html`<${ClipPlayer} ids=${play.ids} start=${play.id} onClose=${() => setPlay(null)}/>`}
+  </div>`;
 }
 
 /* ===== QUINTO · allenamenti, generatore, area Davide, impostazioni, intro, shell ===== */
@@ -2506,15 +2520,16 @@ function ExerciseLib() {
 function Davide({ go, arg }) {
   useStore();
   const a = String(arg || '');
-  const [tab, setTab] = useState(a.startsWith('lavagna') ? 'lavagna' : a === 'formazioni' ? 'formazioni' : 'schemi');
+  const [tab, setTab] = useState(a.startsWith('lavagna') ? 'lavagna' : a === 'formazioni' ? 'formazioni' : a === 'nostro' ? 'nostro' : 'schemi');
   const [board, setBoard] = useState(() => a.startsWith('lavagna:') ? (a.startsWith('lavagna:new:') ? { matchId: a.split(':')[2] } : S.tactics[a.split(':')[1]] || {}) : null);
-  useEffect(() => { if (a.startsWith('lavagna')) { setTab('lavagna'); setBoard(a.startsWith('lavagna:new:') ? { matchId: a.split(':')[2] } : S.tactics[a.split(':')[1]] || {}); } if (a === 'formazioni') setTab('formazioni'); }, [arg]);
+  useEffect(() => { if (a.startsWith('lavagna')) { setTab('lavagna'); setBoard(a.startsWith('lavagna:new:') ? { matchId: a.split(':')[2] } : S.tactics[a.split(':')[1]] || {}); } if (a === 'formazioni') setTab('formazioni'); if (a === 'nostro') setTab('nostro'); }, [arg]);
   const p = profile();
   return html`<div class="page">
     <${PageHead} eyebrow=${'Area ' + (p.staff || 'allenatore')} title="Il campo delle idee." lead="Lavagna tattica, schemi per le gare, generatore di formazioni e osservazioni sul campo."/>
-    <${Tabs} value=${tab} onChange=${(v) => { setTab(v); if (v === 'lavagna' && !board) setBoard({}); }} options=${[['schemi', 'Schemi e moduli'], ['lavagna', 'Lavagna'], ['formazioni', 'Generatore di formazioni'], ['osservazioni', 'Osservazioni'], ['riferimenti', 'Riferimenti']]}/>
+    <${Tabs} value=${tab} onChange=${(v) => { setTab(v); if (v === 'lavagna' && !board) setBoard({}); }} options=${[['schemi', 'Schemi e moduli'], ['nostro', 'Il nostro gioco'], ['lavagna', 'Lavagna'], ['formazioni', 'Generatore di formazioni'], ['osservazioni', 'Osservazioni'], ['riferimenti', 'Riferimenti']]}/>
     ${tab === 'schemi' && html`<${Schemi} open=${(t) => { setBoard(t || {}); setTab('lavagna'); }}/>`}
     ${tab === 'lavagna' && html`<${Lavagna} key=${board?.id || 'new' + (board?.matchId || '')} t=${board || {}} onSaved=${(t) => setBoard(t)}/>`}
+    ${tab === 'nostro' && html`<${NostroGioco} go=${go}/>`}
     ${tab === 'formazioni' && html`<${Formazioni} go=${go}/>`}
     ${tab === 'osservazioni' && html`<${Osservazioni}/>`}
     ${tab === 'riferimenti' && html`<${Riferimenti}/>`}
