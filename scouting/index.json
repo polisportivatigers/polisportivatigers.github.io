@@ -3,67 +3,67 @@
   "iza1": {
    "file": "scouting/clips/iza1.mp4",
    "scorer": "Izanese",
-   "title": "Tiro da fuori dal limite, centrale, su attacco manovrato"
+   "title": "Tiro da fuori dal limite, centrale, dopo un attacco manovrato"
   },
   "iza2": {
    "file": "scouting/clips/iza2.mp4",
    "scorer": "Izanese",
-   "title": "Conduzione sulla destra, palla in mezzo e gol da sotto porta"
+   "title": "Contrasto vinto sulla fascia vicina alla telecamera, conduzione verso il centro e gol"
   },
   "iza3": {
    "file": "scouting/clips/iza3.mp4",
    "scorer": "Izanese",
-   "title": "Pressing alto a inizio ripresa: recupero e tiro ravvicinato"
+   "title": "Duello vinto a metà campo, il n. 10 conduce sulla fascia e chiude sul primo palo"
   },
   "iza4": {
    "file": "scouting/clips/iza4.mp4",
    "scorer": "Izanese",
-   "title": "Contrasto vinto a metà campo, ripartenza e primo palo"
+   "title": "Contrasto vinto a metà campo, conduzione del n. 10 e conclusione sul primo palo"
   },
   "iza5": {
    "file": "scouting/clips/iza5.mp4",
    "scorer": "Izanese",
-   "title": "Pivot spalle alla porta: riceve in area, si gira e tira"
+   "title": "Pivot spalle alla porta sul secondo palo: riceve, si gira e segna"
   },
   "iza6": {
    "file": "scouting/clips/iza6.mp4",
    "scorer": "Izanese",
-   "title": "Attacco con 4 uomini, tiro da sinistra in area e mischia"
+   "title": "Pressione in area e mischia sul primo palo"
   },
   "iza7": {
    "file": "scouting/clips/iza7.mp4",
    "scorer": "Izanese",
-   "title": "Contrasto vinto al limite e conclusione immediata"
+   "title": "Contrasto vinto al limite, portiere fuori dai pali e porta vuota"
   },
   "spa1": {
    "file": "scouting/clips/spa1.mp4",
    "scorer": "Spartak Comazzo",
-   "title": "Tiro del n. 8 da sinistra, respinta corta del portiere e gol"
+   "title": "Combinazione sul lato lontano, portiere a terra e conclusione ravvicinata"
   },
   "spa2": {
    "file": "scouting/clips/spa2.mp4",
    "scorer": "Spartak Comazzo",
-   "title": "33 secondi dopo il gol subito: n. 8 centrale, 2 contro 1"
+   "title": "Mezzo minuto dopo il gol subito: conduzione sulla fascia vicina e gol da sotto"
   },
   "spa3": {
    "file": "scouting/clips/spa3.mp4",
    "scorer": "Spartak Comazzo",
-   "title": "Il n. 5 porta palla da metà campo fino in area, pochi a coprire"
+   "title": "Uno contro uno vinto sul n. 5 dell’Izanese, ingresso in area e gol"
   },
   "spa4": {
    "file": "scouting/clips/spa4.mp4",
    "scorer": "Spartak Comazzo",
-   "title": "17 secondi dopo il gol subito: tiro, respinta, n. 8 sul secondo palo"
+   "title": "17 secondi dopo il gol subito: tiro da fuori, respinta del portiere e tap-in"
   },
   "spa5": {
    "file": "scouting/clips/spa5.mp4",
    "scorer": "Spartak Comazzo",
-   "title": "Attacco prolungato con 4 uomini in area, tiro da vicino"
+   "title": "Attacco prolungato con tre uomini vicino alla porta, mischia sul primo palo"
   },
   "spa6": {
    "file": "scouting/clips/spa6.mp4",
    "scorer": "Spartak Comazzo",
-   "title": "Ripartenza 3 contro 2: il n. 7 chiude e segna in alto"
+   "title": "Ripartenza: superato il n. 7 dell’Izanese, tiro dal centro dell’area"
   }
  },
  "teams": {
@@ -71,16 +71,16 @@
    "match": {
     "title": "Izanese – Spartak Comazzo",
     "result": "8–9",
-    "note": "Analisi dal video della diretta. Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
+    "note": "Analisi dal video della diretta. Izanese in blu (portiere grigio), Spartak Comazzo in rosso e a righe biancorosse (portiere azzurro). Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
    },
-   "summary": "Squadra coraggiosa che pressa alto e riempie l’area, ma si scopre: subisce spesso subito dopo aver segnato e il portiere respinge corto. Nella ripresa ha rimontato da 2–5 a 7–7.",
+   "summary": "Squadra in blu che vince molti contrasti a metà campo e riparte subito, con il n. 10 come uomo di conduzione. Si scopre però: subisce subito dopo aver segnato, perde gli uno contro uno difensivi e il portiere respinge corto. Nella ripresa ha rimontato da 2–5 a 7–7.",
    "scores": {
     "title": "Come segnano",
     "points": [
-     "3 gol su 7 nascono da recuperi palla aggressivi: pressing alto e contrasti vinti.",
+     "4 gol su 7 nascono da contrasti vinti: a metà campo o al limite, poi ripartono subito.",
+     "Il n. 10 è l’uomo di conduzione: porta palla dopo il recupero e chiude sul primo palo.",
      "Un pivot che sa giocare spalle alla porta e girarsi in area.",
-     "Tiratori dalla distanza e conduzioni sulla fascia destra.",
-     "Attaccano con tanta gente in area: le mischie diventano gol."
+     "Tiro dalla distanza e mischie sul primo palo."
     ],
     "clips": [
      "iza3",
@@ -95,9 +95,10 @@
    "concedes": {
     "title": "Dove soffrono",
     "points": [
-     "Il portiere (maglia grigia) respinge corto e centrale: 2 gol su 6 su ribattuta.",
-     "Calo dopo il gol: due volte hanno subito entro 35 secondi dal proprio gol.",
-     "In transizione restano scoperti: conduzioni e ripartenze contro una difesa in inferiorità."
+     "Calo dopo il gol: due volte hanno subito entro mezzo minuto dal proprio gol.",
+     "Uno contro uno difensivi persi: il n. 5 e il n. 7 superati in conduzione.",
+     "Il portiere (maglia grigia) respinge davanti a sé: un gol su tap-in, uno con il portiere a terra.",
+     "In transizione restano scoperti dopo aver perso palla."
     ],
     "clips": [
      "spa1",
@@ -108,15 +109,16 @@
      "spa5"
     ]
    },
-   "players": "I numeri non si leggono (maglie rosse e a righe bianche e rosse). Riferimenti: il pivot, il portiere in grigio.",
+   "players": "Maglia blu. N. 10: conduzione, coinvolto in almeno 2 gol. N. 8: riferimento centrale. N. 5 e n. 7: battuti in uno contro uno nei gol subiti. N. 17 spesso in difesa vicino alla porta. Portiere in grigio.",
    "plans": [
     {
      "title": "Uscire dal loro pressing",
      "tag": "Costruzione",
-     "text": "Niente passaggi corti e centrali sotto pressione. Il portiere apre sul laterale vicino alla linea, che gioca subito lungo sul pivot; l’altro laterale attacca lo spazio alle spalle della pressione.",
+     "text": "Vincono tanti contrasti a metà campo: niente passaggi corti e centrali sotto pressione, niente conduzioni nel traffico. Il portiere apre sul laterale vicino alla linea, che gioca subito lungo sul pivot; l’altro laterale attacca lo spazio alle spalle della pressione.",
      "clips": [
       "iza3",
-      "iza4"
+      "iza4",
+      "iza7"
      ],
      "tokens": [
       {
@@ -215,8 +217,8 @@
      "tag": "Attacco",
      "text": "Il loro portiere respinge davanti a sé: chi tira deve sempre avere un compagno che segue sul primo palo e uno sul secondo. Tiriamo presto, anche da fuori.",
      "clips": [
-      "spa1",
-      "spa4"
+      "spa4",
+      "spa1"
      ],
      "tokens": [
       {
@@ -311,11 +313,13 @@
      ]
     },
     {
-     "title": "Anticipo sul loro pivot",
+     "title": "Chiudere il n. 10 e il loro pivot",
      "tag": "Difesa",
-     "text": "Non lasciarlo ricevere spalle alla porta: il difensore gioca davanti o di lato, non dietro. Un compagno scala a copertura dietro di lui.",
+     "text": "Il pivot non deve ricevere spalle alla porta: il difensore gioca davanti o di lato, non dietro, e un compagno scala a copertura. Sul n. 10 in conduzione: accompagnarlo verso la linea laterale, mai lasciargli il primo palo.",
      "clips": [
-      "iza5"
+      "iza5",
+      "iza3",
+      "iza4"
      ],
      "tokens": [
       {
@@ -405,7 +409,7 @@
     {
      "title": "Ripartenza 3 contro 2",
      "tag": "Transizione",
-     "text": "Quando attaccano in 4 restano in due dietro, a volte uno solo. Al recupero: conduzione centrale veloce e due compagni che si allargano sulle fasce. Come i gol dello Spartak.",
+     "text": "Quando perdono palla restano in pochi dietro e perdono l’uno contro uno. Al recupero: conduzione veloce puntando l’uomo e due compagni che si allargano sulle fasce. Come i gol dello Spartak.",
      "clips": [
       "spa6",
       "spa3",
@@ -525,16 +529,16 @@
    "match": {
     "title": "Izanese – Spartak Comazzo",
     "result": "8–9",
-    "note": "Analisi dal video della diretta. Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
+    "note": "Analisi dal video della diretta. Izanese in blu (portiere grigio), Spartak Comazzo in rosso e a righe biancorosse (portiere azzurro). Il video parte sul 0–3: mancano i primi 10 minuti circa e un gol dell’Izanese non è ripreso."
    },
-   "summary": "Squadra di qualità individuale, letale in conduzione e in ripartenza, con il n. 8 come riferimento. Soffre però la pressione alta e ha perso un vantaggio di 5–2 nella ripresa.",
+   "summary": "Squadra in rosso e a righe biancorosse, forte negli uno contro uno, in conduzione e in ripartenza, e sempre pronta sulle respinte. Soffre però i contrasti a metà campo: ha perso un vantaggio di 5–2 nella ripresa.",
    "scores": {
     "title": "Come segnano",
     "points": [
-     "Conduzioni centrali da metà campo: il n. 8 e il n. 5 puntano l’uomo.",
-     "Ripartenze veloci, il n. 7 è letale in 3 contro 2.",
-     "Seguono sempre il tiro: 2 gol su ribattuta.",
-     "Colpiscono subito dopo aver subito gol (33 e 17 secondi)."
+     "Conduzioni e uno contro uno: puntano l’uomo e entrano in area.",
+     "Ripartenze veloci dopo il recupero palla.",
+     "Seguono sempre il tiro: tap-in e mischie sul primo palo.",
+     "Colpiscono subito dopo aver subito gol (mezzo minuto e 17 secondi)."
     ],
     "clips": [
      "spa2",
@@ -548,25 +552,26 @@
    "concedes": {
     "title": "Dove soffrono",
     "points": [
-     "Pressing alto: 3 gol subiti su recuperi nella loro metà campo o al limite.",
-     "Il pivot avversario che si gira in area.",
-     "Tiri dal limite e azioni sulla loro fascia sinistra."
+     "Contrasti a metà campo: 4 gol subiti su palle perse nei duelli, con ripartenza immediata.",
+     "Il portiere esce dai pali e lascia la porta vuota.",
+     "Il pivot avversario che si gira in area e il tiro dal limite."
     ],
     "clips": [
      "iza3",
      "iza4",
+     "iza2",
      "iza7",
      "iza5",
      "iza1",
-     "iza2"
+     "iza6"
     ]
    },
-   "players": "Da tenere d’occhio: n. 8 (coinvolto in almeno 2 gol), n. 5 (conduzione fino in area), n. 7 (ripartenze), n. 10 e n. 17 spesso nel vivo dell’azione.",
+   "players": "I numeri non si leggono: le righe e la risoluzione li coprono. Usano sia maglie rosse sia a righe biancorosse. Il portiere è in azzurro.",
    "plans": [
     {
-     "title": "Pressing alto sulla loro uscita",
+     "title": "Aggredire a metà campo",
      "tag": "Pressing",
-     "text": "Contro la pressione sbagliano: chiudere il passaggio centrale e spingere la palla verso la linea laterale, poi raddoppiare.",
+     "text": "Nei duelli a metà campo perdono palla: chiudere il passaggio centrale, spingere la palla verso la linea laterale, raddoppiare e ripartire subito.",
      "clips": [
       "iza3",
       "iza4",
@@ -672,9 +677,9 @@
      ]
     },
     {
-     "title": "Fermare le conduzioni del n. 8 e del n. 5",
+     "title": "Fermare l’uno contro uno",
      "tag": "Difesa",
-     "text": "Non aspettarli: aggressione sul primo controllo, il secondo uomo chiude la linea centrale. Fallo tattico solo con pochi falli accumulati.",
+     "text": "Puntano l’uomo: non aspettarli fermi. Aggressione sul primo controllo, il secondo uomo chiude la linea centrale e copre. Fallo tattico solo con pochi falli accumulati.",
      "clips": [
       "spa2",
       "spa3"
@@ -714,7 +719,7 @@
        "x": 48,
        "y": 50,
        "side": "b",
-       "label": "8"
+       "label": ""
       },
       {
        "x": 46,
@@ -767,7 +772,7 @@
     {
      "title": "Due dietro la palla",
      "tag": "Transizione",
-     "text": "Contro il n. 7 in ripartenza: quando attacchiamo, il centrale resta sempre dietro la linea della palla e il laterale opposto rientra subito.",
+     "text": "Contro le loro ripartenze: quando attacchiamo, il centrale resta sempre dietro la linea della palla e il laterale opposto rientra subito.",
      "clips": [
       "spa6"
      ],
@@ -806,7 +811,7 @@
        "x": 62,
        "y": 40,
        "side": "b",
-       "label": "7"
+       "label": ""
       },
       {
        "x": 78,
@@ -861,9 +866,17 @@
      "tag": "Portiere",
      "text": "Seguono ogni tiro. Il nostro portiere respinge di lato, non al centro, e i difensori marcano l’uomo in area prima di guardare la palla.",
      "clips": [
-      "spa1",
       "spa4",
-      "spa5"
+      "spa5",
+      "spa1"
+     ]
+    },
+    {
+     "title": "Il loro portiere esce",
+     "tag": "Attacco",
+     "text": "Il loro portiere esce spesso dai pali: dopo un recupero al limite guardare subito la porta, anche con un pallonetto.",
+     "clips": [
+      "iza7"
      ]
     }
    ]
