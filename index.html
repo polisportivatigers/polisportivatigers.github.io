@@ -2184,7 +2184,9 @@ function MatchSummary({ m, onEdit }) {
   const scorers = {}; g.filter((e) => e.toUs && e.side === 'ours' && e.playerId).forEach((e) => { scorers[e.playerId] = (scorers[e.playerId] || 0) + 1; });
   const rep = S.canWrite ? (staffOf(m.id).report || {}) : {};
   if (!has) Object.entries(rep).forEach(([id, v]) => { if (v.goals) scorers[id] = v.goals; });
-  const nm = (id) => { const p = S.players[id]; return p ? (p.nick || pName(p)) + (p.number != null ? ' #' + p.number : '') : 'Giocatore'; };
+  // senza accesso la rosa non è leggibile: il nome viene dall'etichetta salvata nell'evento ("Manny #45")
+  const fromLabel = (id) => { const e = ev.find((x) => x.playerId === id && x.label && x.kind !== 'sub'); return e ? e.label.split(' · ')[0] : ''; };
+  const nm = (id) => { const p = S.players[id]; return p ? (p.nick || pName(p)) + (p.number != null ? ' #' + p.number : '') : fromLabel(id) || 'Giocatore'; };
   const fouls = ['1', '2'].map((p) => [foulsIn(L, 'ours', p), foulsIn(L, 'opponent', p)]);
   const cards = ev.filter((e) => e.kind === 'yellow' || e.kind === 'red');
   const tos = ev.filter((e) => e.kind === 'timeout');
