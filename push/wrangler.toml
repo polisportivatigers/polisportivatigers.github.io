@@ -1,0 +1,18 @@
+# Postino delle notifiche di QUINTO (Cloudflare Workers, piano gratuito)
+name = "quinto-push"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+[vars]
+FB_PROJECT = "quinto-tigers"
+STAFF_EMAIL = "mister@quinto-tigers.app"
+SITE = "https://polisportivatigers.github.io"
+# FB_KEY (chiave pubblica di Firebase, la stessa di config.js), VAPID_PUBLIC e il segreto VAPID_PRIVATE si impostano alla pubblicazione
+
+[[d1_databases]]
+binding = "DB"
+database_name = "quinto-push"
+database_id = "DA-IMPOSTARE"
+
+[triggers]
+crons = ["*/15 * * * *"]

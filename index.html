@@ -624,6 +624,43 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2,.trailer,.scrim,.pwipe{bottom:auto!important;height:var(--appH,100%)!important}
 @media (max-width:900px){.shell{bottom:auto!important;height:var(--appH,100%)!important}}
 body{background:var(--bg);min-height:var(--appH,100%)}
+
+/* notifiche */
+.ntf{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.ntf.row{flex-direction:row;flex-wrap:wrap;align-items:center}
+.ntf-ic{flex:none;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.ntf-ic.ok{background:var(--ok-soft);color:var(--vittoria)}
+.ntf-ic.off{background:var(--surface-2);color:var(--muted)}
+.ntf-t{font-family:var(--f-display);font-size:20px;text-transform:uppercase;letter-spacing:.3px;color:var(--fg)}
+.ntf-go{justify-content:center;font-size:16px;padding:14px}
+.ntf-names{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}
+.ntf-name{display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 15px/1.2 var(--f-body);text-align:left;cursor:pointer}
+.ntf-name span{font:700 15px/1 var(--f-data);color:var(--muted);min-width:20px}
+.ntf-name.fan{justify-content:center;color:var(--muted)}
+.ntf-name:hover,.ntf-name:focus-visible{border-color:var(--accent)}
+.pres-b{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pres-b button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 10px;border-radius:14px;border:2px solid var(--line);background:var(--surface-2);color:var(--fg);font:800 19px/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.4px;cursor:pointer}
+.pres-yes.on{background:var(--vittoria);border-color:var(--vittoria);color:#fff}
+.pres-no.on{background:var(--sconfitta);border-color:var(--sconfitta);color:#fff}
+.mvp-win{display:flex;align-items:center;gap:14px;margin-bottom:16px;color:var(--accent)}
+.mvp-win div{display:flex;flex-direction:column;gap:2px}
+.mvp-win b{font:900 32px/1 var(--f-display);text-transform:uppercase;color:var(--fg)}
+.mvp-list{display:flex;flex-direction:column;gap:6px}
+.mvp-row{display:grid;grid-template-columns:28px minmax(0,1fr) 70px 42px;align-items:center;gap:8px;padding:11px 10px;border-radius:11px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 15px/1.2 var(--f-body);text-align:left;cursor:pointer}
+.mvp-row:disabled{cursor:default;opacity:1}
+.mvp-row.mine{border-color:var(--accent);background:var(--accent-soft)}
+.mvp-n{font:700 16px/1 var(--f-data);color:var(--muted)}
+.mvp-nm small{font:700 11px/1 var(--f-data);letter-spacing:.5px;text-transform:uppercase;color:var(--accent)}
+.mvp-bar{height:7px;border-radius:9px;background:var(--surface);overflow:hidden}
+.mvp-bar i{display:block;height:100%;background:var(--accent)}
+.mvp-pc{font:700 16px/1 var(--f-data);text-align:right}
+.tgls{display:flex;flex-direction:column}
+.tglrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.sw{position:relative;flex:none;width:44px;height:26px;border-radius:99px;border:0;padding:0;background:var(--line);cursor:pointer}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw.on{background:var(--vittoria)}
+.sw.on::after{transform:translateX(18px)}
+.sw:focus-visible{outline:3px solid var(--giallo);outline-offset:2px}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -1216,6 +1253,7 @@ function Home({ go }) {
       </div>
       <div class="row" style="align-self:end"><button class="btn line" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)" onClick=${() => go('classifica')}>Classifica <${Icon} n="arrowR"/></button></div>
     </section>
+    <${NotifyCard}/>
 
     <div class="grid g-7-5">
       <article class="card match">
@@ -1665,6 +1703,7 @@ function Convocazioni({ m }) {
         <div class="onfield" style="margin-top:10px">${called.map((id) => html`<span class="pill blue">${S.players[id].number ?? ''} ${pName(S.players[id])}</span>`)}</div>
         ${called.some((id) => isUnavailable(S.players[id])) && html`<div class="callout warn" style="margin-top:10px"><${Icon} n="info"/>Tra i convocati c’è chi è segnalato infortunato o squalificato.</div>`}
       </article>
+      <${PushConvoca} m=${m} r=${r} up=${up} called=${called} info=${info}/>
       <article class="card stack">
         <span class="eyebrow">Le informazioni per la squadra</span>
         <div class="fgrid">
@@ -2287,7 +2326,7 @@ function MatchSummary({ m, onEdit }) {
       <time>${periodShort(e.period)} ${fmtClock(e.elapsedMs)}</time><span class="ic">${icon}</span>
       <span><b>${txt}</b>${e.label ? ' · ' + e.label : ''}${e.note ? ' — ' + e.note : ''}</span>${goal ? html`<span class="sc">${o}–${t}</span>` : html`<span></span>`}</div>`; };
   return html`<div class="stack" style="gap:16px">
-    ${S.canWrite && html`<div class="row between lv-sumbar"><span class="muted small">Partita giocata. Qui trovi la cronaca e l’andamento.</span><button class="btn fire" onClick=${onEdit}><${Icon} n="edit"/>Modifica</button></div>`}
+    ${S.canWrite && html`<div class="row between lv-sumbar"><span class="muted small">Partita giocata. Qui trovi la cronaca e l’andamento.</span><div class="row" style="gap:6px"><${MvpOpenBtn} m=${m}/><button class="btn fire" onClick=${onEdit}><${Icon} n="edit"/>Modifica</button></div></div>`}
     ${has ? html`
       <article class="card stack"><span class="eyebrow">Andamento della partita</span>${g.length ? html`<${ScoreFlow} m=${m}/>` : html`<p class="muted">Nessun gol registrato nel live.</p>`}</article>
       <div class="grid g2">
@@ -2393,6 +2432,261 @@ function EventEditor({ m, e, roster, label, onClose, onSave }) {
     <div class="row"><button class="btn line" type="button" onClick=${onClose}>Annulla</button><button class="btn fire" type="submit">Salva</button></div>
   </form></${Modal}>`;
 }
+
+/* ---------- Notifiche sul telefono ----------
+   Il "postino" è un piccolo servizio gratuito (Cloudflare) indicato in config.js: se manca, tutta questa parte resta nascosta.
+   Tifosi e giocatori si iscrivono da Panoramica; i giocatori scelgono il proprio nome (elenco pubblico club/pubroster, scritto dallo staff).
+   Il telefono dello staff manda gli avvisi del Live solo quando cambia il risultato; il postino scarta i doppioni. */
+const PUSH = window.QUINTO_PUSH || {};
+IC.bell = 'M6 16v-5a6 6 0 1112 0v5l1.5 2h-15zM10 21a2 2 0 004 0';
+const pushReady = () => !!(PUSH.url && PUSH.vapid);
+const pushSupported = () => pushReady() && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const pushCfg = () => ({ reminders: true, live: true, mvp: true, ...(S.club.pushcfg || {}) });
+function pushLocal() { try { return JSON.parse(localStorage.getItem('quinto-push') || '{}'); } catch (e) { return window.__pushLocal || {}; } }
+function pushSave(o) { window.__pushLocal = o; try { localStorage.setItem('quinto-push', JSON.stringify(o)); } catch (e) {} bump(); }
+function deviceId() {
+  try { let d = localStorage.getItem('quinto-dev'); if (!d) { d = 'dev-' + uid() + uid(); localStorage.setItem('quinto-dev', d); } return d; }
+  catch (e) { return window.__dev || (window.__dev = 'dev-' + uid() + uid()); }
+}
+const keyBytes = (b64) => { const s = (b64 + '='.repeat((4 - (b64.length % 4)) % 4)).replace(/-/g, '+').replace(/_/g, '/'); return Uint8Array.from(atob(s), (c) => c.charCodeAt(0)); };
+async function pushApi(path, body, staff) {
+  const h = { 'Content-Type': 'application/json' };
+  if (staff) { const u = window.firebase && firebase.auth().currentUser; if (!u) throw new Error('Accedi come staff'); h.Authorization = 'Bearer ' + (await u.getIdToken()); }
+  const r = await fetch(PUSH.url.replace(/\/$/, '') + path, body === undefined ? { headers: h } : { method: 'POST', headers: h, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'errore ' + r.status);
+  return j;
+}
+const staffSend = (msg) => pushApi('/send', msg, true);
+async function currentSub() { if (!pushSupported()) return null; const reg = await navigator.serviceWorker.ready; return reg.pushManager.getSubscription(); }
+async function enablePush() {
+  const perm = await Notification.requestPermission();
+  if (perm !== 'granted') { pushSave({ ...pushLocal(), on: false, denied: perm === 'denied' }); return false; }
+  const reg = await navigator.serviceWorker.ready;
+  let sub = await reg.pushManager.getSubscription();
+  if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(PUSH.vapid) });
+  const loc = pushLocal();
+  await pushApi('/sub', { sub: sub.toJSON(), player: loc.player || '' });
+  pushSave({ ...loc, on: true, denied: false });
+  return true;
+}
+async function setPushPlayer(player) {
+  pushSave({ ...pushLocal(), player, chose: true });
+  const sub = await currentSub(); if (sub) await pushApi('/sub', { sub: sub.toJSON(), player });
+}
+async function disablePush() {
+  const sub = await currentSub();
+  if (sub) { await pushApi('/unsub', { endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe().catch(() => {}); }
+  pushSave({ ...pushLocal(), on: false });
+}
+// l'iscrizione può cambiare da sola (il telefono la rinnova): a ogni apertura si riallinea il postino
+let pushSynced = false;
+async function pushResync() {
+  if (pushSynced || !pushSupported() || Notification.permission !== 'granted') return; pushSynced = true;
+  try { const sub = await currentSub(); const loc = pushLocal(); if (sub) { await pushApi('/sub', { sub: sub.toJSON(), player: loc.player || '' }); if (!loc.on) pushSave({ ...loc, on: true }); } else if (loc.on) pushSave({ ...loc, on: false }); } catch (e) { pushSynced = false; }
+}
+// un tocco sulla notifica con l'app già aperta: il service worker chiede di andare alla pagina giusta
+if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('message', (e) => { const g = e.data && e.data.go; if (typeof g === 'string' && g[0] === '#') location.hash = g; });
+
+const pubRoster = () => (S.club.pubroster && S.club.pubroster.players) || [];
+const rosterName = (id) => { const p = S.players[id]; if (p) return pName(p); const r = pubRoster().find((x) => x.id === id); return r ? r.name : ''; };
+const matchTitle = (m) => (m.home ? `Tigers – ${short(m.opponent)}` : `${short(m.opponent)} – Tigers`);
+const matchWhen = (m) => `${fmtDate(m.date, { long: true })}${m.time ? ' ore ' + m.time : ''}`;
+
+/* ---------- Panoramica: iscrizione ---------- */
+function NotifyCard({ compact }) {
+  useStore();
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { pushResync(); }, []);
+  if (!pushSupported()) return null;
+  const loc = pushLocal(), perm = Notification.permission;
+  const on = loc.on && perm === 'granted';
+  const roster = pubRoster();
+  const me = loc.player ? roster.find((x) => x.id === loc.player) : null;
+  const act = async () => { setBusy(true); try { const ok = await enablePush(); toast(ok ? 'Notifiche attive' : 'Notifiche non permesse su questo telefono', !ok); } catch (e) { toast('Attivazione non riuscita: riprova tra poco', true); } finally { setBusy(false); } };
+  const pick = async (id) => { setBusy(true); try { await setPushPlayer(id); toast(id ? 'Ciao ' + (roster.find((x) => x.id === id)?.name || '') + '! Riceverai anche convocazioni e presenze' : 'Riceverai gli avvisi per i tifosi'); } catch (e) { toast('Non salvato: riprova', true); } finally { setBusy(false); } };
+  if (perm === 'denied') return compact ? null : html`<article class="card ntf"><div class="row" style="gap:10px"><span class="ntf-ic off"><${Icon} n="bell"/></span><div><b>Notifiche bloccate</b><div class="small muted">Il telefono non permette a QUINTO di mandare avvisi.</div></div></div></article>`;
+  if (!on) return html`<article class="card ntf">
+    <div class="row" style="gap:12px;flex-wrap:nowrap"><span class="ntf-ic"><${Icon} n="bell" s=${22}/></span><div style="min-width:0"><b class="ntf-t">Non perderti un gol</b><div class="small muted">Promemoria delle partite, risultato in diretta, convocazioni e messaggi della squadra.</div></div></div>
+    <button class="btn fire ntf-go" disabled=${busy} onClick=${act}><${Icon} n="bell"/>${busy ? 'Un attimo…' : 'Attiva notifiche'}</button></article>`;
+  if (!loc.chose && roster.length) return html`<article class="card ntf">
+    <div class="row" style="gap:12px;flex-wrap:nowrap"><span class="ntf-ic ok"><${Icon} n="check" s=${22}/></span><div><b class="ntf-t">Notifiche attive. Sei un giocatore?</b><div class="small muted">Tocca il tuo nome per ricevere convocazioni e richieste di presenza.</div></div></div>
+    <div class="ntf-names">${roster.map((p) => html`<button class="ntf-name" disabled=${busy} onClick=${() => pick(p.id)}><span>${p.number ?? '–'}</span>${p.name}</button>`)}
+      <button class="ntf-name fan" disabled=${busy} onClick=${() => pick('')}>Sono un tifoso</button></div></article>`;
+  if (compact) return null;
+  return html`<article class="card ntf row between" style="gap:10px">
+    <div class="row" style="gap:10px;flex-wrap:nowrap"><span class="ntf-ic ok"><${Icon} n="bell"/></span><div><b>Notifiche attive</b><div class="small muted">${me ? 'Giocatore: ' + me.name : 'Tifoso'}</div></div></div>
+    <div class="row" style="gap:6px"><button class="btn line sm" onClick=${() => pushSave({ ...pushLocal(), chose: false })}>${me ? 'Cambia nome' : 'Sono un giocatore'}</button><button class="btn ghost sm" onClick=${async () => { await disablePush(); toast('Notifiche disattivate'); }}>Disattiva</button></div></article>`;
+}
+
+/* ---------- Presenze: risposta del giocatore ---------- */
+function Presenze({ go, arg }) {
+  useStore();
+  const m = S.matches[arg] || nextMatch();
+  const loc = pushLocal();
+  const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(() => (m && loc.answers && loc.answers[m.id]) || '');
+  if (!m) return html`<div class="page"><${PageHead} eyebrow="Presenze" title="Nessuna partita in arrivo."/></div>`;
+  const me = pubRoster().find((x) => x.id === loc.player);
+  const answer = async (a) => {
+    setBusy(true);
+    try { const sub = await currentSub(); if (!sub) throw new Error('nosub'); await pushApi('/presence', { endpoint: sub.endpoint, match: m.id, answer: a }); const l = pushLocal(); pushSave({ ...l, answers: { ...(l.answers || {}), [m.id]: a } }); setDone(a); toast(a === 'yes' ? 'Presenza confermata' : 'Assenza segnata'); }
+    catch (e) { toast('Risposta non inviata: attiva le notifiche e scegli il tuo nome in Panoramica', true); } finally { setBusy(false); }
+  };
+  return html`<div class="page">
+    <${PageHead} eyebrow="Presenze" title=${me ? `Ci sei, ${me.name}?` : 'Ci sei?'} lead=${matchTitle(m) + ' · ' + matchWhen(m)}/>
+    ${!me && html`<${NotifyCard}/>`}
+    ${me && html`<article class="card stack pres">
+      <div class="pres-b"><button class=${'pres-yes' + (done === 'yes' ? ' on' : '')} disabled=${busy} onClick=${() => answer('yes')}><${Icon} n="check" s=${26}/>Sì, ci sono</button>
+        <button class=${'pres-no' + (done === 'no' ? ' on' : '')} disabled=${busy} onClick=${() => answer('no')}><${Icon} n="x" s=${26}/>No, non ci sono</button></div>
+      ${done && html`<p class="muted" style="text-align:center">${done === 'yes' ? 'Segnato: ci sei. Lo staff lo vede subito.' : 'Segnato: non ci sei. Lo staff lo vede subito.'} Puoi cambiare risposta quando vuoi.</p>`}
+      <div class="place"><${Icon} n="pin"/>${m.venue || 'Campo da definire'}</div>
+    </article>`}
+  </div>`;
+}
+
+/* ---------- MVP: votazione dei tifosi ---------- */
+function MvpPage({ go }) {
+  useStore();
+  const [d, setD] = useState(null), [err, setErr] = useState(false), [busy, setBusy] = useState(false);
+  const now = useTick(true);
+  const load = async () => { try { setD(await pushApi('/poll?voter=' + encodeURIComponent(deviceId()))); setErr(false); } catch (e) { setErr(true); } };
+  useEffect(() => { if (pushReady()) load(); const h = setInterval(load, 20000); return () => clearInterval(h); }, []);
+  if (!pushReady()) return html`<div class="page"><${PageHead} eyebrow="MVP" title="Migliore in campo."/><${Empty} title="Votazione non disponibile">Torna più tardi.</${Empty}></div>`;
+  const p = d && d.poll;
+  if (!p) return html`<div class="page"><${PageHead} eyebrow="MVP" title="Migliore in campo." lead="Dopo ogni partita i tifosi votano il migliore in campo."/>${err ? html`<div class="callout warn"><${Icon} n="info"/>Votazione non raggiungibile: controlla la connessione.</div>` : d ? html`<${Empty} title="Nessuna votazione aperta">Si vota dopo il fischio finale della prossima partita.</${Empty}>` : html`<p class="muted">Carico la votazione…</p>`}</div>`;
+  const open = p.closes > now && !p.winner;
+  const tot = (d.tally || []).reduce((s, x) => s + x.n, 0);
+  const n = (id) => ((d.tally || []).find((x) => x.player === id) || {}).n || 0;
+  const list = open ? p.candidates : sortBy(p.candidates, (c) => -n(c.id));
+  const win = p.winner ? p.candidates.find((c) => c.id === p.winner) : (!open && list[0] && n(list[0].id) ? list[0] : null);
+  const left = Math.max(0, p.closes - now), hh = Math.floor(left / 3600000), mm = Math.floor((left % 3600000) / 60000);
+  const vote = async (id) => { setBusy(true); try { const r = await pushApi('/vote', { match: p.match, voter: deviceId(), player: id }); setD({ ...d, poll: { ...p, mine: id }, tally: r.tally }); toast('Voto registrato'); } catch (e) { toast('Voto non registrato: ' + (e.message || 'riprova'), true); } finally { setBusy(false); } };
+  return html`<div class="page">
+    <${PageHead} eyebrow="MVP" title=${open ? 'Chi è il migliore in campo?' : 'Il migliore in campo.'} lead=${(p.title || '') + (open ? ` · si vota ancora per ${hh ? hh + ' h ' : ''}${mm} min` : ' · votazione chiusa')}/>
+    ${win && html`<article class="card mvp-win"><${Icon} n="trophy" s=${34}/><div><span class="eyebrow">MVP dei tifosi</span><b>${win.name}</b><span class="muted small">${n(win.id)} voti su ${tot}</span></div></article>`}
+    <article class="card">
+      ${open && html`<p class="small muted" style="margin-bottom:10px">${p.mine ? 'Hai votato. Puoi cambiare idea finché la votazione è aperta.' : 'Tocca un nome per votare. Un voto per telefono.'}</p>`}
+      <div class="mvp-list">${list.map((c) => { const pc = tot ? Math.round((n(c.id) * 100) / tot) : 0; return html`<button class=${'mvp-row' + (p.mine === c.id ? ' mine' : '')} disabled=${!open || busy} onClick=${() => vote(c.id)}>
+        <span class="mvp-n">${c.number ?? '–'}</span><span class="mvp-nm">${c.name}${p.mine === c.id ? html` <small>il tuo voto</small>` : ''}</span>
+        <span class="mvp-bar"><i style=${'width:' + pc + '%'}></i></span><b class="mvp-pc">${pc}%</b></button>`; })}</div>
+      <p class="small muted" style="margin-top:10px">${tot} ${tot === 1 ? 'voto' : 'voti'}</p>
+    </article>
+  </div>`;
+}
+
+/* ---------- Staff: invio e impostazioni ---------- */
+function PushStaff() {
+  useStore();
+  const [st, setSt] = useState(null), [mode, setMode] = useState('all'), [txt, setTxt] = useState(''), [ttl, setTtl] = useState('Messaggio dello staff'), [busy, setBusy] = useState(false);
+  useEffect(() => { if (pushReady() && S.loggedIn) pushApi('/stats', undefined, true).then(setSt).catch(() => setSt(null)); }, [S.loggedIn]);
+  if (!pushReady() || !S.canWrite) return null;
+  const cfg = pushCfg();
+  const setCfg = (k) => put('club', 'pushcfg', { ...cfg, [k]: !cfg[k] });
+  const send = async () => { if (!txt.trim()) return; setBusy(true); try { const r = await staffSend({ title: ttl.trim() || 'Messaggio dello staff', body: txt.trim(), to: mode === 'players' ? 'players' : 'all', url: '#home' }); toast(`Inviato a ${r.sent} ${r.sent === 1 ? 'telefono' : 'telefoni'}`); setTxt(''); } catch (e) { toast('Invio non riuscito: ' + e.message, true); } finally { setBusy(false); } };
+  const T = ([k, t, s]) => html`<div class="tglrow"><div><b>${t}</b><div class="small muted">${s}</div></div><button class=${'sw' + (cfg[k] ? ' on' : '')} role="switch" aria-checked=${cfg[k] ? 'true' : 'false'} aria-label=${t} onClick=${() => setCfg(k)}></button></div>`;
+  return html`<article class="card stack"><div class="card-h"><span class="eyebrow">Notifiche sul telefono</span>${st && html`<span class="pill blue">${st.devices} ${st.devices === 1 ? 'telefono' : 'telefoni'} · ${st.players.length} ${st.players.length === 1 ? 'giocatore' : 'giocatori'}</span>`}</div>
+    <div class="fgrid">
+      <${Field} label="A chi"><select value=${mode} onChange=${(e) => setMode(e.target.value)}><option value="all">Tutti (tifosi e giocatori)</option><option value="players">Solo i giocatori</option></select></${Field}>
+      <${Field} label="Titolo"><input value=${ttl} maxlength="60" onInput=${(e) => setTtl(e.target.value)}/></${Field}>
+      <${Field} label="Messaggio" full><textarea value=${txt} maxlength="280" onInput=${(e) => setTxt(e.target.value)} placeholder="Es. Venerdì cena di squadra alle 20:30"></textarea></${Field}>
+    </div>
+    <div class="row"><button class="btn fire" disabled=${busy || !txt.trim()} onClick=${send}><${Icon} n="bell"/>${busy ? 'Invio…' : 'Invia notifica'}</button></div>
+    <div class="tgls">${[['reminders', 'Promemoria partita', 'Il giorno prima dalle 18 e 2 ore prima'], ['live', 'Inizio, gol e finale', 'Dal Live, solo quando cambia il risultato'], ['mvp', 'Votazione MVP', 'Si apre al fischio finale, per 24 ore']].map(T)}</div>
+  </article>`;
+}
+/* Centro partita → Convocazioni: avvisi ai convocati e risposte alle presenze */
+function PushConvoca({ m, r, up, called, info }) {
+  useStore();
+  const [ans, setAns] = useState(null), [st, setSt] = useState(null), [busy, setBusy] = useState('');
+  const load = async () => { try { const [a, s] = await Promise.all([pushApi('/presence?match=' + encodeURIComponent(m.id), undefined, true), pushApi('/stats', undefined, true)]); setAns(a.answers || []); setSt(s); } catch (e) { setAns(null); } };
+  useEffect(() => { if (pushReady() && S.loggedIn) { load(); const h = setInterval(load, 30000); return () => clearInterval(h); } }, [m.id, S.loggedIn]);
+  // le risposte dall'app riempiono la disponibilità ancora da chiedere (o "forse")
+  useEffect(() => { if (!ans || !ans.length) return; const ch = ans.filter((a) => S.players[a.player] && ['ask', 'maybe', undefined].includes(r.availability[a.player]) && r.availability[a.player] !== a.answer); if (ch.length) { up((o) => { ch.forEach((a) => { o.availability[a.player] = a.answer; if (a.answer === 'no') o.called = o.called.filter((x) => x !== a.player); }); return o; }); toast(`${ch.length} ${ch.length === 1 ? 'risposta arrivata' : 'risposte arrivate'} dall'app: ricordati di salvare`); } }, [ans]);
+  if (!pushReady() || !S.canWrite) return null;
+  const linked = new Set((st && st.players) || []);
+  const meet = (info.meeting ? ' · ritrovo ' + info.meeting : '') + (info.meetingPlace ? ' ' + info.meetingPlace : '');
+  const run = async (k, msg, ok) => { setBusy(k); try { const res = await staffSend(msg); toast(ok(res.sent)); } catch (e) { toast('Invio non riuscito: ' + e.message, true); } finally { setBusy(''); } };
+  const calledLinked = called.filter((id) => linked.has(id));
+  const pending = playerList().filter((p) => linked.has(p.id) && !(ans || []).some((a) => a.player === p.id) && (r.availability[p.id] || 'ask') === 'ask').map((p) => p.id);
+  const ask = (to, k) => run(k, { title: 'Ci sei? ' + matchTitle(m), body: matchWhen(m) + (m.venue ? ' · ' + m.venue.split(' - ')[0] : ''), to, url: '#presenze~' + m.id, match: m.id, actions: [{ action: 'yes', title: 'Sì, ci sono' }, { action: 'no', title: 'No' }] }, (n) => `Richiesta inviata a ${n} ${n === 1 ? 'giocatore' : 'giocatori'}`);
+  return html`<article class="card stack"><div class="card-h"><span class="eyebrow">Avvisi sul telefono</span>${st && html`<span class="pill blue">${linked.size} ${linked.size === 1 ? 'giocatore collegato' : 'giocatori collegati'}</span>`}</div>
+    <div class="row">
+      <button class="btn line" disabled=${!!busy || !calledLinked.length} onClick=${() => run('conv', { title: 'Sei convocato 📋', body: `${matchTitle(m)} · ${matchWhen(m)}${meet}`, to: calledLinked, url: '#partita~' + m.id }, (n) => `Convocazione inviata a ${n} ${n === 1 ? 'giocatore' : 'giocatori'}`)}><${Icon} n="bell"/>Avvisa i convocati (${calledLinked.length})</button>
+      <button class="btn line" disabled=${!!busy || !linked.size} onClick=${() => ask('players', 'ask')}><${Icon} n="check"/>Chiedi le presenze</button>
+      ${pending.length > 0 && ans && ans.length > 0 && html`<button class="btn ghost" disabled=${!!busy} onClick=${() => ask(pending, 'rem')}>Ricorda a chi non ha risposto (${pending.length})</button>`}
+    </div>
+    ${ans && ans.length > 0 && html`<div class="onfield">${ans.map((a) => html`<span class=${'pill ' + (a.answer === 'yes' ? 'ok' : 'bad')}>${rosterName(a.player) || 'Giocatore'} · ${a.answer === 'yes' ? 'ci sono' : 'assente'}</span>`)}</div>`}
+    ${st && called.length > calledLinked.length && html`<p class="small muted">${called.length - calledLinked.length === 1 ? '1 convocato non ha' : called.length - calledLinked.length + ' convocati non hanno'} ancora collegato il telefono.</p>`}
+  </article>`;
+}
+/* MVP aperto a mano dal riepilogo della partita */
+function mvpCandidates(m) {
+  const L = m.live || {}, so = staffOf(m.id);
+  const ids = new Set([...(so.called || []), ...(L.initialLineup || []), ...(L.onField || [])]);
+  (L.events || []).forEach((e) => { if (e.kind === 'sub') { if (e.inId) ids.add(e.inId); if (e.playerId) ids.add(e.playerId); } });
+  return sortBy([...ids].filter((id) => S.players[id]), (id) => S.players[id].number ?? 99).map((id) => ({ id, name: pName(S.players[id]), number: S.players[id].number ?? null }));
+}
+async function openMvp(m, force) {
+  const c = mvpCandidates(m); if (!c.length) throw new Error('nessun giocatore in distinta');
+  const [o, t] = m.live && m.live.started ? liveScore(m) : [m.ourScore ?? 0, m.theirScore ?? 0];
+  return pushApi('/poll/open', { match: m.id, title: m.home ? `Tigers ${o}–${t} ${short(m.opponent)}` : `${short(m.opponent)} ${t}–${o} Tigers`, hours: 24, candidates: c, force: !!force }, true);
+}
+function MvpOpenBtn({ m }) {
+  const [busy, setBusy] = useState(false);
+  if (!pushReady() || !S.canWrite || m.status !== 'played') return null;
+  return html`<button class="btn line sm" disabled=${busy} onClick=${async () => { setBusy(true); try { const r = await openMvp(m, true); toast(`Votazione MVP aperta per 24 ore · avvisati ${r.sent || 0} telefoni`); } catch (e) { toast('Non aperta: ' + e.message, true); } finally { setBusy(false); } }}><${Icon} n="trophy"/>Apri votazione MVP</button>`;
+}
+
+/* ---------- osservatore sul telefono dello staff ---------- */
+const LW = {};
+function liveSent() { try { return JSON.parse(localStorage.getItem('quinto-push-live') || '{}'); } catch (e) { return {}; } }
+function liveMark(id, v) { const o = liveSent(); o[id] = v; try { localStorage.setItem('quinto-push-live', JSON.stringify(o)); } catch (e) {} }
+function scoreLine(m, o, t) { return m.home ? `Tigers ${o}–${t} ${short(m.opponent)}` : `${short(m.opponent)} ${t}–${o} Tigers`; }
+function goalText(m) {
+  const [o, t] = liveScore(m); const g = goalEvents(m); const e = g[g.length - 1];
+  const min = e ? ` · ${Math.floor((e.elapsedMs || 0) / 60000) + 1}' ${periodShort(e.period || '1')}` : '';
+  if (e && e.toUs) { const who = e.playerId ? rosterName(e.playerId) || e.label : ''; const as = e.assistId ? rosterName(e.assistId) : '';
+    return { title: '⚽ GOL TIGERS!', body: `${who ? who + (e.ownGoal ? ' (autorete)' : '') + (as ? ' · assist ' + as : '') + ' · ' : ''}${scoreLine(m, o, t)}${min}` }; }
+  return { title: 'Gol ' + short(m.opponent), body: scoreLine(m, o, t) + min };
+}
+let pubRosterTimer = null, mvpChecked = false;
+function pushWatch() {
+  if (!pushReady() || !S.canWrite || !IS_FB) return;
+  const cfg = pushCfg();
+  // elenco pubblico dei nomi per "Sei un giocatore?"
+  if (Object.keys(S.players).length) {
+    const list = playerList().map((p) => ({ id: p.id, name: pName(p), number: p.number ?? null }));
+    if (JSON.stringify(list) !== JSON.stringify(pubRoster())) { clearTimeout(pubRosterTimer); pubRosterTimer = setTimeout(() => { if (JSON.stringify(list) !== JSON.stringify(pubRoster())) put('club', 'pubroster', { players: list, updatedAt: new Date().toISOString() }).catch(() => {}); }, 3000); }
+  }
+  // l'MVP votato dai tifosi finisce nel referto, se lo staff non l'ha già scelto
+  if (!mvpChecked && Object.keys(S.staffmatches).length) { mvpChecked = true; pushApi('/poll').then((d) => { const p = d.poll; if (p && p.winner && S.staffmatches[p.match] && !S.staffmatches[p.match].mvp) put('staffmatches', p.match, { ...S.staffmatches[p.match], mvp: p.winner }).catch(() => {}); }).catch(() => {}); }
+  if (!cfg.live && !cfg.mvp) return;
+  const today = todayISO();
+  Object.values(S.matches).forEach((m) => {
+    const L = m.live; if (!L || !L.started || !m.date || m.date < addDays(today, -1)) return;
+    const [o, t] = liveScore(m), tot = o + t;
+    const w = LW[m.id] || (LW[m.id] = {});
+    const sent = liveSent()[m.id];
+    if (w.last == null) w.last = sent != null ? sent : tot; // all'apertura non si rimandano i gol già passati
+    if (cfg.live && !L.finished && (L.runningSince || L.elapsedMs > 0) && !w.kick) { w.kick = true; staffSend({ key: 'kick:' + m.id, title: 'Si parte! 🔴 LIVE', body: scoreLine(m, o, t).replace(/ \d+–\d+ /, ' – ') + ' è iniziata. Segui la cronaca.', url: '#live~' + m.id, tag: 'live-' + m.id }).catch(() => { w.kick = false; }); }
+    if (cfg.live && !L.finished && tot > w.last) {
+      clearTimeout(w.timer);
+      // si aspetta qualche secondo: il tempo di scegliere marcatore e assist, o di annullare
+      w.timer = setTimeout(() => { const mm = S.matches[m.id]; if (!mm || !mm.live || mm.live.finished) return; const [a, b] = liveScore(mm); if (a + b <= w.last) return; const g = goalText(mm);
+        staffSend({ key: `goal:${m.id}:${a}-${b}`, ...g, url: '#live~' + m.id, tag: 'live-' + m.id }).then(() => { w.last = a + b; liveMark(m.id, a + b); }).catch(() => {}); }, 20000);
+    }
+    if (L.finished && !w.fin && L.finalizedAt && Date.now() - Date.parse(L.finalizedAt) < 3 * 3600000) {
+      w.fin = true; clearTimeout(w.timer);
+      const g = goalEvents(m).filter((e) => e.toUs && e.playerId), sc = {};
+      g.forEach((e) => { const n = rosterName(e.playerId) || e.label; if (n) sc[n] = (sc[n] || 0) + 1; });
+      const who = Object.entries(sc).map(([n, k]) => n + (k > 1 ? ' ×' + k : '')).join(', ');
+      if (cfg.live) staffSend({ key: 'fin:' + m.id, title: 'Fischio finale', body: scoreLine(m, o, t) + (who ? ' · Marcatori: ' + who : '') + ' · Tocca per il riassunto', url: '#partita~' + m.id, tag: 'live-' + m.id }).catch(() => { w.fin = false; });
+      if (cfg.mvp) openMvp(m, false).catch(() => {});
+    }
+  });
+}
+listeners.add(pushWatch);
 
 /* ===== QUINTO · trailer della partita =====
    Presentazione a tutto schermo sincronizzata con l'audio (Suno). I tempi sono in trailers/<idPartita>.json.
@@ -3261,6 +3555,7 @@ function Impostazioni() {
   return html`<div class="page">
     <${PageHead} eyebrow="Impostazioni" title="Facciamola vostra." lead="Dati della squadra, accessi, backup e guida."/>
     <div class="grid g2" style="align-items:start">
+      <${PushStaff}/>
       <article class="card form"><span class="eyebrow">Identità della squadra</span>
         ${S.canWrite ? html`<div class="fgrid">
           <${Field} label="Nome squadra" full><input value=${f.teamName} onInput=${(e) => up('teamName', e.target.value)}/></${Field}>
@@ -3358,7 +3653,10 @@ const ROUTES = [
   ['allenamenti', 'Allenamenti', 'cone', Allenamenti, 'Allenamento'], ['davide', 'Area Davide', 'board', Davide, 'Allenamento'], ['taccuino', 'Taccuino', 'note', Taccuino, 'Allenamento'],
   ['impostazioni', 'Impostazioni', 'gear', Impostazioni, 'Altro'],
 ];
-function parseHash() { const h = decodeURIComponent((location.hash || '').slice(1)); const [r, ...rest] = h.split('~'); return { route: ROUTES.some((x) => x[0] === r) ? r : 'home', arg: rest.join('~') || '' }; }
+// pagine aperte dalle notifiche: non compaiono nei menu
+const HIDDEN_ROUTES = [['mvp', 'MVP', 'trophy', MvpPage, ''], ['presenze', 'Presenze', 'check', Presenze, '']];
+const ALL_ROUTES = () => ROUTES.concat(HIDDEN_ROUTES);
+function parseHash() { const h = decodeURIComponent((location.hash || '').slice(1)); const [r, ...rest] = h.split('~'); return { route: ALL_ROUTES().some((x) => x[0] === r) ? r : 'home', arg: rest.join('~') || '' }; }
 /* transizione tra le pagine: le tre bande dell'ingresso attraversano la pagina e dietro l'ultima (blu Tigers) c'è già la nuova.
    Si fotografa la pagina vecchia, si disegna la nuova sotto, e la foto della vecchia resta visibile solo davanti alle bande. */
 // torna in cima: sul telefono scorre la zona delle pagine, sul computer la finestra
@@ -3402,10 +3700,10 @@ function App() {
   // la voce della pagina aperta resta sempre visibile al centro della barra
   useEffect(() => { const b = mbar.current; const on = b && b.querySelector('.on'); if (on) b.scrollTo({ left: on.offsetLeft - (b.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' }); }, [loc.route]);
   useEffect(() => { window.__login = () => { setMenu(false); setLoginOpen(true); }; }, []);
-  const [intro, setIntro] = useState(() => { try { return !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return true; } });
+  const [intro, setIntro] = useState(() => { if (HIDDEN_ROUTES.some((r) => r[0] === parseHash().route)) return false; try { return !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return true; } });
   useEffect(() => { window.__showIntro = () => setIntro(true); let prev = parseHash().route; const f = () => { const nl = parseHash(); const a = ROUTES.findIndex((x) => x[0] === prev), b = ROUTES.findIndex((x) => x[0] === nl.route); const run = nl.route !== prev ? pageWipe(b >= a ? 1 : -1) : null; prev = nl.route; setLoc(nl); setMenu(false); pageTop(false); if (run) requestAnimationFrame(run); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
   const go = (route, arg) => { const h = '#' + route + (arg ? '~' + encodeURIComponent(arg) : ''); if (location.hash === h) { setLoc(parseHash()); } else location.hash = h; };
-  const R = ROUTES.find((r) => r[0] === loc.route);
+  const R = ALL_ROUTES().find((r) => r[0] === loc.route);
   const View = R[3];
   const live = matchList().find((m) => m.live && m.live.started && !m.live.finished);
   let groups = []; ROUTES.forEach((r) => { if (!groups.length || groups[groups.length - 1][0] !== r[4]) groups.push([r[4], []]); groups[groups.length - 1][1].push(r); });

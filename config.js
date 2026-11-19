@@ -8,3 +8,9 @@ window.QUINTO_FIREBASE = {
   messagingSenderId: '118646812303',
   appId: '1:118646812303:web:4ca1e1f8c1c3e8c9bb0afa',
 };
+
+/* Postino delle notifiche (Cloudflare, piano gratuito): finché è vuoto le notifiche restano nascoste nell'app. */
+window.QUINTO_PUSH = {
+  url: '',
+  vapid: '',
+};

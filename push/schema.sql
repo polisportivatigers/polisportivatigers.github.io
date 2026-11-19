@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS subs (id TEXT PRIMARY KEY, endpoint TEXT NOT NULL, p256dh TEXT NOT NULL, auth TEXT NOT NULL, player TEXT NOT NULL DEFAULT '', created INTEGER);
+CREATE TABLE IF NOT EXISTS sent (key TEXT PRIMARY KEY, at INTEGER);
+CREATE TABLE IF NOT EXISTS presence (match TEXT, player TEXT, answer TEXT, at INTEGER, PRIMARY KEY (match, player));
+CREATE TABLE IF NOT EXISTS polls (match TEXT PRIMARY KEY, title TEXT, candidates TEXT, opens INTEGER, closes INTEGER, winner TEXT, announced INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS votes (match TEXT, voter TEXT, player TEXT, at INTEGER, PRIMARY KEY (match, voter));
