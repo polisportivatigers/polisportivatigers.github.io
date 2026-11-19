@@ -567,7 +567,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2-foot input{accent-color:var(--fiamma);width:17px;height:17px}
 .in2-wipe{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
 .in2-wipe i{position:absolute;top:-10%;bottom:-10%;left:-50%;width:200%;display:block;transform:translateX(-115%) skewX(-18deg);will-change:transform}
-.in2-wipe i:nth-child(1){background:var(--fiamma)}.in2-wipe i:nth-child(2){background:#C63A12}.in2-wipe i:nth-child(3){background:var(--notte)}
+.in2-wipe i:nth-child(1){background:var(--fiamma)}.in2-wipe i:nth-child(2){background:#C63A12}.in2-wipe i:nth-child(3){background:var(--blu)}
 .in2.go .in2-wipe i{animation:in2claw .5s cubic-bezier(.65,0,.3,1) forwards}
 .in2.go .in2-wipe i:nth-child(2){animation-delay:.08s}.in2.go .in2-wipe i:nth-child(3){animation-delay:.16s}
 @keyframes in2claw{to{transform:translateX(0) skewX(-18deg)}}
@@ -3342,7 +3342,7 @@ const ROUTES = [
   ['impostazioni', 'Impostazioni', 'gear', Impostazioni, 'Altro'],
 ];
 function parseHash() { const h = decodeURIComponent((location.hash || '').slice(1)); const [r, ...rest] = h.split('~'); return { route: ROUTES.some((x) => x[0] === r) ? r : 'home', arg: rest.join('~') || '' }; }
-/* transizione tra le pagine: le tre bande dell'ingresso attraversano la pagina e dietro l'ultima (blu notte) c'è già la nuova.
+/* transizione tra le pagine: le tre bande dell'ingresso attraversano la pagina e dietro l'ultima (blu Tigers) c'è già la nuova.
    Si fotografa la pagina vecchia, si disegna la nuova sotto, e la foto della vecchia resta visibile solo davanti alle bande. */
 let wiping = false;
 function pageWipe(dir) {
@@ -3354,7 +3354,7 @@ function pageWipe(dir) {
   old.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
   // la copia non conserva i valori scelti: li riporto (menu a tendina, campi, caselle)
   const so = main.querySelectorAll('select,input,textarea'), sc = old.querySelectorAll('select,input,textarea'); so.forEach((n, i) => { const c = sc[i]; if (!c) return; if (n.tagName === 'SELECT') c.selectedIndex = n.selectedIndex; else if (n.type === 'checkbox' || n.type === 'radio') c.checked = n.checked; else c.value = n.value; });
-  const cols = dir > 0 ? ['var(--notte)', '#C63A12', 'var(--fiamma)'] : ['var(--fiamma)', '#C63A12', 'var(--notte)'];
+  const cols = dir > 0 ? ['var(--blu)', '#C63A12', 'var(--fiamma)'] : ['var(--fiamma)', '#C63A12', 'var(--blu)'];
   ov.appendChild(old); const bands = cols.map((c) => { const i = document.createElement('i'); i.style.background = c; ov.appendChild(i); return i; });
   document.body.appendChild(ov); wiping = true;
   const sk = H * 1.2 * Math.tan(18 * Math.PI / 180), hs = H / 2 * Math.tan(18 * Math.PI / 180), bw = [W * .2, W * .12, W * .16], B = bw[0] + bw[1] + bw[2], DUR = 560;
