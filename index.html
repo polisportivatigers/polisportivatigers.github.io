@@ -619,6 +619,11 @@ tr.us td{background:var(--accent-soft);font-weight:700}
   .main{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:28px}
   .mbar{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;flex:0 0 auto;box-shadow:none}
 }
+/* iPhone, app installata: iOS dà alla pagina 47 px in meno (l'altezza della barra dell'orario) e lascia scoperto il fondo.
+   Gli elementi a tutto schermo usano l'altezza vera dello schermo (--appH, misurata all'avvio). */
+.in2,.trailer,.scrim,.pwipe{bottom:auto!important;height:var(--appH,100%)!important}
+@media (max-width:900px){.shell{bottom:auto!important;height:var(--appH,100%)!important}}
+body{background:var(--bg);min-height:var(--appH,100%)}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -3449,6 +3454,7 @@ function App() {
 render(html`<${App}/>`, document.getElementById('app'));
 boot();
 </script>
+<script>(function(){function f(){var st=navigator.standalone||matchMedia('(display-mode: standalone)').matches;var h=innerHeight,sh=innerWidth<innerHeight?screen.height:screen.width;document.documentElement.style.setProperty('--appH',(st&&sh>h&&sh-h<80?sh:h)+'px');}f();addEventListener('resize',f);addEventListener('orientationchange',function(){setTimeout(f,300)});})();</script>
 <script>if('serviceWorker' in navigator){const t0=Date.now();let had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&Date.now()-t0<15000)location.reload();had=true;});addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then((r)=>{r.update();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')r.update().catch(()=>{});});}).catch(()=>{}))}</script>
 </body>
 </html>
