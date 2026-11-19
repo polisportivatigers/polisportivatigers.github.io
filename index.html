@@ -535,6 +535,42 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .lv-line.goal{font-size:15px}
 @media (prefers-reduced-motion:reduce){.lv-tile.pick,.lv-to.late{animation:none}}
 .lv-editline{grid-template-columns:72px 22px minmax(0,1fr) auto}
+/* ingresso */
+.in2{position:fixed;inset:0;z-index:100;background:var(--notte);color:#fff;overflow:hidden;transition:opacity .5s ease}
+.in2.out{opacity:0;pointer-events:none}
+.in2-fx{position:absolute;inset:0;width:100%;height:100%;display:block}
+.in2-stage{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));transition:opacity .5s ease}
+.in2.go .in2-stage{opacity:0}
+.in2-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.in2-sound{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);border-radius:999px;padding:7px 12px 7px 10px;cursor:pointer;font-family:var(--f-data);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#AEB3D6}
+.in2-eq{display:flex;gap:2px;align-items:flex-end;height:14px}
+.in2-eq i{width:3px;background:var(--fiamma);border-radius:1px;height:4px;transition:height .08s linear}
+.in2-sound.off .in2-eq i{background:#AEB3D6;height:3px!important}
+.in2-c{display:grid;place-items:center;align-content:center;gap:16px;text-align:center;min-height:0}
+.in2-disc{width:clamp(130px,30vw,200px);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 calc(8px + var(--pulse,0)*14px) rgba(240,78,35,calc(.12 + var(--pulse,0)*.25)),0 30px 60px -20px rgba(0,0,0,.6);transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(calc(1 + var(--pulse,0)*.035));will-change:transform}
+.in2-disc img{width:92%;pointer-events:none}
+.in2.go .in2-disc{transition:transform .7s cubic-bezier(.7,0,.25,1);transform:scale(1.6)}
+.in2-tag{font-family:var(--f-data);letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#AEB3D6}
+.in2-h{color:#fff;font-size:clamp(64px,17vw,150px);font-weight:900;line-height:.84}
+.in2-h span{display:block}.in2-h em{display:block;font-style:normal;color:var(--fiamma)}
+.in2-next{display:flex;gap:10px;align-items:center;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14);padding:8px 4px;font-family:var(--f-data);font-size:15px;letter-spacing:.06em;color:#AEB3D6;flex-wrap:wrap;justify-content:center}
+.in2-next b{color:#fff}.in2-next i{width:6px;height:6px;border-radius:50%;background:var(--fiamma)}
+.in2-bottom{display:grid;gap:12px;justify-items:center}
+.in2-enter{position:relative;border:0;background:var(--fiamma);color:#fff;border-radius:16px;padding:18px 54px;font-family:var(--f-display);font-weight:800;font-size:30px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;overflow:hidden;box-shadow:0 18px 40px -16px rgba(240,78,35,.8);width:min(420px,100%)}
+.in2-enter::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(108deg,transparent 0 22px,rgba(255,255,255,.16) 22px 30px);transform:translateX(-30%);animation:in2sweep 2.4s linear infinite}
+.in2-enter span{position:relative;z-index:1;display:inline-flex;align-items:center;gap:12px}
+.in2-enter svg{width:26px;height:26px}
+@keyframes in2sweep{to{transform:translateX(0)}}
+.in2-foot{display:flex;justify-content:space-between;gap:12px;width:100%;font-size:13px;color:#AEB3D6;align-items:center;flex-wrap:wrap}
+.in2-foot label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.in2-foot input{accent-color:var(--fiamma);width:17px;height:17px}
+.in2-wipe{position:absolute;inset:-20vh -30vw;pointer-events:none;display:grid;grid-template-columns:1fr 1fr 1fr;gap:3vw;transform:rotate(18deg)}
+.in2-wipe i{background:var(--fiamma);transform:translateY(130%);display:block}
+.in2-wipe i:nth-child(2){background:#D63E16}.in2-wipe i:nth-child(3){background:var(--blu)}
+.in2.go .in2-wipe i{animation:in2claw .62s cubic-bezier(.7,0,.25,1) forwards}
+.in2.go .in2-wipe i:nth-child(2){animation-delay:.09s}.in2.go .in2-wipe i:nth-child(3){animation-delay:.18s}
+@keyframes in2claw{to{transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.in2-enter::after{animation:none}.in2.go .in2-wipe i{animation-duration:.01s}.in2-disc{transform:none!important}}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -3108,25 +3144,66 @@ function normalizeBackup(j) {
 
 /* ---------- INTRO ---------- */
 function Intro({ onDone }) {
-  const [play, setPlay] = useState(false), [p, setP] = useState(0);
-  const a = useRef();
+  // ingresso: inno di sottofondo (parte da solo se il telefono lo consente, altrimenti al primo tocco),
+  // graffi interattivi, e con "Entra" i tre graffi coprono lo schermo mentre la musica sfuma
   let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
-  const [no, setNo] = useState(skip);
-  const enter = () => { try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (e) {} onDone(); };
-  const start = () => { setPlay(true); const au = a.current; if (au) { au.currentTime = 0; au.play().catch(() => {}); } };
-  useEffect(() => { if (!play) return; const t0 = Date.now(); const h = setInterval(() => { const x = (Date.now() - t0) / 12000; setP(Math.min(1, x)); if (x >= 1) { clearInterval(h); setTimeout(enter, 400); } }, 100); return () => clearInterval(h); }, [play]);
-  return html`<div class=${'intro' + (play ? ' play' : '')} role="dialog" aria-label="Intro Polisportiva Tigers">
-    <${Stripes} seed=${3} count=${18} alpha=${.07}/>
-    <div class="row between"><div class="brand" style="font-size:30px">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div><button class="btn line sm" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)" onClick=${() => { a.current && a.current.pause(); enter(); }}>Salta intro <${Icon} n="x"/></button></div>
-    <div class="intro-c">
-      <div class="disc"><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
-      <span class="tag">Cinque in campo · tutti dalla stessa parte</span>
-      <h1><span>Forza</span><em>Tigers.</em></h1>
-      ${play ? html`<div class="intro-progress" aria-hidden="true"><i style=${'width:' + p * 100 + '%'}></i></div><button class="btn ghost" style="color:#fff" onClick=${() => { if (a.current) a.current.muted = !a.current.muted; }}><${Icon} n="music"/>Audio sì / no</button>`
-      : html`<div class="row" style="justify-content:center"><button class="btn fire" style="padding:14px 22px;font-size:17px" onClick=${start}><${Icon} n="play"/>Entra con l’inno</button><button class="btn ghost" style="color:#fff" onClick=${enter}>Entra subito <${Icon} n="arrowR"/></button></div>`}
+  const [no, setNo] = useState(skip), [on, setOn] = useState(false), [phase, setPhase] = useState('');
+  const cv = useRef(), disc = useRef(), au = useRef(), eqRef = useRef(), st = useRef({ leaving: false, want: true });
+  const nm = nextMatch();
+  useEffect(() => {
+    const a = au.current, c = cv.current, ctx = c.getContext('2d'), S0 = st.current;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W = 0, H = 0, ac = null, an = null, data = null, gain = null, pulse = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
+    const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
+    size(); addEventListener('resize', size);
+    const graph = () => { if (ac) return; try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); const src = ac.createMediaElementSource(a); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain = ac.createGain(); src.connect(gain); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; } };
+    const play = async () => { if (S0.leaving || !alive) return; try { graph(); if (ac && ac.state === 'suspended') await ac.resume(); if (gain) gain.gain.value = 1; await a.play(); setOn(true); } catch (e) { setOn(false); } };
+    S0.play = play; S0.pause = () => { a.pause(); setOn(false); };
+    S0.fade = (ms) => { if (a.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : a.volume; const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else a.volume = v; if (k < 1) requestAnimationFrame(step); else a.pause(); }; step(); };
+    play();
+    const first = () => { if (S0.want && a.paused) play(); };
+    const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
+    const marks = [];
+    const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
+    const tilt = (e) => { if (e.gamma == null) return; mx = .5 + Math.max(-1, Math.min(1, e.gamma / 30)) * .5; my = .5 + Math.max(-1, Math.min(1, (e.beta - 40) / 30)) * .5; };
+    const down = (e) => { if (e.target.closest('.in2-enter')) return; first(); if (e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
+    addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', first);
+    const ANG = 18 * Math.PI / 180;
+    const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
+    const eq = () => (eqRef.current ? [...eqRef.current.children] : []);
+    const frame = (now) => { if (!alive) return; const dt = Math.min(50, now - last); last = now;
+      let lvl = 0; if (an && !a.paused) { an.getByteFrequencyData(data); let s = 0; for (let i = 2; i < 14; i++) s += data[i]; lvl = s / (12 * 255); eq().forEach((b, i) => { b.style.height = (3 + data[3 + i * 5] / 255 * 11) + 'px'; }); }
+      pulse += ((lvl > .5 ? Math.min(1, (lvl - .45) * 2.2) : 0) - pulse) * .25;
+      const dEl = disc.current; if (dEl) { dEl.style.setProperty('--pulse', pulse.toFixed(3)); if (!reduce && !S0.leaving) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); } }
+      ctx.clearRect(0, 0, W, H);
+      const g = ctx.createRadialGradient(W * .5, H * .42, 0, W * .5, H * .42, Math.max(W, H) * .7); g.addColorStop(0, 'rgba(11,18,87,' + (.9 + pulse * .1) + ')'); g.addColorStop(1, 'rgba(6,10,51,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      slashes.forEach((s) => { if (!reduce) s.y -= s.sp * dt * (1 + pulse * 3); if (s.y < -.5) { s.y = 1.5; s.x = Math.random(); } slash((s.x + (mx - .5) * .04 * s.w / 10) * W, s.y * H, s.len * H, s.w, 'rgba(240,78,35,' + (s.al + pulse * .08) + ')'); });
+      marks.forEach((m) => { const k = (now - m.t) / 1400; if (k < 1) { const L = Math.min(W, H) * .32 * Math.min(1, k * 4); for (let i = -1; i <= 1; i++) slash(m.x + i * Math.min(W, H) * .05, m.y + i * 8, L, 13, 'rgba(255,99,57,' + Math.min(1, (1 - k) * 1.1) + ')'); } });
+      raf = requestAnimationFrame(frame); };
+    raf = requestAnimationFrame(frame);
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', first); try { a.pause(); } catch (e) {} try { ac && ac.close(); } catch (e) {} };
+  }, []);
+  const enter = () => { const S0 = st.current; if (S0.leaving) return; S0.leaving = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (e) {}
+    S0.fade && S0.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
+  const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (au.current.paused) { S0.want = true; S0.play(); } else { S0.want = false; S0.pause(); } };
+  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers">
+    <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
+    <div class="in2-stage">
+      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
+        <button class=${'in2-sound' + (on ? '' : ' off')} aria-pressed=${on} onPointerDown=${(e) => e.stopPropagation()} onClick=${toggle}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : 'Audio spento'}</button></div>
+      <div class="in2-c">
+        <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
+        <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
+        <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
+        ${nm && html`<div class="in2-next"><i></i>Prossima <b>${nm.home ? 'Tigers – ' + short(nm.opponent) : short(nm.opponent) + ' – Tigers'}</b> · ${fmtDate(nm.date)}${nm.time ? ' · ' + nm.time : ''}</div>`}
+      </div>
+      <div class="in2-bottom">
+        <button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button>
+        <div class="in2-foot"><label><input type="checkbox" checked=${no} onChange=${(e) => setNo(e.target.checked)}/>Non mostrare all’apertura</label><span>Polisportiva Tigers · Futsal</span></div>
+      </div>
     </div>
-    <div class="row between small" style="color:#AEB3D6"><label class="check"><input type="checkbox" checked=${no} onChange=${(e) => setNo(e.target.checked)}/>Non mostrare all’apertura</label><span>Polisportiva Tigers · Futsal</span></div>
-    <audio ref=${a} src="forza-tigers-intro.mp3" preload="auto"></audio>
+    <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
+    <audio ref=${au} src="forza-tigers.mp3" preload="auto" loop></audio>
   </div>`;
 }
 
