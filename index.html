@@ -571,6 +571,9 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2.go .in2-wipe i:nth-child(2){animation-delay:.09s}.in2.go .in2-wipe i:nth-child(3){animation-delay:.18s}
 @keyframes in2claw{to{transform:translateY(0)}}
 @media (prefers-reduced-motion:reduce){.in2-enter::after{animation:none}.in2.go .in2-wipe i{animation-duration:.01s}.in2-disc{transform:none!important}}
+.in2-sound.ask{color:#fff;border-color:var(--fiamma);background:rgba(240,78,35,.18);animation:in2ask 1.4s ease-in-out infinite}
+@keyframes in2ask{50%{background:rgba(240,78,35,.38)}}
+@media (prefers-reduced-motion:reduce){.in2-sound.ask{animation:none}}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -3148,7 +3151,7 @@ function Intro({ onDone }) {
   // ingresso: inno di sottofondo (parte da solo se il telefono lo consente, altrimenti al primo tocco),
   // graffi interattivi, e con "Entra" i tre graffi coprono lo schermo mentre la musica sfuma
   let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
-  const [no, setNo] = useState(skip), [on, setOn] = useState(false), [phase, setPhase] = useState('');
+  const [no, setNo] = useState(skip), [on, setOn] = useState(false), [want, setWant] = useState(true), [phase, setPhase] = useState('');
   const cv = useRef(), disc = useRef(), eqRef = useRef(), st = useRef({ leaving: false, want: true });
   const nm = nextMatch();
   useEffect(() => {
@@ -3159,6 +3162,7 @@ function Intro({ onDone }) {
     size(); addEventListener('resize', size);
     // inno in loop senza pause: intro una volta, poi da "Sale il ritmo" fino allo stacco dopo il drop
     let buf = null, srcNode = null, started = false, el = null;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
     try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); gain = ac.createGain(); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; }
     const running = () => (ac ? ac.state === 'running' && started : el && !el.paused);
     const startSrc = () => { if (!buf || started || !ac) return; srcNode = ac.createBufferSource(); srcNode.buffer = buf; srcNode.loop = true; srcNode.loopStart = INNO_LOOP.start; srcNode.loopEnd = INNO_LOOP.end; srcNode.connect(gain); gain.gain.value = 1; srcNode.start(0); started = true; };
@@ -3171,13 +3175,17 @@ function Intro({ onDone }) {
     S0.fade = (ms) => { if (!running()) return; if (ac) { const t = ac.currentTime; gain.gain.cancelScheduledValues(t); gain.gain.setValueAtTime(gain.gain.value, t); gain.gain.linearRampToValueAtTime(0.0001, t + ms / 1000); setTimeout(() => { if (ac.state === 'running') ac.suspend().catch(() => {}); }, ms + 50); }
       else if (el) { const t0 = performance.now(), v0 = el.volume; const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); el.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); else el.pause(); }; step(); } };
     play();
-    const first = () => { if (S0.want && !running()) play(); };
+    // sblocco: i telefoni concedono l'audio solo quando il dito si stacca (touchend / pointerup / click)
+    let unlocked = false;
+    const first = () => { if (!S0.want || running()) return;
+      if (!unlocked) { unlocked = true; try { const u = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAABgAAAykAWlpaWlpaWlpaWlpaWlpaWnt7e3t7e3t7e3t7e3t7e3t7nJycnJycnJycnJycnJycnL29vb29vb29vb29vb29vb293t7e3t7e3t7e3t7e3t7e3t7/////////////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQCowAAAAAAAAMpso+sIAAAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU='); u.play().catch(() => {}); } catch (e) {} }
+      play(); };
     const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
     const marks = [];
     const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
     const tilt = (e) => { if (e.gamma == null) return; mx = .5 + Math.max(-1, Math.min(1, e.gamma / 30)) * .5; my = .5 + Math.max(-1, Math.min(1, (e.beta - 40) / 30)) * .5; };
-    const down = (e) => { if (e.target.closest('.in2-enter')) return; first(); if (e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
-    addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', first);
+    const down = (e) => { if (e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
+    addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', first); addEventListener('pointerup', first); addEventListener('touchend', first); addEventListener('click', first);
     const ANG = 18 * Math.PI / 180;
     const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
     const eq = () => (eqRef.current ? [...eqRef.current.children] : []);
@@ -3191,16 +3199,16 @@ function Intro({ onDone }) {
       marks.forEach((m) => { const k = (now - m.t) / 1400; if (k < 1) { const L = Math.min(W, H) * .32 * Math.min(1, k * 4); for (let i = -1; i <= 1; i++) slash(m.x + i * Math.min(W, H) * .05, m.y + i * 8, L, 13, 'rgba(255,99,57,' + Math.min(1, (1 - k) * 1.1) + ')'); } });
       raf = requestAnimationFrame(frame); };
     raf = requestAnimationFrame(frame);
-    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', first); try { el && el.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', first); removeEventListener('pointerup', first); removeEventListener('touchend', first); removeEventListener('click', first); try { el && el.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
   }, []);
   const enter = () => { const S0 = st.current; if (S0.leaving) return; S0.leaving = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (e) {}
     S0.fade && S0.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
-  const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (S0.paused && S0.paused()) { S0.want = true; S0.play(); } else { S0.want = false; S0.pause && S0.pause(); } };
+  const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (S0.paused && S0.paused()) { S0.want = true; setWant(true); S0.play(); } else { S0.want = false; setWant(false); S0.pause && S0.pause(); } };
   return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers">
     <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
     <div class="in2-stage">
       <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
-        <button class=${'in2-sound' + (on ? '' : ' off')} aria-pressed=${on} onPointerDown=${(e) => e.stopPropagation()} onClick=${toggle}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : 'Audio spento'}</button></div>
+        <button class=${'in2-sound' + (on ? '' : ' off') + (!on && want ? ' ask' : '')} aria-pressed=${on} onPointerDown=${(e) => e.stopPropagation()} onPointerUp=${(e) => e.stopPropagation()} onTouchEnd=${(e) => e.stopPropagation()} onClick=${toggle}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : want ? 'Tocca per l’audio' : 'Audio spento'}</button></div>
       <div class="in2-c">
         <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
         <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
