@@ -2591,6 +2591,135 @@ function NostroGioco({ go }) {
   </div>`;
 }
 
+/* ===== QUINTO · pagina d'ingresso =====
+   Inno "Siamo i Tàighers": intro una volta, poi in loop da "Sale il ritmo" fino allo stacco dopo il drop.
+   Audio con un solo lettore normale (funziona allo stesso modo su iPhone e Android):
+   - prova a partire da solo (Android con l'app installata lo permette, iPhone no);
+   - altrimenti parte al primo tocco in qualsiasi punto della schermata;
+   - la sfumatura su iPhone passa dall'audio del browser, perché lì il volume del lettore non si può cambiare.
+   Lo stemma pulsa sulle battute già calcolate del brano, senza analizzare l'audio. */
+
+const INNO = { src: 'inno-loop.mp3', start: 12.2657, end: 66.9255,
+  beats: [0.7, 1.39, 2.07, 2.74, 3.44, 4.11, 4.78, 5.46, 6.18, 6.85, 7.52, 8.2, 8.89, 9.57, 10.24, 10.94, 11.61, 12.28, 12.96, 13.65, 14.33, 15.02, 15.72, 16.39, 17.07, 17.76, 18.46, 19.16, 19.81, 20.48, 21.15, 21.85, 22.52, 23.22, 23.89, 24.59, 25.26, 25.94, 26.61, 27.28, 27.98, 28.68, 29.35, 30.02, 30.72, 31.42, 32.09, 32.79, 33.46, 34.16, 34.83, 35.53, 36.2, 36.9, 37.57, 38.24, 38.94, 39.61, 40.31, 40.98, 41.68, 42.35, 43.03, 43.72, 44.4, 45.09, 45.77, 46.46, 47.11, 47.81, 48.48, 49.18, 49.85, 50.55, 51.22, 51.92, 52.59, 53.27, 53.94, 54.64, 55.31, 56.01, 56.68, 57.38, 58.05, 58.75, 59.42, 60.09, 60.77, 61.46, 62.14, 62.83, 63.51, 64.18, 64.88, 65.55, 66.22],
+  energy: [0.05, 0.28, 0.75, 0.44, 0.54, 0.3, 0.33, 0.43, 0.34, 0.39, 0.44, 0.92, 0.86, 1.0, 0.75, 0.69, 0.38, 0.48, 0.25, 0.4, 0.22, 0.31, 0.57, 0.7, 0.86, 0.78, 0.77, 0.63, 0.45, 0.7, 0.7, 0.44, 0.65, 0.62, 0.51, 0.63, 0.58, 0.49, 0.34, 0.45, 0.46, 0.49, 0.46, 0.54, 0.58, 0.85, 0.8, 0.78, 0.59, 0.57, 0.73, 0.77, 0.71, 0.79, 0.72, 0.58, 0.72, 0.57, 0.59, 0.49, 0.63, 0.58, 0.49, 0.63, 0.52, 0.6, 0.45, 0.61, 0.44, 0.65, 0.59, 0.59, 0.61, 0.56, 0.65, 0.57, 0.64, 0.61, 0.63, 0.39, 0.65, 0.52, 0.68, 0.65, 0.69, 0.61, 0.58, 0.57, 0.7, 1.0, 0.76, 0.75, 0.82, 0.81, 0.88, 0.73, 1.0, 1.0, 0.75, 0.8, 0.89, 0.75, 0.77, 0.93, 0.89, 0.85, 0.76, 1.0, 0.97, 0.93, 0.7, 0.76, 0.79, 0.73, 1.0, 1.0, 1.0, 0.69, 0.88, 0.86, 0.75, 0.69, 0.78, 0.87, 0.82, 0.79, 1.0, 0.86, 0.71, 0.77, 0.77, 0.7, 0.51, 0.6] };
+
+function innoEngine(onState) {
+  const el = new Audio();
+  el.preload = 'auto'; el.src = INNO.src; el.setAttribute('playsinline', ''); el.setAttribute('webkit-playsinline', '');
+  let ctx = null, gain = null, want = true, leaving = false, raf = 0;
+  // su iPhone il volume del lettore è fisso: se non cambia, la sfumatura passerà dall'audio del browser
+  let volumeWorks = true; try { el.volume = 0.5; volumeWorks = Math.abs(el.volume - 0.5) < 0.01; el.volume = 1; } catch (e) { volumeWorks = false; }
+  const wrap = () => { if (el.currentTime >= INNO.end) el.currentTime = INNO.start + (el.currentTime - INNO.end); };
+  const tick = () => { if (!el.paused) wrap(); raf = requestAnimationFrame(tick); };
+  raf = requestAnimationFrame(tick);
+  el.addEventListener('timeupdate', wrap);
+  el.addEventListener('ended', () => { if (leaving) return; el.currentTime = INNO.start; el.play().catch(() => {}); });
+  el.addEventListener('playing', () => onState(true));
+  el.addEventListener('pause', () => onState(false));
+  const graph = () => { // solo dentro un tocco e solo dove serve (volume fisso)
+    if (ctx || volumeWorks) return;
+    try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); const src = ctx.createMediaElementSource(el); gain = ctx.createGain(); src.connect(gain); gain.connect(ctx.destination); } catch (e) { ctx = null; gain = null; }
+  };
+  const api = {
+    el,
+    playing: () => !el.paused,
+    want: () => want,
+    // fromTouch: chiamata dentro un tocco dell'utente
+    play(fromTouch) {
+      if (leaving) return Promise.resolve(false);
+      want = true;
+      if (fromTouch) graph();
+      if (ctx && ctx.state !== 'running') { try { ctx.resume(); } catch (e) {} }
+      if (gain) gain.gain.value = 1; else if (volumeWorks) el.volume = 1;
+      const p = el.play();
+      return (p && p.then ? p : Promise.resolve()).then(() => true, () => false);
+    },
+    pause() { want = false; el.pause(); },
+    fade(ms) {
+      leaving = true;
+      if (el.paused) return;
+      const t0 = performance.now();
+      const v0 = gain ? gain.gain.value : el.volume;
+      const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k);
+        if (gain) gain.gain.value = v; else if (volumeWorks) el.volume = v;
+        if (k < 1) requestAnimationFrame(step); else el.pause(); };
+      step();
+    },
+    destroy() { cancelAnimationFrame(raf); try { el.pause(); el.removeAttribute('src'); el.load(); } catch (e) {} try { ctx && ctx.close(); } catch (e) {} },
+  };
+  return api;
+}
+// pulsazione: 1 su ogni battuta, poi cala; più forte dove il brano è più carico
+function innoPulse(t) {
+  if (!(t >= 0)) return 0;
+  const b = INNO.beats; let lo = 0, hi = b.length - 1, i = -1;
+  while (lo <= hi) { const m = (lo + hi) >> 1; if (b[m] <= t) { i = m; lo = m + 1; } else hi = m - 1; }
+  if (i < 0) return 0;
+  const e = INNO.energy[Math.min(INNO.energy.length - 1, Math.floor(t * 2))] || 0;
+  return Math.exp(-(t - b[i]) * 7) * Math.max(0, e - 0.35) / 0.65;
+}
+
+function Intro({ onDone }) {
+  let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
+  const [no, setNo] = useState(skip), [on, setOn] = useState(false), [want, setWant] = useState(true), [phase, setPhase] = useState('');
+  const cv = useRef(), disc = useRef(), eqRef = useRef(), eng = useRef(null), leaving = useRef(false);
+  const nm = nextMatch();
+  useEffect(() => {
+    const E = innoEngine(setOn); eng.current = E;
+    E.play(false);
+    const c = cv.current, ctx = c.getContext('2d');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W = 0, H = 0, pulse = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
+    const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
+    size(); addEventListener('resize', size);
+    const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
+    const marks = [];
+    const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
+    const tilt = (e) => { if (e.gamma == null) return; mx = .5 + Math.max(-1, Math.min(1, e.gamma / 30)) * .5; my = .5 + Math.max(-1, Math.min(1, (e.beta - 40) / 30)) * .5; };
+    const down = (e) => { if (e.target.closest && e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
+    const key = () => { if (E.want() && !E.playing()) E.play(true); };
+    addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', key);
+    const ANG = 18 * Math.PI / 180;
+    const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
+    const frame = (now) => { if (!alive) return; const dt = Math.min(50, now - last); last = now;
+      const t = E.playing() ? E.el.currentTime : -1;
+      const target = innoPulse(t);
+      pulse += (target - pulse) * (target > pulse ? .6 : .2);
+      if (eqRef.current) [...eqRef.current.children].forEach((b, i) => { b.style.height = (E.playing() ? 3 + 11 * Math.min(1, innoPulse(t - i * .06) + .15 + .25 * Math.abs(Math.sin(now / 180 + i))) : 3) + 'px'; });
+      const dEl = disc.current; if (dEl) { dEl.style.setProperty('--pulse', pulse.toFixed(3)); if (!reduce && !leaving.current) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); } }
+      ctx.clearRect(0, 0, W, H);
+      const g = ctx.createRadialGradient(W * .5, H * .42, 0, W * .5, H * .42, Math.max(W, H) * .7); g.addColorStop(0, 'rgba(11,18,87,' + (.9 + pulse * .1) + ')'); g.addColorStop(1, 'rgba(6,10,51,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      slashes.forEach((s) => { if (!reduce) s.y -= s.sp * dt * (1 + pulse * 3); if (s.y < -.5) { s.y = 1.5; s.x = Math.random(); } slash((s.x + (mx - .5) * .04 * s.w / 10) * W, s.y * H, s.len * H, s.w, 'rgba(240,78,35,' + (s.al + pulse * .08) + ')'); });
+      marks.forEach((m) => { const k = (now - m.t) / 1400; if (k < 1) { const L = Math.min(W, H) * .32 * Math.min(1, k * 4); for (let i = -1; i <= 1; i++) slash(m.x + i * Math.min(W, H) * .05, m.y + i * 8, L, 13, 'rgba(255,99,57,' + Math.min(1, (1 - k) * 1.1) + ')'); } });
+      raf = requestAnimationFrame(frame); };
+    raf = requestAnimationFrame(frame);
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', key); E.destroy(); };
+  }, []);
+  // ogni tocco sulla schermata (che per iPhone è un elemento cliccabile) avvia l'inno se non sta suonando
+  const touch = () => { const E = eng.current; if (!E || leaving.current || !E.want() || E.playing()) return; E.play(true); };
+  const toggle = (e) => { e.stopPropagation(); const E = eng.current; if (!E) return; if (E.playing()) { E.pause(); setWant(false); } else { setWant(true); E.play(true); } };
+  const enter = (e) => { e.stopPropagation(); if (leaving.current) return; leaving.current = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (x) {}
+    eng.current && eng.current.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
+  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${touch}>
+    <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
+    <div class="in2-stage">
+      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
+        <button class=${'in2-sound' + (on ? '' : ' off') + (!on && want ? ' ask' : '')} aria-pressed=${on} onClick=${toggle}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : want ? 'Tocca per l’audio' : 'Audio spento'}</button></div>
+      <div class="in2-c">
+        <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
+        <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
+        <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
+        ${nm && html`<div class="in2-next"><i></i>Prossima <b>${nm.home ? 'Tigers – ' + short(nm.opponent) : short(nm.opponent) + ' – Tigers'}</b> · ${fmtDate(nm.date)}${nm.time ? ' · ' + nm.time : ''}</div>`}
+      </div>
+      <div class="in2-bottom">
+        <button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button>
+        <div class="in2-foot"><label onClick=${(e) => e.stopPropagation()}><input type="checkbox" checked=${no} onChange=${(e) => setNo(e.target.checked)}/>Non mostrare all’apertura</label><span>Polisportiva Tigers · Futsal</span></div>
+      </div>
+    </div>
+    <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>`;
+}
+
 /* ===== QUINTO · allenamenti, generatore, area Davide, impostazioni, intro, shell ===== */
 
 const PHASE_LABEL = { general: 'Riscaldamento generale', specific: 'Riscaldamento con palla', technique: 'Tecnica', tactics: 'Obiettivo tattico', conditioned: 'Gioco a tema', match: 'Partitella finale', cooldown: 'Defaticamento' };
@@ -3146,86 +3275,6 @@ function normalizeBackup(j) {
 }
 
 /* ---------- INTRO ---------- */
-const INNO_LOOP = { src: 'inno-loop.mp3', start: 12.2657, end: 66.9255 };
-function Intro({ onDone }) {
-  // ingresso: inno di sottofondo (parte da solo se il telefono lo consente, altrimenti al primo tocco),
-  // graffi interattivi, e con "Entra" i tre graffi coprono lo schermo mentre la musica sfuma
-  let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
-  const [no, setNo] = useState(skip), [on, setOn] = useState(false), [want, setWant] = useState(true), [phase, setPhase] = useState('');
-  const cv = useRef(), disc = useRef(), au = useRef(), eqRef = useRef(), st = useRef({ leaving: false, want: true });
-  const nm = nextMatch();
-  useEffect(() => {
-    const c = cv.current, ctx = c.getContext('2d'), S0 = st.current;
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let W = 0, H = 0, ac = null, an = null, data = null, gain = null, pulse = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
-    const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
-    size(); addEventListener('resize', size);
-    // inno: lettore audio normale (su iPhone con l'app installata può partire all'apertura),
-    // il loop lo gestisce frame(): intro una volta, poi da "Sale il ritmo" fino allo stacco dopo il drop
-    const a = au.current;
-    const graph = () => { if (ac) return; try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); const src = ac.createMediaElementSource(a); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain = ac.createGain(); src.connect(gain); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; } };
-    const running = () => !a.paused;
-    const wrap = () => { if (a.currentTime >= INNO_LOOP.end) a.currentTime = INNO_LOOP.start + (a.currentTime - INNO_LOOP.end); };
-    a.addEventListener('timeupdate', wrap);
-    a.addEventListener('ended', () => { if (S0.leaving) return; a.currentTime = INNO_LOOP.start; a.play().catch(() => {}); });
-    const play = async () => { if (S0.leaving || !alive) return; try { graph(); if (ac && ac.state === 'suspended') await ac.resume(); if (gain) gain.gain.value = 1; else a.volume = 1; await a.play(); } catch (e) {} setOn(running()); };
-    S0.play = play; S0.pause = () => { a.pause(); setOn(false); };
-    S0.paused = () => !running();
-    S0.fade = (ms) => { if (a.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : a.volume; const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else a.volume = v; if (k < 1) requestAnimationFrame(step); else a.pause(); }; step(); };
-    a.addEventListener('playing', () => setOn(true)); a.addEventListener('pause', () => setOn(false));
-    play();
-    // sblocco: i telefoni concedono l'audio solo quando il dito si stacca (touchend / pointerup / click)
-    let unlocked = false;
-    const first = () => { if (!S0.want || running()) return;
-      S0.gesture = true; play(); };
-    const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
-    const marks = [];
-    const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
-    const tilt = (e) => { if (e.gamma == null) return; mx = .5 + Math.max(-1, Math.min(1, e.gamma / 30)) * .5; my = .5 + Math.max(-1, Math.min(1, (e.beta - 40) / 30)) * .5; };
-    const down = (e) => { if (e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
-    addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', first); addEventListener('pointerup', first); addEventListener('touchend', first); addEventListener('click', first);
-    const ANG = 18 * Math.PI / 180;
-    const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
-    const eq = () => (eqRef.current ? [...eqRef.current.children] : []);
-    const frame = (now) => { if (!alive) return; const dt = Math.min(50, now - last); last = now;
-      if (!a.paused) wrap();
-      let lvl = 0; if (an && running()) { an.getByteFrequencyData(data); let s = 0; for (let i = 2; i < 14; i++) s += data[i]; lvl = s / (12 * 255); eq().forEach((b, i) => { b.style.height = (3 + data[3 + i * 5] / 255 * 11) + 'px'; }); }
-      pulse += ((lvl > .5 ? Math.min(1, (lvl - .45) * 2.2) : 0) - pulse) * .25;
-      const dEl = disc.current; if (dEl) { dEl.style.setProperty('--pulse', pulse.toFixed(3)); if (!reduce && !S0.leaving) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); } }
-      ctx.clearRect(0, 0, W, H);
-      const g = ctx.createRadialGradient(W * .5, H * .42, 0, W * .5, H * .42, Math.max(W, H) * .7); g.addColorStop(0, 'rgba(11,18,87,' + (.9 + pulse * .1) + ')'); g.addColorStop(1, 'rgba(6,10,51,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      slashes.forEach((s) => { if (!reduce) s.y -= s.sp * dt * (1 + pulse * 3); if (s.y < -.5) { s.y = 1.5; s.x = Math.random(); } slash((s.x + (mx - .5) * .04 * s.w / 10) * W, s.y * H, s.len * H, s.w, 'rgba(240,78,35,' + (s.al + pulse * .08) + ')'); });
-      marks.forEach((m) => { const k = (now - m.t) / 1400; if (k < 1) { const L = Math.min(W, H) * .32 * Math.min(1, k * 4); for (let i = -1; i <= 1; i++) slash(m.x + i * Math.min(W, H) * .05, m.y + i * 8, L, 13, 'rgba(255,99,57,' + Math.min(1, (1 - k) * 1.1) + ')'); } });
-      raf = requestAnimationFrame(frame); };
-    raf = requestAnimationFrame(frame);
-    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', first); removeEventListener('pointerup', first); removeEventListener('touchend', first); removeEventListener('click', first); try { a.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
-  }, []);
-  const enter = () => { const S0 = st.current; if (S0.leaving) return; S0.leaving = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (e) {}
-    S0.fade && S0.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
-  const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (S0.paused && S0.paused()) { S0.want = true; setWant(true); S0.play(); } else { S0.want = false; setWant(false); S0.pause && S0.pause(); } };
-  // su iPhone solo un elemento con un proprio gestore di click riceve un tocco valido per l'audio
-  const wake = () => { const S0 = st.current; if (S0.leaving || !S0.want || !(S0.paused && S0.paused())) return; S0.gesture = true; S0.play && S0.play(); };
-  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${wake} onTouchEnd=${wake}>
-    <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
-    <div class="in2-stage">
-      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
-        <button class=${'in2-sound' + (on ? '' : ' off') + (!on && want ? ' ask' : '')} aria-pressed=${on} onPointerDown=${(e) => e.stopPropagation()} onPointerUp=${(e) => e.stopPropagation()} onTouchEnd=${(e) => e.stopPropagation()} onClick=${toggle}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : want ? 'Tocca per l’audio' : 'Audio spento'}</button></div>
-      <div class="in2-c">
-        <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
-        <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
-        <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
-        ${nm && html`<div class="in2-next"><i></i>Prossima <b>${nm.home ? 'Tigers – ' + short(nm.opponent) : short(nm.opponent) + ' – Tigers'}</b> · ${fmtDate(nm.date)}${nm.time ? ' · ' + nm.time : ''}</div>`}
-      </div>
-      <div class="in2-bottom">
-        <button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button>
-        <div class="in2-foot"><label><input type="checkbox" checked=${no} onChange=${(e) => setNo(e.target.checked)}/>Non mostrare all’apertura</label><span>Polisportiva Tigers · Futsal</span></div>
-      </div>
-    </div>
-    <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
-    <audio ref=${au} src="inno-loop.mp3" preload="auto" loop></audio>
-  </div>`;
-}
-
 /* ---------- SHELL ---------- */
 const ROUTES = [
   ['home', 'Panoramica', 'home', Home, 'Squadra'], ['squadra', 'La squadra', 'team', Squadra, 'Squadra'], ['calendario', 'Calendario', 'cal', Calendario, 'Partite'],
