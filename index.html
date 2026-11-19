@@ -3163,13 +3163,12 @@ function Intro({ onDone }) {
     // inno: lettore audio normale (su iPhone con l'app installata può partire all'apertura),
     // il loop lo gestisce frame(): intro una volta, poi da "Sale il ritmo" fino allo stacco dopo il drop
     const a = au.current;
-    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
     const graph = () => { if (ac) return; try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); const src = ac.createMediaElementSource(a); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain = ac.createGain(); src.connect(gain); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; } };
     const running = () => !a.paused;
     const wrap = () => { if (a.currentTime >= INNO_LOOP.end) a.currentTime = INNO_LOOP.start + (a.currentTime - INNO_LOOP.end); };
     a.addEventListener('timeupdate', wrap);
     a.addEventListener('ended', () => { if (S0.leaving) return; a.currentTime = INNO_LOOP.start; a.play().catch(() => {}); });
-    const play = async () => { if (S0.leaving || !alive) return; try { graph(); if (ac && ac.state === 'suspended') ac.resume().catch(() => {}); if (gain) gain.gain.value = 1; else a.volume = 1; await a.play(); } catch (e) {} setOn(running()); };
+    const play = async () => { if (S0.leaving || !alive) return; try { graph(); if (ac && ac.state === 'suspended') await ac.resume(); if (gain) gain.gain.value = 1; else a.volume = 1; await a.play(); } catch (e) {} setOn(running()); };
     S0.play = play; S0.pause = () => { a.pause(); setOn(false); };
     S0.paused = () => !running();
     S0.fade = (ms) => { if (a.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : a.volume; const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else a.volume = v; if (k < 1) requestAnimationFrame(step); else a.pause(); }; step(); };
@@ -3178,7 +3177,6 @@ function Intro({ onDone }) {
     // sblocco: i telefoni concedono l'audio solo quando il dito si stacca (touchend / pointerup / click)
     let unlocked = false;
     const first = () => { if (!S0.want || running()) return;
-      if (!unlocked) { unlocked = true; try { const u = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAABgAAAykAWlpaWlpaWlpaWlpaWlpaWnt7e3t7e3t7e3t7e3t7e3t7nJycnJycnJycnJycnJycnL29vb29vb29vb29vb29vb293t7e3t7e3t7e3t7e3t7e3t7/////////////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQCowAAAAAAAAMpso+sIAAAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU='); u.play().catch(() => {}); } catch (e) {} }
       S0.gesture = true; play(); };
     const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
     const marks = [];
@@ -3224,7 +3222,7 @@ function Intro({ onDone }) {
       </div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
-    <audio ref=${au} src=${INNO_LOOP.src} preload="auto" playsinline></audio>
+    <audio ref=${au} src="inno-loop.mp3" preload="auto" loop></audio>
   </div>`;
 }
 
