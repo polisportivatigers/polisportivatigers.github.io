@@ -583,13 +583,26 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2 .in2-disc{filter:brightness(calc(.22 + var(--lux,0)*.78)) saturate(calc(.3 + var(--lux,0)*.7))}
 .in2 .in2-h,.in2 .in2-tag{opacity:calc(.22 + var(--lux,0)*.78);filter:saturate(calc(.3 + var(--lux,0)*.7))}
 .in2 .in2-disc,.in2 .in2-h,.in2 .in2-tag{transition:none}
-.in2.dark .in2-enter{box-shadow:0 0 30px -6px rgba(240,78,35,.55)}
 .in2 .brand{opacity:calc(.35 + var(--lux,0)*.65)}
 .in2-call{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:10px 18px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.45);color:#FFE7A0;font-family:var(--f-data);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:14px;animation:in2call 1.6s ease-in-out infinite;transition:opacity .4s,transform .4s}
 .in2-call svg{width:18px;height:18px}
 @keyframes in2call{50%{background:rgba(245,197,24,.24);box-shadow:0 0 0 8px rgba(245,197,24,.06)}}
 .in2.lit .in2-call{opacity:0;transform:translateY(8px);pointer-events:none}
 @media (prefers-reduced-motion:reduce){.in2-call{animation:none}}
+
+/* tasto unico: "Accendi il palazzetto" al buio, "Entra" a luce piena */
+.in2-enter{display:grid;place-items:center}
+.in2-enter .in2-lab{grid-area:1/1;position:relative;z-index:1;display:inline-flex;align-items:center;gap:12px;transition:opacity .35s ease,transform .35s ease}
+.in2-enter .in2-lab-off{font-size:clamp(18px,5.4vw,24px);white-space:nowrap;letter-spacing:.02em;gap:10px}
+.in2-enter .in2-lab-off svg{width:24px;height:24px}
+.in2-enter.ready .in2-lab-off,.in2-enter:not(.ready) .in2-lab-on{opacity:0;transform:translateY(10px)}
+.in2-enter.off{background:#2A2F55;color:#FFE7A0;box-shadow:0 0 0 1px rgba(245,197,24,.45) inset,0 0 34px -8px rgba(245,197,24,.45);animation:in2call2 1.6s ease-in-out infinite}
+.in2-enter.off::after{opacity:.35}
+.in2-enter.warming{background:#7A3420;color:#FFD9C9;cursor:default}
+.in2-enter{transition:background .6s ease,color .6s ease,box-shadow .6s ease,transform .12s ease}
+@keyframes in2call2{50%{box-shadow:0 0 0 1px rgba(245,197,24,.7) inset,0 0 44px -4px rgba(245,197,24,.6)}}
+@media (prefers-reduced-motion:reduce){.in2-enter.off{animation:none}}
+.in2-enter.warming .in2-lab-off{opacity:.45}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -2606,15 +2619,15 @@ function NostroGioco({ go }) {
 }
 
 /* ===== QUINTO · pagina d'ingresso: "Accendi il palazzetto" =====
-   All'apertura il palazzetto è al buio. Al primo tocco (o subito, dove il telefono permette l'audio automatico)
+   All'apertura il palazzetto è al buio e il tasto dice "Accendi il palazzetto". Toccandolo (o subito, dove il telefono permette l'audio automatico)
    i quattro fari si accendono, parte l'inno (intro una volta, poi coro e drop in loop) e i Tigers giocano un'azione.
-   Entra funziona sempre e sfuma l'inno. Un solo lettore audio; su iPhone (volume fisso) la sfumatura passa
+   A luce piena il tasto diventa "Entra" e sfuma l'inno. Un solo lettore audio; su iPhone (volume fisso) la sfumatura passa
    dall'audio del browser, creato dentro il tocco. */
 
 const INNO = { src: 'inno-loop.mp3', start:12.2657,end:66.9255,beats:[0.7, 1.39, 2.07, 2.74, 3.44, 4.11, 4.78, 5.46, 6.18, 6.85, 7.52, 8.2, 8.89, 9.57, 10.24, 10.94, 11.61, 12.28, 12.96, 13.65, 14.33, 15.02, 15.72, 16.39, 17.07, 17.76, 18.46, 19.16, 19.81, 20.48, 21.15, 21.85, 22.52, 23.22, 23.89, 24.59, 25.26, 25.94, 26.61, 27.28, 27.98, 28.68, 29.35, 30.02, 30.72, 31.42, 32.09, 32.79, 33.46, 34.16, 34.83, 35.53, 36.2, 36.9, 37.57, 38.24, 38.94, 39.61, 40.31, 40.98, 41.68, 42.35, 43.03, 43.72, 44.4, 45.09, 45.77, 46.46, 47.11, 47.81, 48.48, 49.18, 49.85, 50.55, 51.22, 51.92, 52.59, 53.27, 53.94, 54.64, 55.31, 56.01, 56.68, 57.38, 58.05, 58.75, 59.42, 60.09, 60.77, 61.46, 62.14, 62.83, 63.51, 64.18, 64.88, 65.55, 66.22],energy:[0.05, 0.28, 0.75, 0.44, 0.54, 0.3, 0.33, 0.43, 0.34, 0.39, 0.44, 0.92, 0.86, 1.0, 0.75, 0.69, 0.38, 0.48, 0.25, 0.4, 0.22, 0.31, 0.57, 0.7, 0.86, 0.78, 0.77, 0.63, 0.45, 0.7, 0.7, 0.44, 0.65, 0.62, 0.51, 0.63, 0.58, 0.49, 0.34, 0.45, 0.46, 0.49, 0.46, 0.54, 0.58, 0.85, 0.8, 0.78, 0.59, 0.57, 0.73, 0.77, 0.71, 0.79, 0.72, 0.58, 0.72, 0.57, 0.59, 0.49, 0.63, 0.58, 0.49, 0.63, 0.52, 0.6, 0.45, 0.61, 0.44, 0.65, 0.59, 0.59, 0.61, 0.56, 0.65, 0.57, 0.64, 0.61, 0.63, 0.39, 0.65, 0.52, 0.68, 0.65, 0.69, 0.61, 0.58, 0.57, 0.7, 1.0, 0.76, 0.75, 0.82, 0.81, 0.88, 0.73, 1.0, 1.0, 0.75, 0.8, 0.89, 0.75, 0.77, 0.93, 0.89, 0.85, 0.76, 1.0, 0.97, 0.93, 0.7, 0.76, 0.79, 0.73, 1.0, 1.0, 1.0, 0.69, 0.88, 0.86, 0.75, 0.69, 0.78, 0.87, 0.82, 0.79, 1.0, 0.86, 0.71, 0.77, 0.77, 0.7, 0.51, 0.6]};
 
 function Intro({ onDone }) {
-  const [phase, setPhase] = useState(''), [lit, setLit] = useState(false), [on, setOn] = useState(false);
+  const [phase, setPhase] = useState(''), [lit, setLit] = useState(false), [ready, setReady] = useState(false), [on, setOn] = useState(false);
   const cv = useRef(), disc = useRef(), eqRef = useRef(), auRef = useRef(), S0 = useRef({});
   useEffect(() => {
     const cvEl = cv.current, ctx = cvEl.getContext('2d'), discEl = disc.current, au = auRef.current;
@@ -2669,7 +2682,7 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
  const since=lit?(now-litAt)/1000:-1;
  const lv=lamps.map(l=>lit?lampLevel(l,since):0);
  light=lv.reduce((a,b)=>a+b,0)/lamps.length;
- if(lit&&light>.72&&kick===Infinity)kick=now+250;
+ if(lit&&light>.72&&kick===Infinity){kick=now+250;setReady(true)}
  rootEl.style.setProperty('--lux',light.toFixed(3));
  const t=!au.paused?au.currentTime:-1,pt=pulseAt(t);pulse+=(pt-pulse)*(pt>pulse?.6:.2);
  discEl.style.setProperty('--p',pulse.toFixed(3));
@@ -2715,7 +2728,7 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
       try { au.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
   }, []);
   const left = useRef(false);
-  const enter = (e) => { e.stopPropagation(); if (left.current) return; left.current = true; S0.current.fade && S0.current.fade(1400);
+  const enter = (e) => { e.stopPropagation(); if (!ready) { if (!lit) S0.current.tap && S0.current.tap(); return; } if (left.current) return; left.current = true; S0.current.fade && S0.current.fade(1400);
     setPhase('go'); setTimeout(() => setPhase('go out'), 700); setTimeout(onDone, 1180); };
   return html`<div class=${'in2 ' + (lit ? 'lit ' : 'dark ') + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${() => S0.current.tap && S0.current.tap()}>
     <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
@@ -2726,9 +2739,10 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
         <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
         <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
         <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
-        <span class="in2-call" aria-hidden=${lit}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18.4 5.6l-2.1 2.1M21 12h-3"/><path d="M8 14a4 4 0 118 0c0 1.6-1 2.4-1.6 3.4-.3.5-.4 1-.4 1.6h-4c0-.6-.1-1.1-.4-1.6C9 16.4 8 15.6 8 14z"/></svg>Tocca e accendi il palazzetto</span>
       </div>
-      <div class="in2-bottom"><button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button></div>
+      <div class="in2-bottom"><button class=${'in2-enter' + (ready ? ' ready' : lit ? ' warming' : ' off')} onClick=${enter} aria-label=${ready ? 'Entra' : 'Accendi il palazzetto'}>
+        <span class="in2-lab in2-lab-on" aria-hidden=${!ready}>Entra <${Icon} n="arrowR"/></span>
+        <span class="in2-lab in2-lab-off" aria-hidden=${ready}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 2.5v2M4.9 5.4l1.4 1.4M2.5 12h2M19.1 5.4l-1.4 1.4M21.5 12h-2"/><path d="M8 14a4 4 0 118 0c0 1.6-1 2.4-1.6 3.4-.3.5-.4 1-.4 1.6h-4c0-.6-.1-1.1-.4-1.6C9 16.4 8 15.6 8 14zM10 21.5h4"/></svg>Accendi il palazzetto</span></button></div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
     <audio ref=${auRef} src=${INNO.src} preload="auto" playsinline></audio>
