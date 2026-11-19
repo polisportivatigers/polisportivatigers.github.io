@@ -2592,62 +2592,32 @@ function NostroGioco({ go }) {
 }
 
 /* ===== QUINTO · pagina d'ingresso =====
-   Inno "Siamo i Tàighers": intro una volta, poi in loop da "Sale il ritmo" fino allo stacco dopo il drop.
-   Audio con un solo lettore normale (funziona allo stesso modo su iPhone e Android):
-   - prova a partire da solo (Android con l'app installata lo permette, iPhone no);
-   - altrimenti parte al primo tocco in qualsiasi punto della schermata;
-   - la sfumatura su iPhone passa dall'audio del browser, perché lì il volume del lettore non si può cambiare.
-   Lo stemma pulsa sulle battute già calcolate del brano, senza analizzare l'audio. */
+   Inno "Siamo i Tàighers" intero, che a fine brano ricomincia da capo (loop nativo del lettore).
+   Prova a partire da solo all'apertura; se il telefono lo blocca, parte al primo tocco ovunque.
+   Lo stemma pulsa sulle battute già calcolate del brano. */
 
-const INNO = { src: 'inno-loop.mp3', start: 12.2657, end: 66.9255,
-  beats: [0.7, 1.39, 2.07, 2.74, 3.44, 4.11, 4.78, 5.46, 6.18, 6.85, 7.52, 8.2, 8.89, 9.57, 10.24, 10.94, 11.61, 12.28, 12.96, 13.65, 14.33, 15.02, 15.72, 16.39, 17.07, 17.76, 18.46, 19.16, 19.81, 20.48, 21.15, 21.85, 22.52, 23.22, 23.89, 24.59, 25.26, 25.94, 26.61, 27.28, 27.98, 28.68, 29.35, 30.02, 30.72, 31.42, 32.09, 32.79, 33.46, 34.16, 34.83, 35.53, 36.2, 36.9, 37.57, 38.24, 38.94, 39.61, 40.31, 40.98, 41.68, 42.35, 43.03, 43.72, 44.4, 45.09, 45.77, 46.46, 47.11, 47.81, 48.48, 49.18, 49.85, 50.55, 51.22, 51.92, 52.59, 53.27, 53.94, 54.64, 55.31, 56.01, 56.68, 57.38, 58.05, 58.75, 59.42, 60.09, 60.77, 61.46, 62.14, 62.83, 63.51, 64.18, 64.88, 65.55, 66.22],
-  energy: [0.05, 0.28, 0.75, 0.44, 0.54, 0.3, 0.33, 0.43, 0.34, 0.39, 0.44, 0.92, 0.86, 1.0, 0.75, 0.69, 0.38, 0.48, 0.25, 0.4, 0.22, 0.31, 0.57, 0.7, 0.86, 0.78, 0.77, 0.63, 0.45, 0.7, 0.7, 0.44, 0.65, 0.62, 0.51, 0.63, 0.58, 0.49, 0.34, 0.45, 0.46, 0.49, 0.46, 0.54, 0.58, 0.85, 0.8, 0.78, 0.59, 0.57, 0.73, 0.77, 0.71, 0.79, 0.72, 0.58, 0.72, 0.57, 0.59, 0.49, 0.63, 0.58, 0.49, 0.63, 0.52, 0.6, 0.45, 0.61, 0.44, 0.65, 0.59, 0.59, 0.61, 0.56, 0.65, 0.57, 0.64, 0.61, 0.63, 0.39, 0.65, 0.52, 0.68, 0.65, 0.69, 0.61, 0.58, 0.57, 0.7, 1.0, 0.76, 0.75, 0.82, 0.81, 0.88, 0.73, 1.0, 1.0, 0.75, 0.8, 0.89, 0.75, 0.77, 0.93, 0.89, 0.85, 0.76, 1.0, 0.97, 0.93, 0.7, 0.76, 0.79, 0.73, 1.0, 1.0, 1.0, 0.69, 0.88, 0.86, 0.75, 0.69, 0.78, 0.87, 0.82, 0.79, 1.0, 0.86, 0.71, 0.77, 0.77, 0.7, 0.51, 0.6] };
+const INNO = { src: 'inno-tigers.mp3',
+  beats: [1.6, 2.28, 2.97, 3.65, 4.32, 5.02, 5.69, 6.36, 7.08, 7.76, 8.43, 9.1, 9.8, 10.47, 11.15, 11.82, 12.49, 13.19, 13.84, 14.56, 15.23, 15.91, 16.63, 17.28, 17.97, 18.67, 19.37, 20.04, 20.71, 21.36, 22.06, 22.73, 23.41, 24.1, 24.8, 25.5, 26.15, 26.84, 27.52, 28.19, 28.89, 29.58, 30.26, 30.95, 31.63, 32.32, 33.0, 33.69, 34.37, 35.04, 35.74, 36.41, 37.11, 37.78, 38.48, 39.15, 39.85, 40.52, 41.19, 41.89, 42.56, 43.26, 43.93, 44.61, 45.28, 45.98, 46.65, 47.35, 48.02, 48.72, 49.39, 50.09, 50.76, 51.46, 52.13, 52.8, 53.48, 54.17, 54.85, 55.52, 56.22, 56.91, 57.59, 58.28, 58.93, 59.63, 60.3, 61.0, 61.67, 62.37, 63.04, 63.72, 64.41, 65.09, 65.76, 66.46, 67.13, 67.83, 68.5, 69.17, 69.87, 70.54, 71.22, 71.91, 72.59, 73.28, 73.96, 74.65, 75.33, 76.0, 76.7, 77.37, 78.04, 78.74, 79.41, 80.11, 80.78, 81.46, 82.15, 82.83, 83.5, 84.2, 84.87, 85.57, 86.24, 86.91, 87.61, 88.28, 88.96, 89.65, 90.33, 91.02, 91.7, 92.37, 93.07, 93.74, 94.41, 95.11, 95.78, 96.48, 97.15, 97.83, 98.52, 99.2, 99.89, 100.57, 101.24, 101.94, 102.61, 103.31, 103.98, 104.65, 105.35, 106.02, 106.7, 107.39, 108.07, 108.76, 109.44, 110.11, 110.81, 111.48, 112.18, 112.85, 113.52, 114.22, 114.89, 115.59, 116.26, 116.94, 117.63, 118.31, 118.98, 119.68, 120.35, 121.05, 121.7, 122.39, 123.07, 123.76, 124.44, 125.13, 125.81, 126.5, 127.18, 127.87, 128.55, 129.22, 129.89, 130.59, 131.26, 131.96, 132.63, 133.31, 134.0, 134.68, 135.37, 136.05, 136.72, 137.42, 138.09, 138.76, 139.46, 140.13, 140.83, 141.5, 142.18, 142.87, 143.55, 144.24, 144.94, 145.61, 146.29, 146.98, 147.68, 148.35, 149.05, 149.75, 150.44, 151.12, 151.86, 152.62, 153.41, 154.11, 154.78, 155.48, 156.18, 156.87, 157.57, 158.29, 158.99, 159.71],
+  energy: [0.0, 0.02, 0.08, 0.28, 0.43, 0.39, 0.36, 0.31, 0.46, 0.34, 0.52, 0.28, 0.42, 0.73, 0.8, 0.8, 0.62, 0.42, 0.26, 0.24, 0.3, 0.27, 0.27, 0.38, 0.52, 0.88, 0.73, 0.61, 0.5, 0.42, 0.4, 0.4, 0.54, 0.39, 0.36, 0.23, 0.47, 0.48, 0.54, 0.42, 0.24, 0.35, 0.36, 0.44, 0.42, 0.43, 0.47, 0.89, 0.54, 0.7, 0.61, 0.63, 0.56, 0.63, 0.63, 0.51, 0.53, 0.49, 0.6, 0.49, 0.37, 0.41, 0.53, 0.31, 0.52, 0.35, 0.5, 0.49, 0.49, 0.47, 0.4, 0.45, 0.37, 0.47, 0.43, 0.52, 0.39, 0.5, 0.37, 0.5, 0.47, 0.54, 0.45, 0.45, 0.48, 0.47, 0.49, 0.44, 0.42, 0.42, 0.4, 0.59, 0.61, 0.59, 0.72, 0.96, 0.93, 0.56, 0.74, 0.66, 0.62, 0.6, 0.66, 0.65, 0.65, 0.61, 0.96, 0.95, 0.6, 0.65, 0.83, 0.8, 0.7, 0.65, 0.71, 0.65, 0.6, 0.71, 0.83, 0.63, 0.58, 0.63, 0.61, 0.64, 0.74, 1.0, 0.92, 0.58, 0.69, 0.54, 0.51, 0.46, 0.38, 0.43, 0.42, 0.56, 0.88, 0.88, 0.6, 0.61, 0.62, 0.56, 0.54, 0.63, 0.56, 0.58, 0.55, 0.81, 0.8, 0.64, 0.54, 0.55, 0.57, 0.59, 0.57, 0.68, 0.61, 0.63, 0.75, 0.74, 0.56, 0.52, 0.61, 0.59, 0.59, 0.54, 0.83, 0.79, 0.66, 0.68, 0.54, 0.61, 0.58, 0.61, 0.59, 0.61, 0.58, 0.59, 0.66, 0.49, 0.41, 0.32, 0.43, 0.33, 0.34, 0.25, 0.36, 0.23, 0.23, 0.39, 0.29, 0.33, 0.24, 0.39, 0.39, 0.48, 0.34, 0.55, 0.46, 0.52, 0.77, 0.68, 0.43, 0.52, 0.45, 0.55, 0.55, 0.55, 0.65, 0.53, 0.75, 0.48, 0.72, 0.44, 0.71, 0.51, 0.55, 0.46, 0.57, 0.49, 0.5, 0.53, 0.85, 0.65, 0.65, 0.63, 0.64, 0.64, 0.58, 0.56, 0.46, 0.49, 0.55, 0.86, 0.48, 0.65, 0.61, 0.59, 0.74, 0.78, 0.76, 0.82, 0.83, 0.17, 0.79, 0.81, 0.81, 0.7, 0.94, 0.97, 0.61, 0.61, 0.61, 0.75, 0.68, 0.71, 1.0, 0.9, 0.61, 0.86, 0.91, 0.84, 0.65, 0.84, 0.8, 0.87, 0.9, 0.79, 0.67, 0.97, 0.54, 0.61, 0.77, 0.73, 0.68, 0.46, 0.44, 0.81, 0.62, 0.82, 0.88, 0.86, 0.98, 0.94, 1.0, 0.92, 0.88, 0.82, 1.0, 0.68, 0.69, 0.68, 0.62, 1.0, 0.62, 0.54, 0.56, 0.44, 0.94, 1.0, 0.54, 0.69, 0.7, 0.63, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.64, 0.59, 0.58, 0.4, 0.32, 0.2, 0.12, 0.07, 0.04] };
 
-function innoEngine(onState) {
-  const el = new Audio();
-  el.preload = 'auto'; el.src = INNO.src; el.setAttribute('playsinline', ''); el.setAttribute('webkit-playsinline', '');
-  let ctx = null, gain = null, want = true, leaving = false, raf = 0;
-  // su iPhone il volume del lettore è fisso: se non cambia, la sfumatura passerà dall'audio del browser
-  let volumeWorks = true; try { el.volume = 0.5; volumeWorks = Math.abs(el.volume - 0.5) < 0.01; el.volume = 1; } catch (e) { volumeWorks = false; }
-  const wrap = () => { if (el.currentTime >= INNO.end) el.currentTime = INNO.start + (el.currentTime - INNO.end); };
-  const tick = () => { if (!el.paused) wrap(); raf = requestAnimationFrame(tick); };
-  raf = requestAnimationFrame(tick);
-  el.addEventListener('timeupdate', wrap);
-  el.addEventListener('ended', () => { if (leaving) return; el.currentTime = INNO.start; el.play().catch(() => {}); });
+function innoEngine(el, onState) {
+  // come la versione che partiva da sola su iPhone: lettore dentro la pagina con avvio automatico e "loop" nativo,
+  // audio del browser collegato subito (serve per la sfumatura su iPhone, dove il volume del lettore è fisso)
+  let ctx = null, gain = null, want = true, leaving = false;
+  try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); const src = ctx.createMediaElementSource(el); gain = ctx.createGain(); src.connect(gain); gain.connect(ctx.destination); } catch (e) { ctx = null; gain = null; }
   el.addEventListener('playing', () => onState(true));
   el.addEventListener('pause', () => onState(false));
-  const graph = () => { // solo dentro un tocco e solo dove serve (volume fisso)
-    if (ctx || volumeWorks) return;
-    try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); const src = ctx.createMediaElementSource(el); gain = ctx.createGain(); src.connect(gain); gain.connect(ctx.destination); } catch (e) { ctx = null; gain = null; }
-  };
-  const api = {
+  const resume = () => (ctx && ctx.state !== 'running' ? Promise.race([ctx.resume().catch(() => {}), new Promise((ok) => setTimeout(ok, 800))]) : Promise.resolve());
+  return {
     el,
     playing: () => !el.paused,
     want: () => want,
-    // fromTouch: chiamata dentro un tocco dell'utente
-    play(fromTouch) {
-      if (leaving) return Promise.resolve(false);
-      want = true;
-      if (fromTouch) graph();
-      if (ctx && ctx.state !== 'running') { try { ctx.resume(); } catch (e) {} }
-      if (gain) gain.gain.value = 1; else if (volumeWorks) el.volume = 1;
-      const p = el.play();
-      return (p && p.then ? p : Promise.resolve()).then(() => true, () => false);
-    },
+    async play() { if (leaving) return false; want = true; try { await resume(); if (gain) gain.gain.value = 1; await el.play(); return true; } catch (e) { return false; } },
     pause() { want = false; el.pause(); },
-    fade(ms) {
-      leaving = true;
-      if (el.paused) return;
-      const t0 = performance.now();
-      const v0 = gain ? gain.gain.value : el.volume;
-      const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k);
-        if (gain) gain.gain.value = v; else if (volumeWorks) el.volume = v;
-        if (k < 1) requestAnimationFrame(step); else el.pause(); };
-      step();
-    },
-    destroy() { cancelAnimationFrame(raf); try { el.pause(); el.removeAttribute('src'); el.load(); } catch (e) {} try { ctx && ctx.close(); } catch (e) {} },
+    fade(ms) { leaving = true; if (el.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : el.volume;
+      const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else el.volume = v; if (k < 1) requestAnimationFrame(step); else el.pause(); }; step(); },
+    destroy() { try { el.pause(); } catch (e) {} try { ctx && ctx.close(); } catch (e) {} },
   };
-  return api;
 }
 // pulsazione: 1 su ogni battuta, poi cala; più forte dove il brano è più carico
 function innoPulse(t) {
@@ -2662,11 +2632,11 @@ function innoPulse(t) {
 function Intro({ onDone }) {
   let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
   const [no, setNo] = useState(skip), [on, setOn] = useState(false), [want, setWant] = useState(true), [phase, setPhase] = useState('');
-  const cv = useRef(), disc = useRef(), eqRef = useRef(), eng = useRef(null), leaving = useRef(false);
+  const cv = useRef(), disc = useRef(), au = useRef(), eqRef = useRef(), eng = useRef(null), leaving = useRef(false);
   const nm = nextMatch();
   useEffect(() => {
-    const E = innoEngine(setOn); eng.current = E;
-    E.play(false);
+    const E = innoEngine(au.current, setOn); eng.current = E;
+    E.play();
     const c = cv.current, ctx = c.getContext('2d');
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let W = 0, H = 0, pulse = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
@@ -2677,7 +2647,7 @@ function Intro({ onDone }) {
     const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
     const tilt = (e) => { if (e.gamma == null) return; mx = .5 + Math.max(-1, Math.min(1, e.gamma / 30)) * .5; my = .5 + Math.max(-1, Math.min(1, (e.beta - 40) / 30)) * .5; };
     const down = (e) => { if (e.target.closest && e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
-    const key = () => { if (E.want() && !E.playing()) E.play(true); };
+    const key = () => { if (E.want() && !E.playing()) E.play(); };
     addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', key);
     const ANG = 18 * Math.PI / 180;
     const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
@@ -2696,8 +2666,8 @@ function Intro({ onDone }) {
     return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', key); E.destroy(); };
   }, []);
   // ogni tocco sulla schermata (che per iPhone è un elemento cliccabile) avvia l'inno se non sta suonando
-  const touch = () => { const E = eng.current; if (!E || leaving.current || !E.want() || E.playing()) return; E.play(true); };
-  const toggle = (e) => { e.stopPropagation(); const E = eng.current; if (!E) return; if (E.playing()) { E.pause(); setWant(false); } else { setWant(true); E.play(true); } };
+  const touch = () => { const E = eng.current; if (!E || leaving.current || !E.want() || E.playing()) return; E.play(); };
+  const toggle = (e) => { e.stopPropagation(); const E = eng.current; if (!E) return; if (E.playing()) { E.pause(); setWant(false); } else { setWant(true); E.play(); } };
   const enter = (e) => { e.stopPropagation(); if (leaving.current) return; leaving.current = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (x) {}
     eng.current && eng.current.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
   return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${touch}>
@@ -2717,6 +2687,7 @@ function Intro({ onDone }) {
       </div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
+    <audio ref=${au} src="inno-tigers.mp3" preload="auto" autoplay loop></audio>
   </div>`;
 }
 
