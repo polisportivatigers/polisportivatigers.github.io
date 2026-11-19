@@ -3146,7 +3146,7 @@ function normalizeBackup(j) {
 }
 
 /* ---------- INTRO ---------- */
-const INNO_LOOP = { src: 'forza-tigers.mp3', start: 0, end: 9999 }; // PROVA TEMPORANEA: canzone vecchia
+const INNO_LOOP = { src: 'inno-loop.mp3', start: 12.2657, end: 66.9255 };
 function Intro({ onDone }) {
   // ingresso: inno di sottofondo (parte da solo se il telefono lo consente, altrimenti al primo tocco),
   // graffi interattivi, e con "Entra" i tre graffi coprono lo schermo mentre la musica sfuma
@@ -3222,7 +3222,7 @@ function Intro({ onDone }) {
       </div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
-    <audio ref=${au} src="forza-tigers.mp3" preload="auto" loop></audio>
+    <audio ref=${au} src="inno-loop.mp3" preload="auto" loop></audio>
   </div>`;
 }
 
@@ -3281,6 +3281,6 @@ function App() {
 render(html`<${App}/>`, document.getElementById('app'));
 boot();
 </script>
-<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+<script>if('serviceWorker' in navigator){const t0=Date.now();let had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&Date.now()-t0<15000)location.reload();had=true;});addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then((r)=>{r.update();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')r.update().catch(()=>{});});}).catch(()=>{}))}</script>
 </body>
 </html>
