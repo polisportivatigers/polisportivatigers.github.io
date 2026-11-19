@@ -688,6 +688,9 @@ const CSI_TEAM = 'https://live.centrosportivoitaliano.it/26/Calcio-a-5/Lombardia
 const CSI_LEAGUE = 'https://live.centrosportivoitaliano.it/26/Calcio-a-5/Lombardia/Lodi/C36131/?j=NEU9RUdLJjRGPVBOUCY0Rz1HSkVHRSY0SD1GTEdMS0cmNEk9VHY0IGgwdnAxJjRMPUVHSyY0Mj1l';
 const FIFA_BASE = 'https://www.fifatrainingcentre.com/en/practice/futsal/';
 const MAX_CALLED = 12;
+// in amichevole non c'è distinta CSI: si convoca chi si vuole
+const isFriendly = (m) => !!m && m.phase === 'Amichevole';
+const maxCalled = (m) => (isFriendly(m) ? Infinity : MAX_CALLED);
 const FIELD_CRITERIA = ['Tecnica', 'Visione di gioco', 'Difesa', 'Velocità', 'Resistenza', 'Gioco senza palla'];
 const KEEPER_CRITERIA = ['Riflessi e parate', 'Posizionamento', 'Uscite e 1 contro 1', 'Gioco con i piedi', 'Distribuzione e rilanci', 'Comunicazione'];
 const INDICATORS = ['Occasioni chiare create', 'Azioni con almeno tre giocatori', 'Possessi con due linee di passaggio', 'Palloni persi per gioco individuale', 'Inserimenti e occasioni sul secondo palo'];
@@ -1690,16 +1693,16 @@ function Convocazioni({ m }) {
   const [wa, setWa] = useState(false), [pdf, setPdf] = useState(false);
   const players = playerList();
   const called = r.called.filter((id) => S.players[id]);
-  const full = called.length >= MAX_CALLED;
+  const lim = maxCalled(m), full = called.length >= lim;
   const setAv = (id, v) => up((o) => { o.availability[id] = v; if (v === 'no') o.called = o.called.filter((x) => x !== id); return o; });
-  const toggle = (id) => up((o) => { if (o.called.includes(id)) o.called = o.called.filter((x) => x !== id); else if (o.called.length < MAX_CALLED) o.called.push(id); else toast(`Massimo ${MAX_CALLED} giocatori in distinta (regolamento CSI).`, true); return o; });
-  const quick = () => up((o) => { const ok = players.filter((p) => !isUnavailable(p) && o.availability[p.id] === 'yes').map((p) => p.id); o.called = ok.slice(0, MAX_CALLED); if (ok.length > MAX_CALLED) toast(`Disponibili ${ok.length}: convocati i primi ${MAX_CALLED}. Scegli a mano chi lasciare fuori.`, true); return o; });
+  const toggle = (id) => up((o) => { if (o.called.includes(id)) o.called = o.called.filter((x) => x !== id); else if (o.called.length < lim) o.called.push(id); else toast(`Massimo ${MAX_CALLED} giocatori in distinta (regolamento CSI).`, true); return o; });
+  const quick = () => up((o) => { const ok = players.filter((p) => !isUnavailable(p) && o.availability[p.id] === 'yes').map((p) => p.id); o.called = ok.slice(0, lim); if (ok.length > lim) toast(`Disponibili ${ok.length}: convocati i primi ${MAX_CALLED}. Scegli a mano chi lasciare fuori.`, true); return o; });
   const doSave = async () => { await save(infoDirty ? info : null); setInfoDirty(false); };
   const AV = [['ask', 'Da chiedere'], ['yes', 'Sì'], ['maybe', 'Forse'], ['no', 'No']];
   return html`<div class="grid g-7-5">
     <article class="card">
       <div class="card-h"><div><span class="eyebrow">Chi c’è per la prossima?</span></div><button class="btn line sm" onClick=${quick}><${Icon} n="check"/>Convoca i disponibili</button></div>
-      <p class="small muted" style="margin-bottom:8px">La convocazione rapida esclude chi è segnalato infortunato o squalificato. Massimo ${MAX_CALLED} in distinta.</p>
+      <p class="small muted" style="margin-bottom:8px">La convocazione rapida esclude chi è segnalato infortunato o squalificato. ${isFriendly(m) ? 'Amichevole: nessun limite di convocati.' : `Massimo ${MAX_CALLED} in distinta.`}</p>
       ${players.length ? html`<div class="avail">${players.map((p) => { const av = r.availability[p.id] || 'ask'; const isC = called.includes(p.id); return html`
         <div class="arow">
           <div class="who"><span class=${'shirt' + (p.role === 'Portiere' ? ' gk' : '')}>${p.number ?? '–'}</span><div style="min-width:0"><div class="ttl">${pName(p)}</div><div class="small muted">${p.nick ? p.name + ' · ' : ''}${p.role || ''}${p.injury?.active ? ' · infortunato' : ''}${p.suspension?.active ? ' · squalificato' : ''}</div></div></div>
@@ -1709,7 +1712,7 @@ function Convocazioni({ m }) {
     </article>
     <div class="stack" style="gap:16px">
       <article class="card">
-        <div class="row between"><span class="eyebrow">Il gruppo per la gara</span><span class=${'counter' + (full ? ' full' : '')}>${called.length}/${MAX_CALLED}</span></div>
+        <div class="row between"><span class="eyebrow">Il gruppo per la gara</span><span class=${'counter' + (full ? ' full' : '')}>${isFriendly(m) ? called.length : called.length + '/' + MAX_CALLED}</span></div>
         <div class="onfield" style="margin-top:10px">${called.map((id) => html`<span class="pill blue">${S.players[id].number ?? ''} ${pName(S.players[id])}</span>`)}</div>
         ${called.some((id) => isUnavailable(S.players[id])) && html`<div class="callout warn" style="margin-top:10px"><${Icon} n="info"/>Tra i convocati c’è chi è segnalato infortunato o squalificato.</div>`}
       </article>
@@ -1784,8 +1787,8 @@ async function buildCallupPdf(m, called) {
   doc.text('N.', 18, 144); doc.text('MAGLIA', 28, 144); doc.text('GIOCATORE', 50, 144); doc.text('NICK', 125, 144); doc.text('RUOLO', 160, 144);
   const ps = sortBy(called.map((id) => S.players[id]).filter(Boolean), (p) => (p.role === 'Portiere' ? 0 : 1) * 100 + (p.number ?? 99));
   doc.setFont('helvetica', 'normal'); let y = 153;
-  ps.forEach((p, i) => { if (i % 2 === 0) { doc.setFillColor(238, 240, 248); doc.rect(14, y - 5.5, W - 28, 8, 'F'); } doc.setTextColor(...BL); doc.setFontSize(11); doc.text(String(i + 1), 18, y); doc.setFont('helvetica', 'bold'); doc.text(p.number != null ? String(p.number) : '–', 30, y); doc.text(p.name, 50, y); doc.setFont('helvetica', 'normal'); doc.text(p.nick || '', 125, y); doc.text(p.role || '', 160, y); y += 8; });
-  y += 4; doc.setFontSize(9); doc.setTextColor(91, 98, 134); doc.text(`${ps.length} convocati su ${MAX_CALLED} ammessi in distinta (regolamento CSI calcio a 5). Portare documento d’identità e tessera CSI.`, 14, y);
+  ps.forEach((p, i) => { if (y > 278) { doc.addPage(); y = 20; } if (i % 2 === 0) { doc.setFillColor(238, 240, 248); doc.rect(14, y - 5.5, W - 28, 8, 'F'); } doc.setTextColor(...BL); doc.setFontSize(11); doc.text(String(i + 1), 18, y); doc.setFont('helvetica', 'bold'); doc.text(p.number != null ? String(p.number) : '–', 30, y); doc.text(p.name, 50, y); doc.setFont('helvetica', 'normal'); doc.text(p.nick || '', 125, y); doc.text(p.role || '', 160, y); y += 8; });
+  y += 4; doc.setFontSize(9); doc.setTextColor(91, 98, 134); doc.text(isFriendly(m) ? `${ps.length} convocati · amichevole. Portare documento d’identità.` : `${ps.length} convocati su ${MAX_CALLED} ammessi in distinta (regolamento CSI calcio a 5). Portare documento d’identità e tessera CSI.`, 14, y);
   if (m.message) { y += 9; doc.setTextColor(...BL); doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.text('Messaggio dello staff', 14, y); doc.setFont('helvetica', 'normal'); doc.setFontSize(10); y += 6; doc.text(doc.splitTextToSize(m.message, W - 28), 14, y); }
   doc.setFillColor(...BL); doc.rect(0, 282, W, 15, 'F'); doc.setTextColor(255, 255, 255); doc.setFontSize(9);
   doc.text('Allenatore: ' + (profile().staff || '') + '   ·   Forza Tigers! Cinque in campo, tutti dalla stessa parte.', 14, 291);
@@ -1809,7 +1812,7 @@ function Quintetto({ m, go }) {
   const labels = ['Portiere', ...F.name === '1-2-1' ? ['Ultimo', 'Laterale sx', 'Laterale dx', 'Pivot'] : F.name === '3-1' ? ['Laterale sx', 'Centrale', 'Laterale dx', 'Pivot'] : F.name === '2-2' ? ['Difensore sx', 'Difensore dx', 'Attaccante sx', 'Attaccante dx'] : ['Esterno', 'Centrale', 'Centrale', 'Esterno']];
   const setSt = (i, pid) => up((o) => {
     o.starters = o.starters.map((x, j) => (x === pid && j !== i ? '' : x)); o.starters[i] = pid;
-    if (pid && !o.called.includes(pid)) { if (o.called.length < MAX_CALLED && o.availability[pid] !== 'no') o.called.push(pid); else { toast('Convocati al completo o giocatore indicato assente.', true); o.starters[i] = ''; } }
+    if (pid && !o.called.includes(pid)) { if (o.called.length < maxCalled(m) && o.availability[pid] !== 'no') o.called.push(pid); else { toast('Convocati al completo o giocatore indicato assente.', true); o.starters[i] = ''; } }
     return o;
   });
   const tactics = Object.values(S.tactics).filter((t) => t.matchId === m.id);
@@ -1818,7 +1821,7 @@ function Quintetto({ m, go }) {
       <div class="card-h"><span class="eyebrow">Il quintetto iniziale</span><select aria-label="Modulo tattico" value=${r.formation} onChange=${(e) => up((o) => { o.formation = e.target.value; return o; })} style="width:auto">${FORMATIONS.map((f) => html`<option value=${f.name}>${f.name} · ${f.title}</option>`)}</select></div>
       <div class="pitch"><${PitchLines}/>${F.pos.map((pos, i) => { const p = S.players[r.starters[i]]; return html`<div class="token ${i === 0 ? 'gk' : 'a'}" style=${`left:${pos[0] / 2 + 2}%;top:${pos[1]}%;cursor:default`}>${p ? (p.number ?? initial(pName(p))) : '?'}<span class="token-name">${p ? pName(p) : labels[i]}</span></div>`; })}</div>
       <div class="fgrid">${labels.map((l, i) => html`<${Field} label=${l}><select value=${r.starters[i] || ''} onChange=${(e) => setSt(i, e.target.value)}><option value="">Scegli dalla rosa…</option>${players.filter((p) => (i === 0) === (p.role === 'Portiere') || !p.role || p.role === 'Universale').map((p) => html`<option value=${p.id} disabled=${r.availability[p.id] === 'no'}>${pFull(p)}${isUnavailable(p) ? ' ⚠' : ''}</option>`)}</select></${Field}>`)}</div>
-      <p class="small muted">Chi inserisci nel quintetto viene aggiunto ai convocati, entro il limite di ${MAX_CALLED}. La formazione non assegna automaticamente una presenza: confermala nel referto.</p>
+      <p class="small muted">Chi inserisci nel quintetto viene aggiunto ai convocati${isFriendly(m) ? '' : `, entro il limite di ${MAX_CALLED}`}. La formazione non assegna automaticamente una presenza: confermala nel referto.</p>
       <div class="row"><button class="btn fire" disabled=${!dirty} onClick=${() => save({ formation: r.formation })}>${dirty ? 'Salva quintetto' : 'Tutto aggiornato'}</button><button class="btn line" onClick=${() => go('davide', 'formazioni')}><${Icon} n="wand"/>Generatore di formazioni</button></div>
     </article>
     <article class="card stack">
@@ -3489,7 +3492,7 @@ function Formazioni({ go }) {
       setOut({ mode, teams: T.map((t) => ({ ids: t.map((x) => x.p.id), mean: mean(t.filter((x) => !x.k)) })), spread: Math.max(...T.map((t) => mean(t.filter((x) => !x.k)))) - Math.min(...T.map((t) => mean(t.filter((x) => !x.k)))), noGk: !gks.length });
     }
   };
-  const apply = async (ids) => { if (!matchId) { toast('Scegli una gara sopra.', true); return; } const r = { availability: {}, called: [], starters: [], formation: '1-2-1', report: {}, ...clone(staffOf(matchId)) }; const called = [...new Set([...(r.called || []), ...ids])]; if (called.length > MAX_CALLED) { toast(`Superati i ${MAX_CALLED} convocati: libera prima un posto nel Centro partita.`, true); return; } r.called = called; r.starters = ids; await put('staffmatches', matchId, r); toast('Quintetto applicato alla gara'); go('partita', matchId); };
+  const apply = async (ids) => { if (!matchId) { toast('Scegli una gara sopra.', true); return; } const r = { availability: {}, called: [], starters: [], formation: '1-2-1', report: {}, ...clone(staffOf(matchId)) }; const called = [...new Set([...(r.called || []), ...ids])]; if (called.length > maxCalled(S.matches[matchId])) { toast(`Superati i ${MAX_CALLED} convocati: libera prima un posto nel Centro partita.`, true); return; } r.called = called; r.starters = ids; await put('staffmatches', matchId, r); toast('Quintetto applicato alla gara'); go('partita', matchId); };
   if (!S.canWrite) return html`<${Empty} title="Riservato allo staff">Il generatore usa le valutazioni riservate di Davide.</${Empty}>`;
   return html`<div class="grid g-7-5" style="align-items:start">
     <article class="card form">
