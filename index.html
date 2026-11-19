@@ -3143,25 +3143,35 @@ function normalizeBackup(j) {
 }
 
 /* ---------- INTRO ---------- */
+const INNO_LOOP = { src: 'inno-loop.mp3', start: 12.2657, end: 66.9255 };
 function Intro({ onDone }) {
   // ingresso: inno di sottofondo (parte da solo se il telefono lo consente, altrimenti al primo tocco),
   // graffi interattivi, e con "Entra" i tre graffi coprono lo schermo mentre la musica sfuma
   let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
   const [no, setNo] = useState(skip), [on, setOn] = useState(false), [phase, setPhase] = useState('');
-  const cv = useRef(), disc = useRef(), au = useRef(), eqRef = useRef(), st = useRef({ leaving: false, want: true });
+  const cv = useRef(), disc = useRef(), eqRef = useRef(), st = useRef({ leaving: false, want: true });
   const nm = nextMatch();
   useEffect(() => {
-    const a = au.current, c = cv.current, ctx = c.getContext('2d'), S0 = st.current;
+    const c = cv.current, ctx = c.getContext('2d'), S0 = st.current;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let W = 0, H = 0, ac = null, an = null, data = null, gain = null, pulse = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
     const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
     size(); addEventListener('resize', size);
-    const graph = () => { if (ac) return; try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); const src = ac.createMediaElementSource(a); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain = ac.createGain(); src.connect(gain); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; } };
-    const play = async () => { if (S0.leaving || !alive) return; try { graph(); if (ac && ac.state === 'suspended') await ac.resume(); if (gain) gain.gain.value = 1; await a.play(); setOn(true); } catch (e) { setOn(false); } };
-    S0.play = play; S0.pause = () => { a.pause(); setOn(false); };
-    S0.fade = (ms) => { if (a.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : a.volume; const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else a.volume = v; if (k < 1) requestAnimationFrame(step); else a.pause(); }; step(); };
+    // inno in loop senza pause: intro una volta, poi da "Sale il ritmo" fino allo stacco dopo il drop
+    let buf = null, srcNode = null, started = false, el = null;
+    try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); gain = ac.createGain(); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; }
+    const running = () => (ac ? ac.state === 'running' && started : el && !el.paused);
+    const startSrc = () => { if (!buf || started || !ac) return; srcNode = ac.createBufferSource(); srcNode.buffer = buf; srcNode.loop = true; srcNode.loopStart = INNO_LOOP.start; srcNode.loopEnd = INNO_LOOP.end; srcNode.connect(gain); gain.gain.value = 1; srcNode.start(0); started = true; };
+    const play = async () => { if (S0.leaving || !alive) return;
+      try { if (ac) { startSrc(); if (ac.state !== 'running') await ac.resume(); } else { if (!el) { el = new Audio(INNO_LOOP.src); el.loop = true; } await el.play(); } } catch (e) {}
+      setOn(running()); };
+    if (ac) fetch(INNO_LOOP.src).then((r) => r.arrayBuffer()).then((ab) => new Promise((res, rej) => ac.decodeAudioData(ab, res, rej))).then((b) => { buf = b; if (alive && S0.want) play(); }).catch(() => {});
+    S0.play = play; S0.pause = () => { if (ac) ac.suspend().catch(() => {}); else if (el) el.pause(); setOn(false); };
+    S0.paused = () => !running();
+    S0.fade = (ms) => { if (!running()) return; if (ac) { const t = ac.currentTime; gain.gain.cancelScheduledValues(t); gain.gain.setValueAtTime(gain.gain.value, t); gain.gain.linearRampToValueAtTime(0.0001, t + ms / 1000); setTimeout(() => { if (ac.state === 'running') ac.suspend().catch(() => {}); }, ms + 50); }
+      else if (el) { const t0 = performance.now(), v0 = el.volume; const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); el.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); else el.pause(); }; step(); } };
     play();
-    const first = () => { if (S0.want && a.paused) play(); };
+    const first = () => { if (S0.want && !running()) play(); };
     const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
     const marks = [];
     const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
@@ -3172,7 +3182,7 @@ function Intro({ onDone }) {
     const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
     const eq = () => (eqRef.current ? [...eqRef.current.children] : []);
     const frame = (now) => { if (!alive) return; const dt = Math.min(50, now - last); last = now;
-      let lvl = 0; if (an && !a.paused) { an.getByteFrequencyData(data); let s = 0; for (let i = 2; i < 14; i++) s += data[i]; lvl = s / (12 * 255); eq().forEach((b, i) => { b.style.height = (3 + data[3 + i * 5] / 255 * 11) + 'px'; }); }
+      let lvl = 0; if (an && running()) { an.getByteFrequencyData(data); let s = 0; for (let i = 2; i < 14; i++) s += data[i]; lvl = s / (12 * 255); eq().forEach((b, i) => { b.style.height = (3 + data[3 + i * 5] / 255 * 11) + 'px'; }); }
       pulse += ((lvl > .5 ? Math.min(1, (lvl - .45) * 2.2) : 0) - pulse) * .25;
       const dEl = disc.current; if (dEl) { dEl.style.setProperty('--pulse', pulse.toFixed(3)); if (!reduce && !S0.leaving) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); } }
       ctx.clearRect(0, 0, W, H);
@@ -3181,11 +3191,11 @@ function Intro({ onDone }) {
       marks.forEach((m) => { const k = (now - m.t) / 1400; if (k < 1) { const L = Math.min(W, H) * .32 * Math.min(1, k * 4); for (let i = -1; i <= 1; i++) slash(m.x + i * Math.min(W, H) * .05, m.y + i * 8, L, 13, 'rgba(255,99,57,' + Math.min(1, (1 - k) * 1.1) + ')'); } });
       raf = requestAnimationFrame(frame); };
     raf = requestAnimationFrame(frame);
-    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', first); try { a.pause(); } catch (e) {} try { ac && ac.close(); } catch (e) {} };
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', first); try { el && el.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
   }, []);
   const enter = () => { const S0 = st.current; if (S0.leaving) return; S0.leaving = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (e) {}
     S0.fade && S0.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
-  const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (au.current.paused) { S0.want = true; S0.play(); } else { S0.want = false; S0.pause(); } };
+  const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (S0.paused && S0.paused()) { S0.want = true; S0.play(); } else { S0.want = false; S0.pause && S0.pause(); } };
   return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers">
     <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
     <div class="in2-stage">
@@ -3203,7 +3213,6 @@ function Intro({ onDone }) {
       </div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
-    <audio ref=${au} src="forza-tigers.mp3" preload="auto" loop></audio>
   </div>`;
 }
 
