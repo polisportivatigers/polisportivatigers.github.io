@@ -612,6 +612,14 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .pwipe i{position:absolute;top:-10%;bottom:-10%;display:block;transform:skewX(-18deg);will-change:left}
 
 .mbar .mdot{position:absolute;top:5px;right:16px;width:8px;height:8px;border-radius:50%;background:#2EBE80;box-shadow:0 0 0 2px var(--side)}
+
+/* telefono: l'app è una struttura fissa (pagina che scorre al centro, barra ferma in basso), così la barra non salta più */
+@media (max-width:900px){
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+  .shell{position:fixed;inset:0;display:flex;flex-direction:column;min-height:0}
+  .main{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:28px}
+  .mbar{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;flex:0 0 auto;box-shadow:none}
+}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -1999,7 +2007,7 @@ function Avversari({ arg, go }) {
     ${T && html`<${ScoutPanel} name=${T.name} go=${go}/>`}
     <div class="tablewrap"><table><thead><tr><th>Squadra</th><th class="num">Indice</th><th class="num">Pt/g</th><th class="num">GF/g</th><th class="num">GS/g</th><th>Forma</th><th>Rispetto a noi</th></tr></thead><tbody>
       <tr class="us"><td>Tigers</td><td class="num">${us.index ?? '—'}</td><td class="num">${us.ppg.toFixed(2)}</td><td class="num">${us.gfp.toFixed(1)}</td><td class="num">${us.gap.toFixed(1)}</td><td><div class="row" style="gap:3px;flex-wrap:nowrap">${us.rows.slice(-5).map((r) => html`<span class=${'res ' + r.r}>${r.r}</span>`)}</div></td><td>—</td></tr>
-      ${all.map((p) => html`<tr style="cursor:pointer" onClick=${() => { setSel(p.name); scrollTo({ top: 0, behavior: 'smooth' }); }}><td>${p.name}${scoutFor(p.name) && html` <span class="pill fire" title="Analisi video disponibile"><${Icon} n="video"/>Video</span>`}</td><td class="num"><b>${p.index ?? '—'}</b></td><td class="num">${p.ppg.toFixed(2)}</td><td class="num">${p.gfp.toFixed(1)}</td><td class="num">${p.gap.toFixed(1)}</td><td><div class="row" style="gap:3px;flex-wrap:nowrap">${p.rows.slice(-5).map((r) => html`<span class=${'res ' + r.r}>${r.r}</span>`)}</div></td><td><span class=${'pill ' + verdict(p)[0]}>${verdict(p)[1].split(' · ')[0]}</span></td></tr>`)}
+      ${all.map((p) => html`<tr style="cursor:pointer" onClick=${() => { setSel(p.name); pageTop(true); }}><td>${p.name}${scoutFor(p.name) && html` <span class="pill fire" title="Analisi video disponibile"><${Icon} n="video"/>Video</span>`}</td><td class="num"><b>${p.index ?? '—'}</b></td><td class="num">${p.ppg.toFixed(2)}</td><td class="num">${p.gfp.toFixed(1)}</td><td class="num">${p.gap.toFixed(1)}</td><td><div class="row" style="gap:3px;flex-wrap:nowrap">${p.rows.slice(-5).map((r) => html`<span class=${'res ' + r.r}>${r.r}</span>`)}</div></td><td><span class=${'pill ' + verdict(p)[0]}>${verdict(p)[1].split(' · ')[0]}</span></td></tr>`)}
     </tbody></table></div>
     <details class="drill"><summary><${Icon} n="info"/><b>Come viene calcolata</b><span></span></summary><div class="modal-b"><p>L’indice da 0 a 100 combina punti per partita (50%), differenza reti per partita (30%) e forma nelle ultime tre gare (20%). Lo scarto con l’indice dei Tigers decide il giudizio: oltre 15 punti sopra “più forte”, oltre 15 sotto “più debole”, altrimenti “alla pari”. Con meno di 5 gare giocate l’affidabilità è bassa. I risultati vengono dal portale CSI e dalle correzioni dello staff nella sezione Campionato.</p></div></details>
   </div>`;
@@ -2167,7 +2175,7 @@ function LiveControls({ m, el, go }) {
   const skipLabel = pick && { goal: 'Senza autore', assist: 'Nessuno', penalty: 'Senza autore', sub: 'Annulla' }[pick.kind];
   const exclude = pick && pick.kind === 'assist' ? [pick.scorer] : [];
   const startTimeout = async (side) => { const cur = S.matches[m.id].live; const nl = clone(cur); const N = Date.now(); if (nl.runningSince) { nl.elapsedMs = (nl.elapsedMs || 0) + (N - nl.runningSince); nl.runningSince = null; }
-    nl.timeout = { side, startedAt: N }; nl.events = (nl.events || []).concat([{ id: uid('e'), kind: 'timeout', side, period: nl.period || '1', elapsedMs: Math.round(nl.elapsedMs || 0), createdAt: new Date().toISOString() }]); await saveLive(m, nl); scrollTo({ top: 0, behavior: 'smooth' }); };
+    nl.timeout = { side, startedAt: N }; nl.events = (nl.events || []).concat([{ id: uid('e'), kind: 'timeout', side, period: nl.period || '1', elapsedMs: Math.round(nl.elapsedMs || 0), createdAt: new Date().toISOString() }]); await saveLive(m, nl); pageTop(true); };
   const endPeriod = async () => { const cur = S.matches[m.id].live; if (cur.period === '1') { const nl = clone(cur); if (nl.runningSince) { nl.elapsedMs += Date.now() - nl.runningSince; nl.runningSince = null; } nl.period = '2'; nl.elapsedMs = 0; delete nl.timeout; await saveLive(m, nl); toast('Inizia il 2º tempo: falli azzerati, cronometro da 00:00'); } else setFin(true); };
   const finalize = async () => {
     const cur = S.matches[m.id].live; const [o, t] = liveScore(S.matches[m.id]); const nl = clone(cur); if (nl.runningSince) { nl.elapsedMs += Date.now() - nl.runningSince; nl.runningSince = null; } delete nl.timeout; nl.finished = true; nl.finalizedAt = new Date().toISOString();
@@ -3348,19 +3356,23 @@ const ROUTES = [
 function parseHash() { const h = decodeURIComponent((location.hash || '').slice(1)); const [r, ...rest] = h.split('~'); return { route: ROUTES.some((x) => x[0] === r) ? r : 'home', arg: rest.join('~') || '' }; }
 /* transizione tra le pagine: le tre bande dell'ingresso attraversano la pagina e dietro l'ultima (blu Tigers) c'è già la nuova.
    Si fotografa la pagina vecchia, si disegna la nuova sotto, e la foto della vecchia resta visibile solo davanti alle bande. */
+// torna in cima: sul telefono scorre la zona delle pagine, sul computer la finestra
+function pageTop(smooth) { const m = document.getElementById('main'); const b = smooth ? 'smooth' : 'auto'; if (m && getComputedStyle(m).overflowY === 'auto') m.scrollTo({ top: 0, behavior: b }); scrollTo({ top: 0, behavior: b }); }
 let wiping = false;
 function pageWipe(dir) {
   const main = document.getElementById('main');
   if (!main || wiping || matchMedia('(prefers-reduced-motion: reduce)').matches || document.querySelector('.in2,.trailer,.scrim')) return null;
   const r = main.getBoundingClientRect(), W = r.width, H = innerHeight;
   const ov = document.createElement('div'); ov.className = 'pwipe'; ov.style.cssText = `left:${r.left}px;width:${W}px`;
-  const old = main.cloneNode(true); old.removeAttribute('id'); old.className += ' pwipe-old'; old.style.cssText = `top:${r.top}px;width:${W}px`;
+  const inner = getComputedStyle(main).overflowY === 'auto';
+  const old = main.cloneNode(true); old.removeAttribute('id'); old.className += ' pwipe-old'; old.style.cssText = `top:${r.top}px;width:${W}px` + (inner ? `;height:${r.height}px;min-height:0;overflow:hidden` : '');
   old.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
   // la copia non conserva i valori scelti: li riporto (menu a tendina, campi, caselle)
   const so = main.querySelectorAll('select,input,textarea'), sc = old.querySelectorAll('select,input,textarea'); so.forEach((n, i) => { const c = sc[i]; if (!c) return; if (n.tagName === 'SELECT') c.selectedIndex = n.selectedIndex; else if (n.type === 'checkbox' || n.type === 'radio') c.checked = n.checked; else c.value = n.value; });
   const cols = dir > 0 ? ['var(--blu)', '#C63A12', 'var(--fiamma)'] : ['var(--fiamma)', '#C63A12', 'var(--blu)'];
   ov.appendChild(old); const bands = cols.map((c) => { const i = document.createElement('i'); i.style.background = c; ov.appendChild(i); return i; });
   document.body.appendChild(ov); wiping = true;
+  if (inner) old.scrollTop = main.scrollTop;
   const sk = H * 1.2 * Math.tan(18 * Math.PI / 180), hs = H / 2 * Math.tan(18 * Math.PI / 180), bw = [W * .2, W * .12, W * .16], B = bw[0] + bw[1] + bw[2], DUR = 560;
   const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   return () => { const t0 = performance.now();
@@ -3386,7 +3398,7 @@ function App() {
   useEffect(() => { const b = mbar.current; const on = b && b.querySelector('.on'); if (on) b.scrollTo({ left: on.offsetLeft - (b.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' }); }, [loc.route]);
   useEffect(() => { window.__login = () => { setMenu(false); setLoginOpen(true); }; }, []);
   const [intro, setIntro] = useState(() => { try { return !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return true; } });
-  useEffect(() => { window.__showIntro = () => setIntro(true); let prev = parseHash().route; const f = () => { const nl = parseHash(); const a = ROUTES.findIndex((x) => x[0] === prev), b = ROUTES.findIndex((x) => x[0] === nl.route); const run = nl.route !== prev ? pageWipe(b >= a ? 1 : -1) : null; prev = nl.route; setLoc(nl); setMenu(false); scrollTo(0, 0); if (run) requestAnimationFrame(run); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
+  useEffect(() => { window.__showIntro = () => setIntro(true); let prev = parseHash().route; const f = () => { const nl = parseHash(); const a = ROUTES.findIndex((x) => x[0] === prev), b = ROUTES.findIndex((x) => x[0] === nl.route); const run = nl.route !== prev ? pageWipe(b >= a ? 1 : -1) : null; prev = nl.route; setLoc(nl); setMenu(false); pageTop(false); if (run) requestAnimationFrame(run); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
   const go = (route, arg) => { const h = '#' + route + (arg ? '~' + encodeURIComponent(arg) : ''); if (location.hash === h) { setLoc(parseHash()); } else location.hash = h; };
   const R = ROUTES.find((r) => r[0] === loc.route);
   const View = R[3];
