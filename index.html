@@ -87,10 +87,11 @@ p{margin:0}
   .side.open{display:flex;position:fixed;inset:0;z-index:70;height:auto;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
   .main{padding-top:12px;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   .mtop{display:flex!important}
-  .mbar{display:flex;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--side);padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));border-top:1px solid var(--side-line)}
+  .mbar{box-shadow:0 120px 0 120px var(--side);display:flex;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--side);padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));border-top:1px solid var(--side-line)}
   .mbar::-webkit-scrollbar{display:none}
   .mbar a,.mbar button{flex:0 0 auto;min-width:62px;padding-inline:8px!important;scroll-snap-align:center;position:relative;white-space:nowrap;-webkit-tap-highlight-color:transparent;display:grid;justify-items:center;gap:2px;color:#C9CCE6;text-decoration:none;font-family:var(--f-data);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:none;border:0;padding:6px 2px;border-radius:8px;cursor:pointer}
-  .mbar svg{width:20px;height:20px}
+  .mbar svg{width:27px;height:27px}
+  .mbar a,.mbar button{gap:3px!important;padding-top:7px!important;padding-bottom:6px!important}
   .mbar .on{color:#fff;background:rgba(240,78,35,.9)}
 }
 .mtop{display:none;align-items:center;justify-content:space-between;gap:12px;margin:0 auto 6px;max-width:1160px}
