@@ -615,12 +615,15 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 
 /* telefono: l'app è una struttura fissa (pagina che scorre al centro, barra ferma in basso), così la barra non salta più */
 @media (max-width:900px){
-  html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:var(--side)}
-  .shell{background:var(--bg)}
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
   .shell{position:fixed;inset:0;display:flex;flex-direction:column;min-height:0}
   .main{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:28px}
-  .mbar{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;flex:0 0 auto;box-shadow:0 200px 0 200px var(--side)}
-  .shell{overflow:visible}
+  .mbar{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;flex:0 0 auto;box-shadow:none}
+}
+
+/* app installata (schermata Home): la struttura occupa tutto lo schermo, fino al bordo in basso */
+@media (max-width:900px) and (display-mode:standalone){
+  .shell{bottom:auto;height:100vh;height:100lvh}
 }
 </style>
 <div id="app"></div>
