@@ -7,12 +7,14 @@ compatibility_date = "2024-11-01"
 FB_PROJECT = "quinto-tigers"
 STAFF_EMAIL = "mister@quinto-tigers.app"
 SITE = "https://polisportivatigers.github.io"
-# FB_KEY (chiave pubblica di Firebase, la stessa di config.js), VAPID_PUBLIC e il segreto VAPID_PRIVATE si impostano alla pubblicazione
+FB_KEY = "AIzaSyCtOp0HFW_rx6kuIk-lFxJCx2LLF1P7Fo0"  # chiave pubblica di Firebase, la stessa di config.js
+VAPID_PUBLIC = "BBKjsMkvYGedcnZ-eEyURnCGvBHo34cHTHzz5FW_zsXt-2WqWOQuEq9PGh-N7E5uqvI6T44QIdckgPiBroGyKKA"
+# il segreto VAPID_PRIVATE è salvato solo su Cloudflare
 
 [[d1_databases]]
 binding = "DB"
 database_name = "quinto-push"
-database_id = "DA-IMPOSTARE"
+database_id = "37783e12-7b1e-4f22-975e-91d791c2bb80"
 
 [triggers]
 crons = ["*/15 * * * *"]

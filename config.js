@@ -9,8 +9,8 @@ window.QUINTO_FIREBASE = {
   appId: '1:118646812303:web:4ca1e1f8c1c3e8c9bb0afa',
 };
 
-/* Postino delle notifiche (Cloudflare, piano gratuito): finché è vuoto le notifiche restano nascoste nell'app. */
+/* Postino delle notifiche (Cloudflare, piano gratuito). Anche questi valori sono pubblici: la chiave privata è solo su Cloudflare. */
 window.QUINTO_PUSH = {
-  url: '',
-  vapid: '',
+  url: 'https://quinto-push.quinto-tigers.workers.dev',
+  vapid: 'BBKjsMkvYGedcnZ-eEyURnCGvBHo34cHTHzz5FW_zsXt-2WqWOQuEq9PGh-N7E5uqvI6T44QIdckgPiBroGyKKA',
 };
