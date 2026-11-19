@@ -2591,27 +2591,89 @@ function NostroGioco({ go }) {
 }
 
 /* ===== QUINTO · pagina d'ingresso =====
-   Solo il tasto Entra: sfondo con i graffi, stemma, "Forza Tigers." e transizione con i tre graffi. Nessun audio. */
+   Solo il tasto Entra: sfondo con il campo da calcio a 5 e un'azione dei Tigers, stemma, "Forza Tigers." e transizione con i tre graffi. Nessun audio. */
 
 function Intro({ onDone }) {
   const [phase, setPhase] = useState('');
-  const cv = useRef(), disc = useRef(), leaving = useRef(false);
+  const cv = useRef(), leaving = useRef(false);
   useEffect(() => {
+    // sfondo: campo da calcio a 5 visto dall'alto, cinque Tigers che si passano la palla e chiudono con un tiro in porta
     const c = cv.current, ctx = c.getContext('2d');
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let W = 0, H = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
-    const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
+    let W = 0, H = 0, raf = 0, alive = true, mx = 0, my = 0, vert = true, sc = 1, ox = 0, oy = 0;
+    const L = 40, Wd = 20; // metri: lunghezza e larghezza del campo
+    const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      vert = H >= W; const lw = vert ? Wd : L, lh = vert ? L : Wd; sc = Math.min(W * .92 / lw, H * .9 / lh); ox = (W - lw * sc) / 2; oy = (H - lh * sc) / 2; };
     size(); addEventListener('resize', size);
-    const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
-    const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
+    const move = (e) => { mx = (e.clientX / W - .5); my = (e.clientY / H - .5); };
     addEventListener('pointermove', move);
-    const ANG = 18 * Math.PI / 180;
-    const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
-    const frame = (now) => { if (!alive) return; const dt = Math.min(50, now - last); last = now;
-      const dEl = disc.current; if (dEl && !reduce && !leaving.current) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); }
-      ctx.clearRect(0, 0, W, H);
-      const g = ctx.createRadialGradient(W * .5, H * .42, 0, W * .5, H * .42, Math.max(W, H) * .7); g.addColorStop(0, 'rgba(11,18,87,.92)'); g.addColorStop(1, 'rgba(6,10,51,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      slashes.forEach((s) => { if (!reduce) s.y -= s.sp * dt; if (s.y < -.5) { s.y = 1.5; s.x = Math.random(); } slash((s.x + (mx - .5) * .04 * s.w / 10) * W, s.y * H, s.len * H, s.w, 'rgba(240,78,35,' + s.al + ')'); });
+    // campo: x di traverso (0..20), y lungo il campo (0 = porta che attacchiamo, 40 = la nostra)
+    const P = (x, y) => (vert ? [ox + x * sc, oy + y * sc] : [ox + (L - y) * sc, oy + x * sc]);
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const base = [[10, 37.2], [10, 29], [3.5, 21], [16.5, 21], [10, 11]]; // portiere, centrale, laterali, pivot
+    const opp = [[10, 2.6], [10, 9], [5, 15], [15, 15], [10, 22]];
+    const mk = (b, j) => b.map(([x, y], i) => { const t = [x + (i && j ? rnd(-j, j) : 0), y + (i && j ? rnd(-j, j) : 0)]; return { x: t[0], y: t[1], tx: t[0], ty: t[1] }; });
+    const us = mk(base, 0), them = mk(opp, 0);
+    const ball = { x: 10, y: 29, trail: [], a: 1 };
+    let seq = [], step = 0, t0 = 0, dur = 1, from = null, to = null, flash = 0, phase = 'reset', wait = 0;
+    const plan = () => { // nuova azione: 3-4 passaggi tra i giocatori di movimento, poi il tiro
+      us.forEach((p, i) => { const [bx, by] = base[i]; p.tx = i ? bx + rnd(-2.4, 2.4) : bx; p.ty = i ? by + rnd(-2.5, 2.5) : by; });
+      them.forEach((p, i) => { const [bx, by] = opp[i]; p.tx = i ? bx + rnd(-2, 2) : bx; p.ty = by + (i ? rnd(-1.5, 1.5) : 0); });
+      const n = 3 + (Math.random() < .5 ? 1 : 0); let cur = Math.random() < .5 ? 1 : 0; seq = [cur];
+      for (let k = 0; k < n; k++) { let nx; do { nx = 1 + Math.floor(Math.random() * 4); } while (nx === cur || (k === n - 1 && nx === 1)); seq.push(nx); cur = nx; }
+      step = 0; };
+    const startLeg = (now) => {
+      const a = seq[step], b = seq[step + 1];
+      from = { x: ball.x, y: ball.y };
+      if (b == null) { to = { x: rnd(8.6, 11.4), y: -.4, shot: true }; dur = .55; }
+      else { const q = us[b]; q.tx += rnd(-1.2, 1.2); q.ty -= rnd(.5, 2.2); to = { x: q.tx, y: q.ty, who: b }; dur = .75 + Math.hypot(to.x - from.x, to.y - from.y) * .028; }
+      t0 = now; phase = 'pass'; };
+    const ease = (t) => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    plan(); ball.x = us[seq[0]].x; ball.y = us[seq[0]].y; let last = performance.now(); wait = last + 900;
+    const line = (pts, close) => { ctx.beginPath(); pts.forEach(([x, y], i) => { const [X, Y] = P(x, y); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); if (close) ctx.closePath(); ctx.stroke(); };
+    const arc = (cx, cy, r, a0, a1) => { ctx.beginPath(); for (let k = 0; k <= 32; k++) { const a = a0 + (a1 - a0) * k / 32; const [X, Y] = P(cx + Math.cos(a) * r, cy + Math.sin(a) * r); k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke(); };
+    const area = (gy, dir) => { // area di rigore del futsal: due quarti di cerchio di 6 m uniti da un tratto di 3,16 m
+      const y = gy, a = dir > 0 ? 0 : Math.PI; ctx.beginPath();
+      for (let k = 0; k <= 20; k++) { const t = Math.PI / 2 * k / 20; const [X, Y] = P(8.42 - Math.sin(t) * 6, y + dir * Math.cos(t) * 6); k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+      for (let k = 20; k >= 0; k--) { const t = Math.PI / 2 * k / 20; const [X, Y] = P(11.58 + Math.sin(t) * 6, y + dir * Math.cos(t) * 6); ctx.lineTo(X, Y); }
+      ctx.stroke(); void a; };
+    const dot = (x, y, r, col, glow) => { const [X, Y] = P(x, y); if (glow) { const g = ctx.createRadialGradient(X, Y, 0, X, Y, r * 4); g.addColorStop(0, glow); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, r * 4, 0, 7); ctx.fill(); } ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill(); };
+    const frame = (now) => { if (!alive) return; const dt = Math.min(.05, (now - last) / 1000); last = now;
+      // gioco
+      if (!reduce) {
+        if (phase === 'reset' && now > wait) startLeg(now);
+        if (phase === 'pass') { const k = Math.max(0, Math.min(1, (now - t0) / 1000 / dur)), e = ease(k);
+          const bend = to.shot ? 0 : .12; const nx = -(to.y - from.y) * bend, ny = (to.x - from.x) * bend; // leggera curva
+          ball.x = from.x + (to.x - from.x) * e + nx * Math.sin(Math.PI * e); ball.y = from.y + (to.y - from.y) * e + ny * Math.sin(Math.PI * e);
+          if (k >= 1) { if (to.shot) { flash = 1; phase = 'goal'; wait = now + 1500; } else { step++; startLeg(now + 120); t0 = now + 120; } } }
+        if (phase === 'goal' && now > wait) { plan(); phase = 'back'; wait = now + 1300; }
+        if (phase === 'goal') ball.a = Math.max(0, ball.a - dt * 2.5);
+        if (phase === 'back') { const q = us[seq[0]]; ball.x = q.x; ball.y = q.y + .6; ball.trail.length = 0; ball.a = Math.min(1, ball.a + dt * 1.5); if (now > wait) { phase = 'reset'; wait = now + 300; } }
+        us.forEach((p) => { p.x += (p.tx - p.x) * Math.min(1, dt * 1.6); p.y += (p.ty - p.y) * Math.min(1, dt * 1.6); });
+        them.forEach((p, i) => { const fx = i ? p.tx + (ball.x - 10) * .35 : 10 + (ball.x - 10) * .25, fy = i ? p.ty + (ball.y - p.ty) * .12 : p.ty; p.x += (fx - p.x) * Math.min(1, dt * 1.2); p.y += (fy - p.y) * Math.min(1, dt * 1.2); });
+        if (phase !== 'back') { ball.trail.push([ball.x, ball.y]); if (ball.trail.length > 30) ball.trail.shift(); } else if (ball.trail.length) ball.trail.shift();
+        flash = Math.max(0, flash - dt * .9);
+      }
+      // disegno
+      ctx.setTransform(Math.min(2, devicePixelRatio || 1), 0, 0, Math.min(2, devicePixelRatio || 1), 0, 0);
+      const g = ctx.createRadialGradient(W * .5, H * .45, 0, W * .5, H * .45, Math.max(W, H) * .75); g.addColorStop(0, '#0E1660'); g.addColorStop(1, '#060A33'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.save(); ctx.translate(mx * -14, my * -14);
+      ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(255,255,255,.14)'; ctx.lineJoin = 'round';
+      line([[0, 0], [Wd, 0], [Wd, L], [0, L]], true); line([[0, L / 2], [Wd, L / 2]]); arc(10, 20, 3, 0, Math.PI * 2);
+      area(0, 1); area(L, -1);
+      [[10, 6], [10, 34], [10, 10], [10, 30], [10, 20]].forEach(([x, y]) => dot(x, y, 1.8, 'rgba(255,255,255,.2)'));
+      // porte
+      ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,' + (.18 + flash * .6) + ')'; line([[8.5, 0], [8.5, -1], [11.5, -1], [11.5, 0]]);
+      ctx.strokeStyle = 'rgba(255,255,255,.16)'; line([[8.5, L], [8.5, L + 1], [11.5, L + 1], [11.5, L]]);
+      if (flash > 0) { const [X, Y] = P(10, -.5); const r = sc * (3 + (1 - flash) * 9); const gg = ctx.createRadialGradient(X, Y, 0, X, Y, r); gg.addColorStop(0, 'rgba(240,78,35,' + flash * .55 + ')'); gg.addColorStop(1, 'rgba(240,78,35,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill(); }
+      // scia della palla
+      ctx.lineCap = 'round'; for (let k = 1; k < ball.trail.length; k++) { const a = k / ball.trail.length; ctx.strokeStyle = 'rgba(255,120,80,' + a * .75 * ball.a + ')'; ctx.lineWidth = 1 + a * 4; line([ball.trail[k - 1], ball.trail[k]]); }
+      them.forEach((p) => dot(p.x, p.y, Math.min(8, Math.max(4, sc * .42)), 'rgba(110,130,240,.55)'));
+      us.forEach((p, i) => dot(p.x, p.y, Math.min(9, Math.max(4.5, sc * .48)), i ? '#F04E23' : '#F5C518', i ? 'rgba(240,78,35,.3)' : 'rgba(245,197,24,.25)'));
+      if (ball.a > .02) { ctx.globalAlpha = ball.a; dot(ball.x, ball.y, Math.min(5, Math.max(2.6, sc * .24)), '#fff', 'rgba(255,255,255,.35)'); ctx.globalAlpha = 1; }
+      ctx.restore();
+      // velo dietro i testi per tenerli leggibili
+      const v = ctx.createRadialGradient(W * .5, H * .48, 0, W * .5, H * .48, Math.min(W, H) * .62); v.addColorStop(0, 'rgba(6,10,51,.38)'); v.addColorStop(1, 'rgba(6,10,51,0)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
       raf = requestAnimationFrame(frame); };
     raf = requestAnimationFrame(frame);
     return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); };
@@ -2622,7 +2684,7 @@ function Intro({ onDone }) {
     <div class="in2-stage">
       <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div></div>
       <div class="in2-c">
-        <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
+        <div class="in2-disc"><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
         <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
         <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
       </div>
