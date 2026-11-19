@@ -3164,10 +3164,16 @@ function Intro({ onDone }) {
     let buf = null, srcNode = null, started = false, el = null;
     try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
     try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); gain = ac.createGain(); an = ac.createAnalyser(); an.fftSize = 256; data = new Uint8Array(an.frequencyBinCount); gain.connect(an); an.connect(ac.destination); } catch (e) { ac = null; }
-    const running = () => (ac ? ac.state === 'running' && started : el && !el.paused);
+    const running = () => (el && !el.paused) || !!(ac && ac.state === 'running' && started);
     const startSrc = () => { if (!buf || started || !ac) return; srcNode = ac.createBufferSource(); srcNode.buffer = buf; srcNode.loop = true; srcNode.loopStart = INNO_LOOP.start; srcNode.loopEnd = INNO_LOOP.end; srcNode.connect(gain); gain.gain.value = 1; srcNode.start(0); started = true; };
+    // riserva: lettore audio normale con salto al punto di loop (se l'iPhone non avvia l'audio del browser)
+    const useEl = () => { if (!el) { el = new Audio(INNO_LOOP.src); el.preload = 'auto'; el.setAttribute('playsinline', ''); el.addEventListener('timeupdate', () => { if (el.currentTime >= INNO_LOOP.end) el.currentTime = INNO_LOOP.start + (el.currentTime - INNO_LOOP.end); }); el.addEventListener('ended', () => { el.currentTime = INNO_LOOP.start; el.play().catch(() => {}); }); }
+      if (ac) { try { ac.suspend().catch(() => {}); } catch (e) {} ac = null; }
+      return el.play(); };
     const play = async () => { if (S0.leaving || !alive) return;
-      try { if (ac) { startSrc(); if (ac.state !== 'running') await ac.resume(); } else { if (!el) { el = new Audio(INNO_LOOP.src); el.loop = true; } await el.play(); } } catch (e) {}
+      if (ac) { startSrc(); try { const r = ac.resume(); await Promise.race([r, new Promise((ok) => setTimeout(ok, 500))]); } catch (e) {}
+        if (ac && ac.state !== 'running' && S0.gesture) { try { await useEl(); } catch (e) {} } }
+      else { try { await useEl(); } catch (e) {} }
       setOn(running()); };
     if (ac) fetch(INNO_LOOP.src).then((r) => r.arrayBuffer()).then((ab) => new Promise((res, rej) => ac.decodeAudioData(ab, res, rej))).then((b) => { buf = b; if (alive && S0.want) play(); }).catch(() => {});
     S0.play = play; S0.pause = () => { if (ac) ac.suspend().catch(() => {}); else if (el) el.pause(); setOn(false); };
@@ -3179,7 +3185,7 @@ function Intro({ onDone }) {
     let unlocked = false;
     const first = () => { if (!S0.want || running()) return;
       if (!unlocked) { unlocked = true; try { const u = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAABgAAAykAWlpaWlpaWlpaWlpaWlpaWnt7e3t7e3t7e3t7e3t7e3t7nJycnJycnJycnJycnJycnL29vb29vb29vb29vb29vb293t7e3t7e3t7e3t7e3t7e3t7/////////////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQCowAAAAAAAAMpso+sIAAAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU='); u.play().catch(() => {}); } catch (e) {} }
-      play(); };
+      S0.gesture = true; play(); };
     const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
     const marks = [];
     const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
