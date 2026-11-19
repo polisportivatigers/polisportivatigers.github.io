@@ -1138,13 +1138,21 @@ function Modal({ title, onClose, dirty, wide, children, footer }) {
   const [ask, setAsk] = useState(false);
   const close = () => { if (dirty) setAsk(true); else onClose(); };
   useEffect(() => { const k = (e) => { if (e.key === 'Escape') close(); }; addEventListener('keydown', k); return () => removeEventListener('keydown', k); });
-  return html`<div class="scrim" onMouseDown=${(e) => { if (e.target === e.currentTarget) close(); }}>
+  return html`<${Portal}><div class="scrim" onMouseDown=${(e) => { if (e.target === e.currentTarget) close(); }}>
     <div class=${'modal' + (wide ? ' wide' : '')} role="dialog" aria-modal="true" aria-label=${title}>
       <div class="modal-h"><h3>${title}</h3><button class="iconbtn" aria-label="Chiudi finestra" onClick=${close}><${Icon} n="x"/></button></div>
       ${ask && html`<div class="modal-b" style="padding-bottom:0"><div class="confirm"><b>Modifiche non salvate.</b><span>Vuoi continuare a modificare o chiudere e scartare le modifiche?</span><div class="row"><button class="btn line sm" onClick=${() => setAsk(false)}>Continua a modificare</button><button class="btn danger sm" onClick=${onClose}>Scarta e chiudi</button></div></div></div>`}
       <div class="modal-b">${children}</div>
       ${footer && html`<div class="modal-f">${footer}</div>`}
-    </div></div>`;
+    </div></div></${Portal}>`;
+}
+/* le finestre si disegnano fuori dalla pagina, direttamente nel documento:
+   su iPhone la zona della pagina che scorre le tagliava all'altezza della barra delle icone */
+function Portal({ children }) {
+  const box = useMemo(() => document.createElement('div'), []);
+  useEffect(() => { document.body.appendChild(box); return () => { render(null, box); box.remove(); }; }, []);
+  useEffect(() => { render(children, box); });
+  return null;
 }
 /* conferma inline per azioni distruttive */
 function ConfirmBtn({ label, confirmLabel, onConfirm, cls }) {
@@ -1341,7 +1349,7 @@ function Rosa() {
     <div class="toolbar">
       <${Search} id="q-rosa" value=${q} onInput=${setQ} placeholder="Cerca per nome o nick"/>
       <select aria-label="Filtra per stato" value=${st} onChange=${(e) => setSt(e.target.value)}><option value="active">Rosa attiva</option><option value="injured">Infortunati</option><option value="suspended">Squalificati</option><option value="archived">Archiviati</option><option value="all">Tutti</option></select>
-      <select aria-label="Filtra per ruolo" value=${role} onChange=${(e) => setRole(e.target.value)}><option value="">Tutti i ruoli</option>${ROLES.map((r) => html`<option>${r}</option>`)}</select>
+      <select aria-label="Filtra per ruolo" value=${role} onChange=${(e) => setRole(e.target.value)}><option value="">Tutti i ruoli</option>${ROLES.map((r) => html`<option value=${r}>${r}</option>`)}</select>
       <button class="btn fire" onClick=${() => setEdit({})}><${Icon} n="plus"/>Nuovo giocatore</button>
     </div>
     ${list.length ? html`<div class="pgrid">${list.map((p) => { const s = stats[p.id] || {}; return html`
@@ -1385,7 +1393,7 @@ function PlayerForm({ p, onClose }) {
         <${Field} label="Nome e cognome *"><input id="pf-name" required value=${f.name || ''} onInput=${(e) => up('name', e.target.value)} placeholder="Come si chiama?"/></${Field}>
         <${Field} label="Nick / soprannome" hint="Compare accanto al nome, nella lavagna e nel live."><input id="pf-nick" value=${f.nick || ''} onInput=${(e) => up('nick', e.target.value)} placeholder="Es. Saro"/></${Field}>
         <${Field} label="Numero di maglia"><input id="pf-num" type="number" min="1" max="99" value=${f.number ?? ''} onInput=${(e) => up('number', e.target.value)} placeholder="Da assegnare"/></${Field}>
-        <${Field} label="Ruolo"><select id="pf-role" value=${f.role || ''} onChange=${(e) => up('role', e.target.value)}><option value="">Da definire</option>${ROLES.map((r) => html`<option>${r}</option>`)}</select></${Field}>
+        <${Field} label="Ruolo"><select id="pf-role" value=${f.role || ''} onChange=${(e) => up('role', e.target.value)}><option value="">Da definire</option>${ROLES.map((r) => html`<option value=${r}>${r}</option>`)}</select></${Field}>
         <${Field} label="Piede"><select id="pf-foot" value=${f.foot || ''} onChange=${(e) => up('foot', e.target.value)}><option value="">—</option><option>destro</option><option>sinistro</option><option>entrambi</option></select></${Field}>
         <${Field} label="Scadenza certificato medico"><input id="pf-cert" type="date" value=${f.certExpiry || ''} onInput=${(e) => up('certExpiry', e.target.value)}/></${Field}>
         <label class="check full"><input type="checkbox" checked=${!!f.registered} onChange=${(e) => up('registered', e.target.checked)}/>Tesseramento CSI verificato</label>
@@ -1525,7 +1533,7 @@ function Calendario({ go }) {
     <${ReadOnly}/>
     <div class="toolbar">
       <${Search} id="q-cal" value=${q} onInput=${setQ} placeholder="Cerca avversario"/>
-      <select aria-label="Filtra per fase" value=${phase} onChange=${(e) => setPhase(e.target.value)}><option value="">Tutte le fasi</option>${Object.keys(PHASES).map((p) => html`<option>${p}</option>`)}</select>
+      <select aria-label="Filtra per fase" value=${phase} onChange=${(e) => setPhase(e.target.value)}><option value="">Tutte le fasi</option>${Object.keys(PHASES).map((p) => html`<option value=${p}>${p}</option>`)}</select>
       <select aria-label="Stato partite" value=${stat} onChange=${(e) => setStat(e.target.value)}><option value="">Tutti gli stati</option><option value="scheduled">In programma</option><option value="postponed">Rinviate</option><option value="played">Giocate</option><option value="cancelled">Annullate</option></select>
     </div>
     <div class="card" style="padding:6px 14px">
@@ -1581,7 +1589,7 @@ function MatchForm({ m, onClose }) {
     <form class="form" onSubmit=${save}>
       <div class="fgrid">
         <${Field} label="Avversario *" full><input required value=${f.opponent || ''} onInput=${(e) => up('opponent', e.target.value)} placeholder="Nome della squadra avversaria"/></${Field}>
-        <${Field} label="Fase"><select value=${f.phase} onChange=${(e) => up('phase', e.target.value)}>${Object.keys(PHASES).map((p) => html`<option>${p}</option>`)}</select></${Field}>
+        <${Field} label="Fase"><select value=${f.phase} onChange=${(e) => up('phase', e.target.value)}>${Object.keys(PHASES).map((p) => html`<option value=${p}>${p}</option>`)}</select></${Field}>
         <${Field} label="Giornata / turno"><input value=${f.round || ''} onInput=${(e) => up('round', e.target.value)} placeholder="Es. 6ª · Andata"/></${Field}>
         <${Field} label="Dove giochiamo?"><${Seg} value=${f.home} onChange=${(v) => up('home', v)} options=${[[true, 'In casa'], [false, 'In trasferta']]}/></${Field}>
         <${Field} label="Stato della gara"><select value=${f.status} onChange=${(e) => up('status', e.target.value)}><option value="scheduled">In programma</option><option value="postponed">Rinvio / recupero</option><option value="played">Giocata</option><option value="cancelled">Annullata</option></select></${Field}>
@@ -3345,7 +3353,7 @@ function ExerciseLib() {
   let list = EXERCISES; if (area) list = list.filter((e) => e.area === area); if (n) list = list.filter((e) => e.min <= +n);
   list = sortBy(list, (e) => (fav.includes(e.id) ? 0 : 1));
   return html`<div class="stack" style="gap:16px">
-    <div class="toolbar"><select aria-label="Obiettivo esercizi" value=${area} onChange=${(e) => setArea(e.target.value)}><option value="">Tutti gli obiettivi</option>${[...new Set(EXERCISES.map((e) => e.area))].map((a) => html`<option>${a}</option>`)}</select>
+    <div class="toolbar"><select aria-label="Obiettivo esercizi" value=${area} onChange=${(e) => setArea(e.target.value)}><option value="">Tutti gli obiettivi</option>${[...new Set(EXERCISES.map((e) => e.area))].map((a) => html`<option value=${a}>${a}</option>`)}</select>
       <select aria-label="Giocatori disponibili" value=${n} onChange=${(e) => setN(e.target.value)}><option value="">Numero giocatori libero</option>${[4, 6, 8, 10, 12].map((x) => html`<option value=${x}>${x} giocatori disponibili</option>`)}</select></div>
     <div class="grid g2">${list.map((e) => { const v = VIDEOS[{ activation: 'warm', support: 'passing', pivot: 'pivot', transition: 'transition', cover: 'defence', press: 'defence', restart: 'control', keeper: 'keeper', game: 'passing', reset: 'warm' }[e.id]]; return html`
       <article class="card stack">
@@ -3562,7 +3570,7 @@ function Impostazioni() {
         ${S.canWrite ? html`<div class="fgrid">
           <${Field} label="Nome squadra" full><input value=${f.teamName} onInput=${(e) => up('teamName', e.target.value)}/></${Field}>
           <${Field} label="Stagione"><input value=${f.season} onInput=${(e) => up('season', e.target.value)}/></${Field}>
-          <${Field} label="Fase attuale"><select value=${f.currentPhase} onChange=${(e) => up('currentPhase', e.target.value)}>${Object.keys(PHASES).map((p) => html`<option>${p}</option>`)}<option>Archivio</option></select></${Field}>
+          <${Field} label="Fase attuale"><select value=${f.currentPhase} onChange=${(e) => up('currentPhase', e.target.value)}>${Object.keys(PHASES).map((p) => html`<option value=${p}>${p}</option>`)}<option>Archivio</option></select></${Field}>
           <${Field} label="Categoria"><input value=${f.category} onInput=${(e) => up('category', e.target.value)}/></${Field}>
           <${Field} label="Comitato"><input value=${f.committee} onInput=${(e) => up('committee', e.target.value)}/></${Field}>
           <${Field} label="Campo di casa" full><input value=${f.ground} onInput=${(e) => up('ground', e.target.value)}/></${Field}>
