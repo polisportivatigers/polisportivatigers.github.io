@@ -575,6 +575,19 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2-sound.ask{color:#fff;border-color:var(--fiamma);background:rgba(240,78,35,.18);animation:in2ask 1.4s ease-in-out infinite}
 @keyframes in2ask{50%{background:rgba(240,78,35,.38)}}
 @media (prefers-reduced-motion:reduce){.in2-sound.ask{animation:none}}
+/* ingresso "Accendi il palazzetto" */
+.in2{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.in2 .in2-sound{opacity:0;pointer-events:none;transition:opacity .5s}
+.in2.lit .in2-sound{opacity:1;pointer-events:auto}
+.in2 .in2-disc{transition:filter .8s ease,box-shadow .1s linear;box-shadow:0 0 0 calc(8px + var(--p,0)*14px) rgba(240,78,35,calc(.08 + var(--p,0)*.3)),0 30px 60px -20px rgba(0,0,0,.6)}
+.in2.dark .in2-disc{filter:brightness(.55) saturate(.6)}
+.in2 .in2-h,.in2 .in2-tag{transition:opacity .8s,filter .8s}
+.in2.dark .in2-h,.in2.dark .in2-tag{opacity:.55;filter:saturate(.5)}
+.in2-call{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:10px 18px;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.45);color:#FFE7A0;font-family:var(--f-data);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:14px;animation:in2call 1.6s ease-in-out infinite;transition:opacity .4s,transform .4s}
+.in2-call svg{width:18px;height:18px}
+@keyframes in2call{50%{background:rgba(245,197,24,.24);box-shadow:0 0 0 8px rgba(245,197,24,.06)}}
+.in2.lit .in2-call{opacity:0;transform:translateY(8px);pointer-events:none}
+@media (prefers-reduced-motion:reduce){.in2-call{animation:none}}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -2590,107 +2603,120 @@ function NostroGioco({ go }) {
   </div>`;
 }
 
-/* ===== QUINTO · pagina d'ingresso =====
-   Solo il tasto Entra: sfondo con il campo da calcio a 5 e un'azione dei Tigers, stemma, "Forza Tigers." e transizione con i tre graffi. Nessun audio. */
+/* ===== QUINTO · pagina d'ingresso: "Accendi il palazzetto" =====
+   All'apertura il palazzetto è al buio. Al primo tocco (o subito, dove il telefono permette l'audio automatico)
+   i quattro fari si accendono, parte l'inno (intro una volta, poi coro e drop in loop) e i Tigers giocano un'azione.
+   Entra funziona sempre e sfuma l'inno. Un solo lettore audio; su iPhone (volume fisso) la sfumatura passa
+   dall'audio del browser, creato dentro il tocco. */
+
+const INNO = { src: 'inno-loop.mp3', start:12.2657,end:66.9255,beats:[0.7, 1.39, 2.07, 2.74, 3.44, 4.11, 4.78, 5.46, 6.18, 6.85, 7.52, 8.2, 8.89, 9.57, 10.24, 10.94, 11.61, 12.28, 12.96, 13.65, 14.33, 15.02, 15.72, 16.39, 17.07, 17.76, 18.46, 19.16, 19.81, 20.48, 21.15, 21.85, 22.52, 23.22, 23.89, 24.59, 25.26, 25.94, 26.61, 27.28, 27.98, 28.68, 29.35, 30.02, 30.72, 31.42, 32.09, 32.79, 33.46, 34.16, 34.83, 35.53, 36.2, 36.9, 37.57, 38.24, 38.94, 39.61, 40.31, 40.98, 41.68, 42.35, 43.03, 43.72, 44.4, 45.09, 45.77, 46.46, 47.11, 47.81, 48.48, 49.18, 49.85, 50.55, 51.22, 51.92, 52.59, 53.27, 53.94, 54.64, 55.31, 56.01, 56.68, 57.38, 58.05, 58.75, 59.42, 60.09, 60.77, 61.46, 62.14, 62.83, 63.51, 64.18, 64.88, 65.55, 66.22],energy:[0.05, 0.28, 0.75, 0.44, 0.54, 0.3, 0.33, 0.43, 0.34, 0.39, 0.44, 0.92, 0.86, 1.0, 0.75, 0.69, 0.38, 0.48, 0.25, 0.4, 0.22, 0.31, 0.57, 0.7, 0.86, 0.78, 0.77, 0.63, 0.45, 0.7, 0.7, 0.44, 0.65, 0.62, 0.51, 0.63, 0.58, 0.49, 0.34, 0.45, 0.46, 0.49, 0.46, 0.54, 0.58, 0.85, 0.8, 0.78, 0.59, 0.57, 0.73, 0.77, 0.71, 0.79, 0.72, 0.58, 0.72, 0.57, 0.59, 0.49, 0.63, 0.58, 0.49, 0.63, 0.52, 0.6, 0.45, 0.61, 0.44, 0.65, 0.59, 0.59, 0.61, 0.56, 0.65, 0.57, 0.64, 0.61, 0.63, 0.39, 0.65, 0.52, 0.68, 0.65, 0.69, 0.61, 0.58, 0.57, 0.7, 1.0, 0.76, 0.75, 0.82, 0.81, 0.88, 0.73, 1.0, 1.0, 0.75, 0.8, 0.89, 0.75, 0.77, 0.93, 0.89, 0.85, 0.76, 1.0, 0.97, 0.93, 0.7, 0.76, 0.79, 0.73, 1.0, 1.0, 1.0, 0.69, 0.88, 0.86, 0.75, 0.69, 0.78, 0.87, 0.82, 0.79, 1.0, 0.86, 0.71, 0.77, 0.77, 0.7, 0.51, 0.6]};
 
 function Intro({ onDone }) {
-  const [phase, setPhase] = useState('');
-  const cv = useRef(), leaving = useRef(false);
+  const [phase, setPhase] = useState(''), [lit, setLit] = useState(false), [on, setOn] = useState(false);
+  const cv = useRef(), disc = useRef(), eqRef = useRef(), auRef = useRef(), S0 = useRef({});
   useEffect(() => {
-    // sfondo: campo da calcio a 5 visto dall'alto, cinque Tigers che si passano la palla e chiudono con un tiro in porta
-    const c = cv.current, ctx = c.getContext('2d');
+    const cvEl = cv.current, ctx = cvEl.getContext('2d'), discEl = disc.current, au = auRef.current;
+    const eqb = () => (eqRef.current ? [...eqRef.current.children] : []);
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let W = 0, H = 0, raf = 0, alive = true, mx = 0, my = 0, vert = true, sc = 1, ox = 0, oy = 0;
-    const L = 40, Wd = 20; // metri: lunghezza e larghezza del campo
-    const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-      vert = H >= W; const lw = vert ? Wd : L, lh = vert ? L : Wd; sc = Math.min(W * .92 / lw, H * .9 / lh); ox = (W - lw * sc) / 2; oy = (H - lh * sc) / 2; };
-    size(); addEventListener('resize', size);
-    const move = (e) => { mx = (e.clientX / W - .5); my = (e.clientY / H - .5); };
-    addEventListener('pointermove', move);
-    // campo: x di traverso (0..20), y lungo il campo (0 = porta che attacchiamo, 40 = la nostra)
-    const P = (x, y) => (vert ? [ox + x * sc, oy + y * sc] : [ox + (L - y) * sc, oy + x * sc]);
-    const rnd = (a, b) => a + Math.random() * (b - a);
-    const base = [[10, 37.2], [10, 29], [3.5, 21], [16.5, 21], [10, 11]]; // portiere, centrale, laterali, pivot
-    const opp = [[10, 2.6], [10, 9], [5, 15], [15, 15], [10, 22]];
-    const mk = (b, j) => b.map(([x, y], i) => { const t = [x + (i && j ? rnd(-j, j) : 0), y + (i && j ? rnd(-j, j) : 0)]; return { x: t[0], y: t[1], tx: t[0], ty: t[1] }; });
-    const us = mk(base, 0), them = mk(opp, 0);
-    const ball = { x: 10, y: 29, trail: [], a: 1 };
-    let seq = [], step = 0, t0 = 0, dur = 1, from = null, to = null, flash = 0, phase = 'reset', wait = 0;
-    const plan = () => { // nuova azione: 3-4 passaggi tra i giocatori di movimento, poi il tiro
-      us.forEach((p, i) => { const [bx, by] = base[i]; p.tx = i ? bx + rnd(-2.4, 2.4) : bx; p.ty = i ? by + rnd(-2.5, 2.5) : by; });
-      them.forEach((p, i) => { const [bx, by] = opp[i]; p.tx = i ? bx + rnd(-2, 2) : bx; p.ty = by + (i ? rnd(-1.5, 1.5) : 0); });
-      const n = 3 + (Math.random() < .5 ? 1 : 0); let cur = Math.random() < .5 ? 1 : 0; seq = [cur];
-      for (let k = 0; k < n; k++) { let nx; do { nx = 1 + Math.floor(Math.random() * 4); } while (nx === cur || (k === n - 1 && nx === 1)); seq.push(nx); cur = nx; }
-      step = 0; };
-    const startLeg = (now) => {
-      const a = seq[step], b = seq[step + 1];
-      from = { x: ball.x, y: ball.y };
-      if (b == null) { to = { x: rnd(8.6, 11.4), y: -.4, shot: true }; dur = .55; }
-      else { const q = us[b]; q.tx += rnd(-1.2, 1.2); q.ty -= rnd(.5, 2.2); to = { x: q.tx, y: q.ty, who: b }; dur = .75 + Math.hypot(to.x - from.x, to.y - from.y) * .028; }
-      t0 = now; phase = 'pass'; };
-    const ease = (t) => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-    plan(); ball.x = us[seq[0]].x; ball.y = us[seq[0]].y; let last = performance.now(); wait = last + 900;
-    const line = (pts, close) => { ctx.beginPath(); pts.forEach(([x, y], i) => { const [X, Y] = P(x, y); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); if (close) ctx.closePath(); ctx.stroke(); };
-    const arc = (cx, cy, r, a0, a1) => { ctx.beginPath(); for (let k = 0; k <= 32; k++) { const a = a0 + (a1 - a0) * k / 32; const [X, Y] = P(cx + Math.cos(a) * r, cy + Math.sin(a) * r); k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke(); };
-    const area = (gy, dir) => { // area di rigore del futsal: due quarti di cerchio di 6 m uniti da un tratto di 3,16 m
-      const y = gy, a = dir > 0 ? 0 : Math.PI; ctx.beginPath();
-      for (let k = 0; k <= 20; k++) { const t = Math.PI / 2 * k / 20; const [X, Y] = P(8.42 - Math.sin(t) * 6, y + dir * Math.cos(t) * 6); k ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
-      for (let k = 20; k >= 0; k--) { const t = Math.PI / 2 * k / 20; const [X, Y] = P(11.58 + Math.sin(t) * 6, y + dir * Math.cos(t) * 6); ctx.lineTo(X, Y); }
-      ctx.stroke(); void a; };
-    const dot = (x, y, r, col, glow) => { const [X, Y] = P(x, y); if (glow) { const g = ctx.createRadialGradient(X, Y, 0, X, Y, r * 4); g.addColorStop(0, glow); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, r * 4, 0, 7); ctx.fill(); } ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill(); };
-    const frame = (now) => { if (!alive) return; const dt = Math.min(.05, (now - last) / 1000); last = now;
-      // gioco
-      if (!reduce) {
-        if (phase === 'reset' && now > wait) startLeg(now);
-        if (phase === 'pass') { const k = Math.max(0, Math.min(1, (now - t0) / 1000 / dur)), e = ease(k);
-          const bend = to.shot ? 0 : .12; const nx = -(to.y - from.y) * bend, ny = (to.x - from.x) * bend; // leggera curva
-          ball.x = from.x + (to.x - from.x) * e + nx * Math.sin(Math.PI * e); ball.y = from.y + (to.y - from.y) * e + ny * Math.sin(Math.PI * e);
-          if (k >= 1) { if (to.shot) { flash = 1; phase = 'goal'; wait = now + 1500; } else { step++; startLeg(now + 120); t0 = now + 120; } } }
-        if (phase === 'goal' && now > wait) { plan(); phase = 'back'; wait = now + 1300; }
-        if (phase === 'goal') ball.a = Math.max(0, ball.a - dt * 2.5);
-        if (phase === 'back') { const q = us[seq[0]]; ball.x = q.x; ball.y = q.y + .6; ball.trail.length = 0; ball.a = Math.min(1, ball.a + dt * 1.5); if (now > wait) { phase = 'reset'; wait = now + 300; } }
-        us.forEach((p) => { p.x += (p.tx - p.x) * Math.min(1, dt * 1.6); p.y += (p.ty - p.y) * Math.min(1, dt * 1.6); });
-        them.forEach((p, i) => { const fx = i ? p.tx + (ball.x - 10) * .35 : 10 + (ball.x - 10) * .25, fy = i ? p.ty + (ball.y - p.ty) * .12 : p.ty; p.x += (fx - p.x) * Math.min(1, dt * 1.2); p.y += (fy - p.y) * Math.min(1, dt * 1.2); });
-        if (phase !== 'back') { ball.trail.push([ball.x, ball.y]); if (ball.trail.length > 30) ball.trail.shift(); } else if (ball.trail.length) ball.trail.shift();
-        flash = Math.max(0, flash - dt * .9);
-      }
-      // disegno
-      ctx.setTransform(Math.min(2, devicePixelRatio || 1), 0, 0, Math.min(2, devicePixelRatio || 1), 0, 0);
-      const g = ctx.createRadialGradient(W * .5, H * .45, 0, W * .5, H * .45, Math.max(W, H) * .75); g.addColorStop(0, '#0E1660'); g.addColorStop(1, '#060A33'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      ctx.save(); ctx.translate(mx * -14, my * -14);
-      ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(255,255,255,.14)'; ctx.lineJoin = 'round';
-      line([[0, 0], [Wd, 0], [Wd, L], [0, L]], true); line([[0, L / 2], [Wd, L / 2]]); arc(10, 20, 3, 0, Math.PI * 2);
-      area(0, 1); area(L, -1);
-      [[10, 6], [10, 34], [10, 10], [10, 30], [10, 20]].forEach(([x, y]) => dot(x, y, 1.8, 'rgba(255,255,255,.2)'));
-      // porte
-      ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,' + (.18 + flash * .6) + ')'; line([[8.5, 0], [8.5, -1], [11.5, -1], [11.5, 0]]);
-      ctx.strokeStyle = 'rgba(255,255,255,.16)'; line([[8.5, L], [8.5, L + 1], [11.5, L + 1], [11.5, L]]);
-      if (flash > 0) { const [X, Y] = P(10, -.5); const r = sc * (3 + (1 - flash) * 9); const gg = ctx.createRadialGradient(X, Y, 0, X, Y, r); gg.addColorStop(0, 'rgba(240,78,35,' + flash * .55 + ')'); gg.addColorStop(1, 'rgba(240,78,35,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill(); }
-      // scia della palla
-      ctx.lineCap = 'round'; for (let k = 1; k < ball.trail.length; k++) { const a = k / ball.trail.length; ctx.strokeStyle = 'rgba(255,120,80,' + a * .75 * ball.a + ')'; ctx.lineWidth = 1 + a * 4; line([ball.trail[k - 1], ball.trail[k]]); }
-      them.forEach((p) => dot(p.x, p.y, Math.min(8, Math.max(4, sc * .42)), 'rgba(110,130,240,.55)'));
-      us.forEach((p, i) => dot(p.x, p.y, Math.min(9, Math.max(4.5, sc * .48)), i ? '#F04E23' : '#F5C518', i ? 'rgba(240,78,35,.3)' : 'rgba(245,197,24,.25)'));
-      if (ball.a > .02) { ctx.globalAlpha = ball.a; dot(ball.x, ball.y, Math.min(5, Math.max(2.6, sc * .24)), '#fff', 'rgba(255,255,255,.35)'); ctx.globalAlpha = 1; }
-      ctx.restore();
-      // velo dietro i testi per tenerli leggibili
-      const v = ctx.createRadialGradient(W * .5, H * .48, 0, W * .5, H * .48, Math.min(W, H) * .62); v.addColorStop(0, 'rgba(6,10,51,.38)'); v.addColorStop(1, 'rgba(6,10,51,0)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
-      raf = requestAnimationFrame(frame); };
+    let alive = true, raf = 0, ac = null, gain = null, want = true, leaving = false, lit = false, litAt = 0;
+    let volOK = true; try { au.volume = .5; volOK = Math.abs(au.volume - .5) < .01; au.volume = 1; } catch (e) { volOK = false; }
+    const wrap = () => { if (au.currentTime >= INNO.end) au.currentTime = INNO.start + (au.currentTime - INNO.end); };
+    const lights = () => { if (lit) return; lit = true; litAt = performance.now(); kick = litAt + 1300; setLit(true); };
+    const onPlaying = () => { lights(); setOn(true); }, onPause = () => setOn(false);
+    au.addEventListener('timeupdate', wrap); au.addEventListener('playing', onPlaying); au.addEventListener('pause', onPause);
+    const graph = () => { if (ac || volOK) return; try { const AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); const s = ac.createMediaElementSource(au); gain = ac.createGain(); s.connect(gain); gain.connect(ac.destination); } catch (e) { ac = null; gain = null; } };
+    const play = (touch) => { if (leaving) return; want = true; if (touch) graph(); if (ac && ac.state !== 'running') ac.resume().catch(() => {}); if (gain) gain.gain.value = 1; else if (volOK) au.volume = 1;
+      const p = au.play(); if (p && p.catch) p.catch(() => { if (touch) lights(); }); };
+    const fade = (ms) => { leaving = true; if (au.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : au.volume; const st = () => { const k = Math.min(1, (performance.now() - t0) / ms), v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else if (volOK) au.volume = v; if (k < 1) requestAnimationFrame(st); else au.pause(); }; st(); };
+    Object.assign(S0.current, {
+      tap: () => { if (leaving) return; if (want && au.paused) play(true); else lights(); },
+      toggle: () => { if (au.paused) play(true); else { want = false; au.pause(); } },
+      fade,
+    });
+let W=0,H=0,vert=true,sc=1,ox=0,oy=0,mx=0,my=0;const Lm=40,Wm=20;
+function size(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cvEl.width=W*d;cvEl.height=H*d;ctx.setTransform(d,0,0,d,0,0);vert=H>=W;const lw=vert?Wm:Lm,lh=vert?Lm:Wm;sc=Math.min(W*.92/lw,H*.9/lh);ox=(W-lw*sc)/2;oy=(H-lh*sc)/2}
+addEventListener('resize',size);size();
+const move=(e)=>{mx=e.clientX/W-.5;my=e.clientY/H-.5};addEventListener('pointermove',move);
+const P=(x,y)=>vert?[ox+x*sc,oy+y*sc]:[ox+(Lm-y)*sc,oy+x*sc];
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const base=[[10,37.2],[10,29],[3.5,21],[16.5,21],[10,11]],opp=[[10,2.6],[10,9],[5,15],[15,15],[10,22]];
+const us=base.map(([x,y])=>({x,y,tx:x,ty:y})),them=opp.map(([x,y])=>({x,y,tx:x,ty:y}));
+const ball={x:10,y:20,trail:[],a:1};let seq=[],step=0,t0=0,dur=1,from=null,to=null,flash=0,ph='wait',wait=0,kick=Infinity;
+function plan(){us.forEach((p,i)=>{const[bx,by]=base[i];p.tx=i?bx+rnd(-2.4,2.4):bx;p.ty=i?by+rnd(-2.5,2.5):by});them.forEach((p,i)=>{const[bx,by]=opp[i];p.tx=i?bx+rnd(-2,2):bx;p.ty=by+(i?rnd(-1.5,1.5):0)});
+ const n=3+(Math.random()<.5?1:0);let cur=Math.random()<.5?1:0;seq=[cur];for(let k=0;k<n;k++){let nx;do{nx=1+Math.floor(Math.random()*4)}while(nx===cur||(k===n-1&&nx===1));seq.push(nx);cur=nx}step=0}
+function leg(now){const b=seq[step+1];from={x:ball.x,y:ball.y};if(b==null){to={x:rnd(8.6,11.4),y:-.4,shot:true};dur=.55}else{const q=us[b];q.tx+=rnd(-1.2,1.2);q.ty-=rnd(.5,2.2);to={x:q.tx,y:q.ty};dur=.75+Math.hypot(to.x-from.x,to.y-from.y)*.028}t0=now;ph='pass'}
+const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+plan();
+// calcio d'inizio: la palla parte dal centro verso il primo giocatore dell'azione
+function line(pts,close){ctx.beginPath();pts.forEach(([x,y],i)=>{const[X,Y]=P(x,y);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y)});if(close)ctx.closePath();ctx.stroke()}
+function arc(cx,cy,r){ctx.beginPath();for(let k=0;k<=40;k++){const a=Math.PI*2*k/40;const[X,Y]=P(cx+Math.cos(a)*r,cy+Math.sin(a)*r);k?ctx.lineTo(X,Y):ctx.moveTo(X,Y)}ctx.stroke()}
+function area(y,dir){ctx.beginPath();for(let k=0;k<=20;k++){const t=Math.PI/2*k/20;const[X,Y]=P(8.42-Math.sin(t)*6,y+dir*Math.cos(t)*6);k?ctx.lineTo(X,Y):ctx.moveTo(X,Y)}for(let k=20;k>=0;k--){const t=Math.PI/2*k/20;const[X,Y]=P(11.58+Math.sin(t)*6,y+dir*Math.cos(t)*6);ctx.lineTo(X,Y)}ctx.stroke()}
+function dot(x,y,r,col,glow){const[X,Y]=P(x,y);if(glow){const g=ctx.createRadialGradient(X,Y,0,X,Y,r*4);g.addColorStop(0,glow);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(X,Y,r*4,0,7);ctx.fill()}ctx.fillStyle=col;ctx.beginPath();ctx.arc(X,Y,r,0,7);ctx.fill()}
+function pulseAt(t){if(!(t>=0))return 0;const b=INNO.beats;let lo=0,hi=b.length-1,i=-1;while(lo<=hi){const m=(lo+hi)>>1;if(b[m]<=t){i=m;lo=m+1}else hi=m-1}if(i<0)return 0;const e=INNO.energy[Math.min(INNO.energy.length-1,Math.floor(t*2))]||0;return Math.exp(-(t-b[i])*7)*Math.max(0,e-.35)/.65}
+// fari: quattro angoli che si accendono uno dopo l'altro
+const lamps=[[0,0],[1,0],[0,1],[1,1]];
+let last=performance.now(),pulse=0,light=.22;
+function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last=now;
+ const since=lit?(now-litAt)/1000:-1;
+ const lampOn=lamps.map((_,i)=>since>i*.16?1:0);
+ const target=lit?1:.22;light+=(target-light)*Math.min(1,dt*(lit?2.2:1));
+ const t=!au.paused?au.currentTime:-1,pt=pulseAt(t);pulse+=(pt-pulse)*(pt>pulse?.6:.2);
+ discEl.style.setProperty('--p',pulse.toFixed(3));
+ eqb().forEach((b,i)=>{b.style.height=(!au.paused?3+11*Math.min(1,pulseAt(t-i*.06)+.15+.25*Math.abs(Math.sin(now/180+i))):3)+'px'});
+ if(!reduce){
+  if(ph==='wait'&&lit&&now>kick){ball.x=10;ball.y=20;ball.a=1;ball.trail.length=0;from={x:10,y:20};const q=us[seq[0]];to={x:q.x,y:q.y};dur=.9;t0=now;ph='kick'}
+  if(ph==='kick'){const k=Math.min(1,(now-t0)/1000/dur),e=ease(k);ball.x=from.x+(to.x-from.x)*e;ball.y=from.y+(to.y-from.y)*e;if(k>=1){ph='reset';wait=now+250}}
+  if(ph==='reset'&&now>wait)leg(now);
+  if(ph==='pass'){const k=Math.max(0,Math.min(1,(now-t0)/1000/dur)),e=ease(k);const bend=to.shot?0:.12,nx=-(to.y-from.y)*bend,ny=(to.x-from.x)*bend;ball.x=from.x+(to.x-from.x)*e+nx*Math.sin(Math.PI*e);ball.y=from.y+(to.y-from.y)*e+ny*Math.sin(Math.PI*e);
+   if(k>=1){if(to.shot){flash=1;ph='goal';wait=now+1500}else{step++;leg(now+120);t0=now+120}}}
+  if(ph==='goal'){ball.a=Math.max(0,ball.a-dt*2.5);if(now>wait){plan();ph='back';wait=now+1300}}
+  if(ph==='back'){const q=us[seq[0]];ball.x=q.x;ball.y=q.y+.6;ball.trail.length=0;ball.a=Math.min(1,ball.a+dt*1.5);if(now>wait){ph='reset';wait=now+300}}
+  const idle=!lit?Math.sin(now/700):0;
+  us.forEach((p,i)=>{p.x+=(p.tx-p.x)*Math.min(1,dt*1.6);p.y+=(p.ty+(i?idle*.15:0)-p.y)*Math.min(1,dt*1.6)});
+  them.forEach((p,i)=>{const fx=i?p.tx+(ball.x-10)*.35:10+(ball.x-10)*.25,fy=i?p.ty+(ball.y-p.ty)*.12:p.ty;p.x+=(fx-p.x)*Math.min(1,dt*1.2);p.y+=(fy-p.y)*Math.min(1,dt*1.2)});
+  if(ph==='pass'||ph==='kick'){ball.trail.push([ball.x,ball.y]);if(ball.trail.length>30)ball.trail.shift()}else if(ball.trail.length)ball.trail.shift();
+  flash=Math.max(0,flash-dt*.9)}
+ const d=Math.min(2,devicePixelRatio||1);ctx.setTransform(d,0,0,d,0,0);
+ const g=ctx.createRadialGradient(W*.5,H*.45,0,W*.5,H*.45,Math.max(W,H)*.75);g.addColorStop(0,'rgba(14,22,96,'+(.35+light*.65)+')');g.addColorStop(1,'#060A33');ctx.fillStyle='#060A33';ctx.fillRect(0,0,W,H);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ // coni di luce dei fari
+ lamps.forEach(([lx,ly],i)=>{if(!lampOn[i])return;const X=lx*W,Y=ly*H;const fl=Math.max(0,1-(since-i*.16)*2.2);const r=Math.max(W,H)*.95;const gg=ctx.createRadialGradient(X,Y,0,X,Y,r);gg.addColorStop(0,'rgba(255,244,214,'+(.07+fl*.4)+')');gg.addColorStop(.45,'rgba(255,244,214,'+(.012+fl*.1)+')');gg.addColorStop(1,'rgba(255,244,214,0)');ctx.fillStyle=gg;ctx.fillRect(0,0,W,H)});
+ ctx.save();ctx.translate(mx*-14,my*-14);
+ const la=(.05+light*.1+pulse*.06*light);ctx.lineWidth=1.4;ctx.strokeStyle='rgba(255,255,255,'+la+')';ctx.lineJoin='round';
+ line([[0,0],[Wm,0],[Wm,Lm],[0,Lm]],true);line([[0,Lm/2],[Wm,Lm/2]]);arc(10,20,3);area(0,1);area(Lm,-1);
+ [[10,6],[10,34],[10,10],[10,30],[10,20]].forEach(([x,y])=>dot(x,y,1.8,'rgba(255,255,255,'+(la*1.4)+')'));
+ ctx.lineWidth=2;ctx.strokeStyle='rgba(255,255,255,'+(la+.06+flash*.6)+')';line([[8.5,0],[8.5,-1],[11.5,-1],[11.5,0]]);ctx.strokeStyle='rgba(255,255,255,'+(la+.04)+')';line([[8.5,Lm],[8.5,Lm+1],[11.5,Lm+1],[11.5,Lm]]);
+ if(flash>0){const[X,Y]=P(10,-.5);const r=sc*(3+(1-flash)*9);const gg=ctx.createRadialGradient(X,Y,0,X,Y,r);gg.addColorStop(0,'rgba(240,78,35,'+flash*.55+')');gg.addColorStop(1,'rgba(240,78,35,0)');ctx.fillStyle=gg;ctx.beginPath();ctx.arc(X,Y,r,0,7);ctx.fill()}
+ ctx.lineCap='round';for(let k=1;k<ball.trail.length;k++){const a=k/ball.trail.length;ctx.strokeStyle='rgba(255,120,80,'+a*.75*ball.a+')';ctx.lineWidth=1+a*4;line([ball.trail[k-1],ball.trail[k]])}
+ const pa=.35+light*.65;ctx.globalAlpha=pa;
+ them.forEach(p=>dot(p.x,p.y,Math.min(8,Math.max(4,sc*.42)),'rgba(110,130,240,.55)'));
+ us.forEach((p,i)=>dot(p.x,p.y,Math.min(9,Math.max(4.5,sc*.48)),i?'#F04E23':'#F5C518',i?'rgba(240,78,35,'+(.15+pulse*.3)+')':'rgba(245,197,24,.25)'));
+ ctx.globalAlpha=pa*ball.a;dot(ball.x,ball.y,Math.min(5,Math.max(2.6,sc*.24)),'#fff','rgba(255,255,255,.35)');ctx.globalAlpha=1;ctx.restore();
+ const v=ctx.createRadialGradient(W*.5,H*.48,0,W*.5,H*.48,Math.min(W,H)*.62);v.addColorStop(0,'rgba(6,10,51,.38)');v.addColorStop(1,'rgba(6,10,51,0)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
+ raf=requestAnimationFrame(frame)}
     raf = requestAnimationFrame(frame);
-    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); };
+    play(false);
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move);
+      au.removeEventListener('timeupdate', wrap); au.removeEventListener('playing', onPlaying); au.removeEventListener('pause', onPause);
+      try { au.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
   }, []);
-  const enter = () => { if (leaving.current) return; leaving.current = true; setPhase('go'); setTimeout(() => setPhase('go out'), 700); setTimeout(onDone, 1180); };
-  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers">
+  const left = useRef(false);
+  const enter = (e) => { e.stopPropagation(); if (left.current) return; left.current = true; S0.current.fade && S0.current.fade(1400);
+    setPhase('go'); setTimeout(() => setPhase('go out'), 700); setTimeout(onDone, 1180); };
+  return html`<div class=${'in2 ' + (lit ? 'lit ' : 'dark ') + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${() => S0.current.tap && S0.current.tap()}>
     <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
     <div class="in2-stage">
-      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div></div>
+      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
+        <button class=${'in2-sound' + (on ? '' : ' off')} aria-pressed=${on} onClick=${(e) => { e.stopPropagation(); S0.current.toggle && S0.current.toggle(); }}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : 'Audio spento'}</button></div>
       <div class="in2-c">
-        <div class="in2-disc"><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
+        <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
         <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
         <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
+        <span class="in2-call" aria-hidden=${lit}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18.4 5.6l-2.1 2.1M21 12h-3"/><path d="M8 14a4 4 0 118 0c0 1.6-1 2.4-1.6 3.4-.3.5-.4 1-.4 1.6h-4c0-.6-.1-1.1-.4-1.6C9 16.4 8 15.6 8 14z"/></svg>Tocca e accendi il palazzetto</span>
       </div>
       <div class="in2-bottom"><button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button></div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
+    <audio ref=${auRef} src=${INNO.src} preload="auto" playsinline></audio>
   </div>`;
 }
 
