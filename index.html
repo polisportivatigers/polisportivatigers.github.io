@@ -87,8 +87,9 @@ p{margin:0}
   .side.open{display:flex;position:fixed;inset:0;z-index:70;height:auto;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
   .main{padding-top:12px;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   .mtop{display:flex!important}
-  .mbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--side);padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));border-top:1px solid var(--side-line)}
-  .mbar a,.mbar button{display:grid;justify-items:center;gap:2px;color:#C9CCE6;text-decoration:none;font-family:var(--f-data);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:none;border:0;padding:6px 2px;border-radius:8px;cursor:pointer}
+  .mbar{display:flex;gap:4px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--side);padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));border-top:1px solid var(--side-line)}
+  .mbar::-webkit-scrollbar{display:none}
+  .mbar a,.mbar button{flex:0 0 auto;min-width:62px;padding-inline:8px!important;scroll-snap-align:center;position:relative;white-space:nowrap;-webkit-tap-highlight-color:transparent;display:grid;justify-items:center;gap:2px;color:#C9CCE6;text-decoration:none;font-family:var(--f-data);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:none;border:0;padding:6px 2px;border-radius:8px;cursor:pointer}
   .mbar svg{width:20px;height:20px}
   .mbar .on{color:#fff;background:rgba(240,78,35,.9)}
 }
@@ -608,6 +609,8 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .pwipe{position:fixed;top:0;bottom:0;z-index:45;pointer-events:none;overflow:hidden}
 .pwipe-old{position:absolute;left:0;margin:0;background:var(--bg);min-height:100vh}
 .pwipe i{position:absolute;top:-10%;bottom:-10%;display:block;transform:skewX(-18deg);will-change:left}
+
+.mbar .mdot{position:absolute;top:5px;right:16px;width:8px;height:8px;border-radius:50%;background:#2EBE80;box-shadow:0 0 0 2px var(--side)}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -3370,11 +3373,16 @@ function pageWipe(dir) {
     requestAnimationFrame(step); };
 }
 
+const MBAR_LABEL = { home: 'Home', squadra: 'Squadra', calendario: 'Gare', partita: 'Partita', live: 'Live', statistiche: 'Statistiche', classifica: 'Classifica', campionato: 'Campionato', avversari: 'Avversari', allenamenti: 'Allenam.', davide: 'Davide', taccuino: 'Taccuino', impostazioni: 'Impostaz.' };
+
 function App() {
   const s = useStore();
   const [loc, setLoc] = useState(parseHash());
   const [menu, setMenu] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const mbar = useRef();
+  // la voce della pagina aperta resta sempre visibile al centro della barra
+  useEffect(() => { const b = mbar.current; const on = b && b.querySelector('.on'); if (on) b.scrollTo({ left: on.offsetLeft - (b.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' }); }, [loc.route]);
   useEffect(() => { window.__login = () => { setMenu(false); setLoginOpen(true); }; }, []);
   const [intro, setIntro] = useState(() => { try { return !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return true; } });
   useEffect(() => { window.__showIntro = () => setIntro(true); let prev = parseHash().route; const f = () => { const nl = parseHash(); const a = ROUTES.findIndex((x) => x[0] === prev), b = ROUTES.findIndex((x) => x[0] === nl.route); const run = nl.route !== prev ? pageWipe(b >= a ? 1 : -1) : null; prev = nl.route; setLoc(nl); setMenu(false); scrollTo(0, 0); if (run) requestAnimationFrame(run); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
@@ -3398,14 +3406,15 @@ function App() {
       </div>
     </aside>
     <main class="main" id="main">
-      <div class="mtop"><a class="brand" href="#home">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></a><button class="iconbtn" aria-label="Apri menu" onClick=${() => setMenu(true)}><${Icon} n="menu"/></button></div>
+      <div class="mtop"><a class="brand" href="#home">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></a>${s.loggedIn && html`<span class="pill fire">MISTER · staff</span>`}</div>
       ${s.canWrite && s.canPublish && (s.pubDirty > 0 || s.publishing) && html`<div class="page" style="margin-bottom:16px"><${PublishBar}/></div>`}
       ${s.phase === 'loading' ? html`<div class="page"><p class="muted">Apro lo spogliatoio…</p></div>` : html`<${View} go=${go} arg=${loc.arg} key=${loc.route}/>`}
       ${s.error && html`<div class="page" style="margin-top:16px"><div class="callout warn"><${Icon} n="info"/>${s.error}</div></div>`}
     </main>
-    <nav class="mbar" aria-label="Sezioni principali">
-      ${[['home', 'Home', 'home'], ['calendario', 'Gare', 'cal'], ['live', 'Live', 'live'], ['allenamenti', 'Allenam.', 'cone']].map(([r, l, i]) => html`<a href=${'#' + r} class=${loc.route === r ? 'on' : ''}><${Icon} n=${i}/>${l}</a>`)}
-      <button onClick=${() => setMenu(true)}><${Icon} n="menu"/>Menu</button>
+    <nav class="mbar" aria-label="Sezioni" ref=${mbar}>
+      ${ROUTES.map((r) => html`<a href=${'#' + r[0]} class=${loc.route === r[0] ? 'on' : ''} aria-current=${loc.route === r[0] ? 'page' : null}><${Icon} n=${r[2]}/>${MBAR_LABEL[r[0]] || r[1]}${r[0] === 'live' && live ? html`<span class="mdot" aria-label="in corso"></span>` : ''}</a>`)}
+      ${s.loggedIn ? html`<button onClick=${() => { logout(); toast('Sei uscito: ora consulti come tutti'); }}><${Icon} n="user"/>Esci</button>`
+        : html`<button onClick=${() => setLoginOpen(true)}><${Icon} n="lock"/>Staff</button>`}
     </nav>
     ${loginOpen && html`<${LoginModal} onClose=${() => setLoginOpen(false)}/>`}
     ${intro && html`<${Intro} onDone=${() => { setIntro(false); try { sessionStorage.setItem('quinto-intro-seen', '1'); } catch (e) {} }}/>`}
