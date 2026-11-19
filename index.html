@@ -618,6 +618,8 @@ tr.us td{background:var(--accent-soft);font-weight:700}
   .shell{position:fixed;inset:0;display:flex;flex-direction:column;min-height:0}
   .main{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:28px}
   .mbar{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;flex:0 0 auto;box-shadow:none}
+  /* finestre (Nuova partita, Modifica…) e avvisi aperti dentro la pagina: sopra la barra, non sotto (su iPhone la zona che scorre le teneva sotto) */
+  .main{position:relative;z-index:55}
 }
 /* iPhone, app installata: iOS dà alla pagina 47 px in meno (l'altezza della barra dell'orario) e lascia scoperto il fondo.
    Gli elementi a tutto schermo usano l'altezza vera dello schermo (--appH, misurata all'avvio). */
