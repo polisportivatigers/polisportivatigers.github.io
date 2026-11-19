@@ -549,7 +549,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2-c{display:grid;place-items:center;align-content:center;gap:16px;text-align:center;min-height:0}
 .in2-disc{width:clamp(130px,30vw,200px);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 calc(8px + var(--pulse,0)*14px) rgba(240,78,35,calc(.12 + var(--pulse,0)*.25)),0 30px 60px -20px rgba(0,0,0,.6);transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(calc(1 + var(--pulse,0)*.035));will-change:transform}
 .in2-disc img{width:92%;pointer-events:none}
-.in2.go .in2-disc{transition:transform .6s cubic-bezier(.65,0,.3,1);transform:scale(1.25)}
+.in2.go .in2-disc{transition:transform .6s cubic-bezier(.65,0,.3,1);transform:scale(1.25)!important}
 .in2-tag{font-family:var(--f-data);letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#AEB3D6}
 .in2-h{color:#fff;font-size:clamp(64px,17vw,150px);font-weight:900;line-height:.84}
 .in2-h span{display:block}.in2-h em{display:block;font-style:normal;color:var(--fiamma)}
@@ -579,7 +579,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .in2{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .in2 .in2-sound{opacity:0;pointer-events:none;transition:opacity .5s}
 .in2.lit .in2-sound{opacity:1;pointer-events:auto}
-.in2 .in2-disc{transition:filter .8s ease,box-shadow .1s linear;box-shadow:0 0 0 calc(8px + var(--p,0)*14px) rgba(240,78,35,calc(.08 + var(--p,0)*.3)),0 30px 60px -20px rgba(0,0,0,.6)}
+.in2 .in2-disc{box-shadow:0 30px 60px -20px rgba(0,0,0,.6);transform:none}
 .in2 .in2-disc{filter:brightness(calc(.22 + var(--lux,0)*.78)) saturate(calc(.3 + var(--lux,0)*.7))}
 .in2 .in2-h,.in2 .in2-tag{opacity:calc(.22 + var(--lux,0)*.78);filter:saturate(calc(.3 + var(--lux,0)*.7))}
 .in2 .in2-disc,.in2 .in2-h,.in2 .in2-tag{transition:none}
@@ -2626,6 +2626,9 @@ function NostroGioco({ go }) {
 
 const INNO = { src: 'inno-loop.mp3', start:12.2657,end:66.9255,beats:[0.7, 1.39, 2.07, 2.74, 3.44, 4.11, 4.78, 5.46, 6.18, 6.85, 7.52, 8.2, 8.89, 9.57, 10.24, 10.94, 11.61, 12.28, 12.96, 13.65, 14.33, 15.02, 15.72, 16.39, 17.07, 17.76, 18.46, 19.16, 19.81, 20.48, 21.15, 21.85, 22.52, 23.22, 23.89, 24.59, 25.26, 25.94, 26.61, 27.28, 27.98, 28.68, 29.35, 30.02, 30.72, 31.42, 32.09, 32.79, 33.46, 34.16, 34.83, 35.53, 36.2, 36.9, 37.57, 38.24, 38.94, 39.61, 40.31, 40.98, 41.68, 42.35, 43.03, 43.72, 44.4, 45.09, 45.77, 46.46, 47.11, 47.81, 48.48, 49.18, 49.85, 50.55, 51.22, 51.92, 52.59, 53.27, 53.94, 54.64, 55.31, 56.01, 56.68, 57.38, 58.05, 58.75, 59.42, 60.09, 60.77, 61.46, 62.14, 62.83, 63.51, 64.18, 64.88, 65.55, 66.22],energy:[0.05, 0.28, 0.75, 0.44, 0.54, 0.3, 0.33, 0.43, 0.34, 0.39, 0.44, 0.92, 0.86, 1.0, 0.75, 0.69, 0.38, 0.48, 0.25, 0.4, 0.22, 0.31, 0.57, 0.7, 0.86, 0.78, 0.77, 0.63, 0.45, 0.7, 0.7, 0.44, 0.65, 0.62, 0.51, 0.63, 0.58, 0.49, 0.34, 0.45, 0.46, 0.49, 0.46, 0.54, 0.58, 0.85, 0.8, 0.78, 0.59, 0.57, 0.73, 0.77, 0.71, 0.79, 0.72, 0.58, 0.72, 0.57, 0.59, 0.49, 0.63, 0.58, 0.49, 0.63, 0.52, 0.6, 0.45, 0.61, 0.44, 0.65, 0.59, 0.59, 0.61, 0.56, 0.65, 0.57, 0.64, 0.61, 0.63, 0.39, 0.65, 0.52, 0.68, 0.65, 0.69, 0.61, 0.58, 0.57, 0.7, 1.0, 0.76, 0.75, 0.82, 0.81, 0.88, 0.73, 1.0, 1.0, 0.75, 0.8, 0.89, 0.75, 0.77, 0.93, 0.89, 0.85, 0.76, 1.0, 0.97, 0.93, 0.7, 0.76, 0.79, 0.73, 1.0, 1.0, 1.0, 0.69, 0.88, 0.86, 0.75, 0.69, 0.78, 0.87, 0.82, 0.79, 1.0, 0.86, 0.71, 0.77, 0.77, 0.7, 0.51, 0.6]};
 
+// colpi reali del loop (cassa forte = esplosione della corona, colpi leggeri = piccolo scatto)
+const INNO_HITS = {"boom": [[0.615, 0.72], [1.347, 0.59], [2.38, 0.45], [3.402, 0.45], [4.098, 0.63], [5.399, 1.0], [6.42, 0.46], [8.847, 0.82], [10.205, 0.46], [11.064, 0.45], [11.564, 0.87], [12.063, 0.85], [12.945, 0.47], [13.653, 0.48], [15.314, 0.79], [16.695, 0.79], [17.705, 0.66], [21.119, 0.56], [22.094, 0.51], [22.674, 0.63], [23.475, 0.53], [24.172, 0.53], [24.706, 0.46], [25.565, 0.51], [27.934, 0.57], [28.874, 0.87], [31.022, 0.74], [32.067, 0.72], [32.74, 0.72], [33.425, 0.59], [34.424, 0.66], [35.294, 0.5], [36.664, 0.49], [38.893, 0.89], [39.578, 0.87], [40.263, 0.91], [41.111, 0.87], [41.633, 0.68], [42.655, 0.91], [44.013, 0.93], [44.582, 0.81], [45.732, 1.0], [46.556, 1.0], [47.914, 1.0], [48.437, 1.0], [49.296, 0.99], [51.177, 0.95], [52.024, 0.92], [53.371, 1.0], [54.044, 0.91], [54.567, 0.81], [56.622, 1.0], [57.469, 1.0], [58.816, 1.0], [59.35, 1.0], [60.72, 1.0], [61.568, 1.0], [62.775, 0.97], [63.286, 0.9], [63.774, 0.89], [65.353, 0.99], [66.212, 0.84]], "tap": [[0.604, 1.0], [1.207, 1.0], [1.892, 1.0], [2.357, 0.99], [2.694, 0.99], [3.042, 0.99], [3.379, 1.0], [3.727, 1.0], [4.748, 1.0], [5.422, 1.0], [7.477, 0.74], [7.825, 1.0], [8.162, 1.0], [8.499, 1.0], [9.52, 0.74], [9.857, 0.59], [10.205, 0.78], [12.899, 1.0], [13.398, 1.0], [14.199, 1.0], [14.965, 1.0], [15.314, 1.0], [16.103, 1.0], [16.66, 1.0], [17.357, 1.0], [17.717, 1.0], [22.465, 1.0], [23.301, 1.0], [23.847, 0.76], [25.972, 0.67], [27.945, 0.65], [28.967, 0.73], [29.605, 0.89], [30.348, 0.65], [31.695, 0.79], [33.762, 0.93], [34.099, 0.88], [34.447, 0.61], [35.12, 0.63], [36.153, 0.62], [36.49, 0.78], [37.175, 0.75], [37.86, 0.65], [39.219, 0.64], [39.567, 0.61], [39.915, 0.53], [40.252, 0.61], [40.937, 0.58], [43.99, 0.65], [44.35, 0.78], [45.035, 0.73], [45.372, 0.74], [45.708, 0.93], [46.057, 0.71], [47.078, 0.68], [47.763, 0.88], [48.1, 0.7], [48.448, 0.85], [48.785, 1.0], [49.133, 0.67], [49.47, 0.99], [50.329, 0.74], [51.177, 0.76], [51.513, 0.7], [51.862, 0.88], [52.198, 1.0], [53.905, 0.65], [54.242, 0.65], [54.579, 0.59], [54.927, 0.68], [55.612, 0.94], [56.123, 0.85], [56.471, 0.72], [57.156, 0.57], [57.655, 0.94], [59.199, 0.93], [59.536, 0.68], [60.047, 0.94], [60.383, 0.86], [61.417, 0.78], [61.753, 0.83], [62.613, 0.73], [63.112, 0.82], [64.482, 0.51], [64.819, 0.74], [65.167, 0.52], [67.129, 0.85]]};
+
 function Intro({ onDone }) {
   const [phase, setPhase] = useState(''), [lit, setLit] = useState(false), [ready, setReady] = useState(false), [on, setOn] = useState(false);
   const cv = useRef(), disc = useRef(), eqRef = useRef(), auRef = useRef(), S0 = useRef({});
@@ -2676,7 +2679,7 @@ const lamps=[[.04,.02],[.96,.02],[.04,.98],[.96,.98]].sort(()=>Math.random()-.5)
 const lampLevel=(l,t)=>{const s=t-l.delay;if(s<0)return 0;const fe=.32;if(s<fe){let v=0;for(const[a,b]of l.flick)if(s>=a)v=b;return v}
   const k=Math.min(1,(s-fe)/l.warm);return .18+.82*(1-Math.pow(1-k,2.2))*(k<1?(.97+.03*Math.sin(s*60)):1)};
 const warmOf=(l,t)=>Math.min(1,Math.max(0,(t-l.delay-.32)/l.warm));
-let last=performance.now(),pulse=0,light=0;
+let last=performance.now(),pulse=0,light=0,lastT=-1,fk=[],dir=1,rot=0,rot2=0,wave=0,cor=0;
 const rootEl=cvEl.parentElement;
 function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last=now;
  const since=lit?(now-litAt)/1000:-1;
@@ -2685,7 +2688,6 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
  if(lit&&light>.72&&kick===Infinity){kick=now+250;setReady(true)}
  rootEl.style.setProperty('--lux',light.toFixed(3));
  const t=!au.paused?au.currentTime:-1,pt=pulseAt(t);pulse+=(pt-pulse)*(pt>pulse?.6:.2);
- discEl.style.setProperty('--p',pulse.toFixed(3));
  eqb().forEach((b,i)=>{b.style.height=(!au.paused?3+11*Math.min(1,pulseAt(t-i*.06)+.15+.25*Math.abs(Math.sin(now/180+i))):3)+'px'});
  if(!reduce){
   if(ph==='wait'&&lit&&now>kick){ball.x=10;ball.y=20;ball.a=1;ball.trail.length=0;from={x:10,y:20};const q=us[seq[0]];to={x:q.x,y:q.y};dur=.9;t0=now;ph='kick'}
@@ -2720,6 +2722,28 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
  ctx.globalAlpha=pa*ball.a;dot(ball.x,ball.y,Math.min(5,Math.max(2.6,sc*.24)),'#fff','rgba(255,255,255,.35)');ctx.globalAlpha=1;ctx.restore();
  const v=ctx.createRadialGradient(W*.5,H*.48,0,W*.5,H*.48,Math.min(W,H)*.62);v.addColorStop(0,'rgba(2,3,16,'+(.2+light*.18)+')');v.addColorStop(1,'rgba(6,10,51,0)');ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
  const vg=ctx.createRadialGradient(W*.5,H*.5,Math.min(W,H)*.35,W*.5,H*.5,Math.max(W,H)*.8);vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,'+(.75-light*.45)+')');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+ // ----- corona attorno allo stemma, sincronizzata con i colpi del brano -----
+ {const en=(x)=>INNO.energy[Math.min(INNO.energy.length-1,Math.max(0,Math.floor(x*2)))]||0;
+  if(t>=0){const a=lastT,b=t;const cross=(x)=>(a<=b?(x>a&&x<=b):(x>a||x<=b));
+   if(a>=0&&(b-a<1.5||a>b)){INNO_HITS.boom.forEach(([x,st])=>{if(cross(x)){const k=st*(.45+.55*Math.min(1,Math.max(0,(en(x)-.3)/.6)));fk.push({t:now,s:k,down:true});if(k>.6)dir=-dir}});
+    INNO_HITS.tap.forEach(([x,st])=>{if(cross(x))fk.push({t:now,s:st*.55,down:false})})}
+   lastT=t}else lastT=-1;
+  cor+=((t>=0?1:0)-cor)*Math.min(1,dt*3);
+  fk=fk.filter(f=>now-f.t<900);let burst=0,thump=0;fk.forEach(f=>{const s=(now-f.t)/1000;burst=Math.max(burst,Math.exp(-s*6)*Math.cos(s*22)*(f.down?1:.45)*f.s);thump=Math.max(thump,Math.exp(-s*12)*(f.down?1:.5)*f.s)});
+  const e=t>=0?en(t):0,drop=e>.72;rot+=dt*dir*(drop?.9:.25)*(1+thump*2);rot2-=dt*(drop?1.4:.45);wave+=dt*(drop?3.2:1.6);
+  if(cor>.01){const rc=discEl.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width/2;
+   ctx.save();ctx.globalAlpha=cor*Math.min(1,light*1.2);ctx.lineCap='round';
+   const hg=ctx.createRadialGradient(cx,cy,R*.95,cx,cy,R*1.5);hg.addColorStop(0,'rgba(240,78,35,'+(.12+thump*.35)+')');hg.addColorStop(1,'rgba(240,78,35,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(cx,cy,R*1.5,0,7);ctx.fill();
+   if(burst>.25){ctx.shadowColor='rgba(255,140,60,.8)';ctx.shadowBlur=18*burst}
+   const N=64,r0=R*1.1;for(let j=0;j<N;j++){const an=rot+j/N*Math.PI*2;let wv=Math.pow(Math.max(0,Math.cos(an-wave)),3);const nz=.5+.5*Math.sin(j*2.3+now/170)*Math.sin(j*.7-now/260);
+    const len=Math.max(R*.04,R*(.1+e*.18+wv*(.25+e*.35)+nz*.08+Math.max(0,burst)*(.6+.4*nz)+Math.min(0,burst)*.2));
+    const x0=cx+Math.cos(an)*r0,y0=cy+Math.sin(an)*r0,x1=cx+Math.cos(an)*(r0+len),y1=cy+Math.sin(an)*(r0+len);
+    const gr=ctx.createLinearGradient(x0,y0,x1,y1);gr.addColorStop(0,'rgba(240,78,35,'+(.55+e*.3)+')');gr.addColorStop(1,burst>.3||wv>.6?'rgba(255,214,90,'+(.7+burst*.3)+')':'rgba(255,120,70,'+(.5+e*.3)+')');
+    ctx.strokeStyle=gr;ctx.lineWidth=Math.max(2,R*.038);ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.stroke()}
+   ctx.shadowBlur=0;
+   const M=32,ri=R*1.04;for(let j=0;j<M;j++){const an=rot2+j/M*Math.PI*2;const len=R*(.05+thump*.12+.04*Math.sin(j*1.9+now/140));ctx.strokeStyle='rgba(255,244,214,'+(.25+thump*.5)+')';ctx.lineWidth=Math.max(1.5,R*.02);ctx.beginPath();ctx.moveTo(cx+Math.cos(an)*ri,cy+Math.sin(an)*ri);ctx.lineTo(cx+Math.cos(an)*(ri+len),cy+Math.sin(an)*(ri+len));ctx.stroke()}
+   ctx.restore()}
+  if(!rootEl.classList.contains('go'))discEl.style.transform=reduce?'':'scale('+(1+thump*.06*cor)+') rotate('+(Math.max(0,burst)*-3*cor)+'deg)'}
  raf=requestAnimationFrame(frame)}
     raf = requestAnimationFrame(frame);
     play(false);
