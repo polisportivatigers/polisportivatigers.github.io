@@ -536,7 +536,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 @media (prefers-reduced-motion:reduce){.lv-tile.pick,.lv-to.late{animation:none}}
 .lv-editline{grid-template-columns:72px 22px minmax(0,1fr) auto}
 /* ingresso */
-.in2{position:fixed;inset:0;z-index:100;background:var(--notte);color:#fff;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .5s ease}
+.in2{position:fixed;inset:0;z-index:100;background:var(--notte);color:#fff;overflow:hidden;transition:opacity .5s ease}
 .in2.out{opacity:0;pointer-events:none}
 .in2-fx{position:absolute;inset:0;width:100%;height:100%;display:block}
 .in2-stage{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));transition:opacity .5s ease}
@@ -1205,7 +1205,7 @@ function Home({ go }) {
       <article class="card dark" style="position:relative;overflow:hidden">
         <div class="stack"><span class="eyebrow" style="color:#FF8A66">L’inno della Polisportiva</span><h2>Forza Tigers.</h2>
           <audio class="audio" ref=${hymn} controls preload="none" src="forza-tigers.mp3" aria-label="Inno Forza Tigers"></audio>
-          <div><button class="btn line sm" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)" onClick=${() => window.__showIntro && window.__showIntro()}><${Icon} n="music"/>Rivedi l’intro</button></div></div>
+          <div><button class="btn line sm" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3)" onClick=${() => window.__showIntro && window.__showIntro()}><${Icon} n="play"/>Rivedi l’intro</button></div></div>
       </article>
       <button class="card" style="text-align:left;cursor:pointer" onClick=${() => go('avversari')}><div class="stack"><span class="eyebrow">Scouting</span><h3>Conosci l’avversario</h3><p class="muted">Confronto con i Tigers sui risultati del girone, con valutazione e affidabilità.</p></div></button>
       <button class="card" style="text-align:left;cursor:pointer" onClick=${() => go('davide')}><div class="stack"><span class="eyebrow">Area Davide</span><h3>Le idee diventano gioco</h3><p class="muted">Lavagna tattica, schemi salvati, generatore di formazioni ed esercizi UEFA.</p></div></button>
@@ -2592,102 +2592,44 @@ function NostroGioco({ go }) {
 }
 
 /* ===== QUINTO · pagina d'ingresso =====
-   Inno "Siamo i Tàighers" intero, che a fine brano ricomincia da capo (loop nativo del lettore).
-   Prova a partire da solo all'apertura; se il telefono lo blocca, parte al primo tocco ovunque.
-   Lo stemma pulsa sulle battute già calcolate del brano. */
-
-const INNO = { src: 'inno-tigers.mp3',
-  beats: [1.6, 2.28, 2.97, 3.65, 4.32, 5.02, 5.69, 6.36, 7.08, 7.76, 8.43, 9.1, 9.8, 10.47, 11.15, 11.82, 12.49, 13.19, 13.84, 14.56, 15.23, 15.91, 16.63, 17.28, 17.97, 18.67, 19.37, 20.04, 20.71, 21.36, 22.06, 22.73, 23.41, 24.1, 24.8, 25.5, 26.15, 26.84, 27.52, 28.19, 28.89, 29.58, 30.26, 30.95, 31.63, 32.32, 33.0, 33.69, 34.37, 35.04, 35.74, 36.41, 37.11, 37.78, 38.48, 39.15, 39.85, 40.52, 41.19, 41.89, 42.56, 43.26, 43.93, 44.61, 45.28, 45.98, 46.65, 47.35, 48.02, 48.72, 49.39, 50.09, 50.76, 51.46, 52.13, 52.8, 53.48, 54.17, 54.85, 55.52, 56.22, 56.91, 57.59, 58.28, 58.93, 59.63, 60.3, 61.0, 61.67, 62.37, 63.04, 63.72, 64.41, 65.09, 65.76, 66.46, 67.13, 67.83, 68.5, 69.17, 69.87, 70.54, 71.22, 71.91, 72.59, 73.28, 73.96, 74.65, 75.33, 76.0, 76.7, 77.37, 78.04, 78.74, 79.41, 80.11, 80.78, 81.46, 82.15, 82.83, 83.5, 84.2, 84.87, 85.57, 86.24, 86.91, 87.61, 88.28, 88.96, 89.65, 90.33, 91.02, 91.7, 92.37, 93.07, 93.74, 94.41, 95.11, 95.78, 96.48, 97.15, 97.83, 98.52, 99.2, 99.89, 100.57, 101.24, 101.94, 102.61, 103.31, 103.98, 104.65, 105.35, 106.02, 106.7, 107.39, 108.07, 108.76, 109.44, 110.11, 110.81, 111.48, 112.18, 112.85, 113.52, 114.22, 114.89, 115.59, 116.26, 116.94, 117.63, 118.31, 118.98, 119.68, 120.35, 121.05, 121.7, 122.39, 123.07, 123.76, 124.44, 125.13, 125.81, 126.5, 127.18, 127.87, 128.55, 129.22, 129.89, 130.59, 131.26, 131.96, 132.63, 133.31, 134.0, 134.68, 135.37, 136.05, 136.72, 137.42, 138.09, 138.76, 139.46, 140.13, 140.83, 141.5, 142.18, 142.87, 143.55, 144.24, 144.94, 145.61, 146.29, 146.98, 147.68, 148.35, 149.05, 149.75, 150.44, 151.12, 151.86, 152.62, 153.41, 154.11, 154.78, 155.48, 156.18, 156.87, 157.57, 158.29, 158.99, 159.71],
-  energy: [0.0, 0.02, 0.08, 0.28, 0.43, 0.39, 0.36, 0.31, 0.46, 0.34, 0.52, 0.28, 0.42, 0.73, 0.8, 0.8, 0.62, 0.42, 0.26, 0.24, 0.3, 0.27, 0.27, 0.38, 0.52, 0.88, 0.73, 0.61, 0.5, 0.42, 0.4, 0.4, 0.54, 0.39, 0.36, 0.23, 0.47, 0.48, 0.54, 0.42, 0.24, 0.35, 0.36, 0.44, 0.42, 0.43, 0.47, 0.89, 0.54, 0.7, 0.61, 0.63, 0.56, 0.63, 0.63, 0.51, 0.53, 0.49, 0.6, 0.49, 0.37, 0.41, 0.53, 0.31, 0.52, 0.35, 0.5, 0.49, 0.49, 0.47, 0.4, 0.45, 0.37, 0.47, 0.43, 0.52, 0.39, 0.5, 0.37, 0.5, 0.47, 0.54, 0.45, 0.45, 0.48, 0.47, 0.49, 0.44, 0.42, 0.42, 0.4, 0.59, 0.61, 0.59, 0.72, 0.96, 0.93, 0.56, 0.74, 0.66, 0.62, 0.6, 0.66, 0.65, 0.65, 0.61, 0.96, 0.95, 0.6, 0.65, 0.83, 0.8, 0.7, 0.65, 0.71, 0.65, 0.6, 0.71, 0.83, 0.63, 0.58, 0.63, 0.61, 0.64, 0.74, 1.0, 0.92, 0.58, 0.69, 0.54, 0.51, 0.46, 0.38, 0.43, 0.42, 0.56, 0.88, 0.88, 0.6, 0.61, 0.62, 0.56, 0.54, 0.63, 0.56, 0.58, 0.55, 0.81, 0.8, 0.64, 0.54, 0.55, 0.57, 0.59, 0.57, 0.68, 0.61, 0.63, 0.75, 0.74, 0.56, 0.52, 0.61, 0.59, 0.59, 0.54, 0.83, 0.79, 0.66, 0.68, 0.54, 0.61, 0.58, 0.61, 0.59, 0.61, 0.58, 0.59, 0.66, 0.49, 0.41, 0.32, 0.43, 0.33, 0.34, 0.25, 0.36, 0.23, 0.23, 0.39, 0.29, 0.33, 0.24, 0.39, 0.39, 0.48, 0.34, 0.55, 0.46, 0.52, 0.77, 0.68, 0.43, 0.52, 0.45, 0.55, 0.55, 0.55, 0.65, 0.53, 0.75, 0.48, 0.72, 0.44, 0.71, 0.51, 0.55, 0.46, 0.57, 0.49, 0.5, 0.53, 0.85, 0.65, 0.65, 0.63, 0.64, 0.64, 0.58, 0.56, 0.46, 0.49, 0.55, 0.86, 0.48, 0.65, 0.61, 0.59, 0.74, 0.78, 0.76, 0.82, 0.83, 0.17, 0.79, 0.81, 0.81, 0.7, 0.94, 0.97, 0.61, 0.61, 0.61, 0.75, 0.68, 0.71, 1.0, 0.9, 0.61, 0.86, 0.91, 0.84, 0.65, 0.84, 0.8, 0.87, 0.9, 0.79, 0.67, 0.97, 0.54, 0.61, 0.77, 0.73, 0.68, 0.46, 0.44, 0.81, 0.62, 0.82, 0.88, 0.86, 0.98, 0.94, 1.0, 0.92, 0.88, 0.82, 1.0, 0.68, 0.69, 0.68, 0.62, 1.0, 0.62, 0.54, 0.56, 0.44, 0.94, 1.0, 0.54, 0.69, 0.7, 0.63, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.64, 0.59, 0.58, 0.4, 0.32, 0.2, 0.12, 0.07, 0.04] };
-
-function innoEngine(el, onState) {
-  // come la versione che partiva da sola su iPhone: lettore dentro la pagina con avvio automatico e "loop" nativo,
-  // audio del browser collegato subito (serve per la sfumatura su iPhone, dove il volume del lettore è fisso)
-  let ctx = null, gain = null, want = true, leaving = false;
-  try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); const src = ctx.createMediaElementSource(el); gain = ctx.createGain(); src.connect(gain); gain.connect(ctx.destination); } catch (e) { ctx = null; gain = null; }
-  el.addEventListener('playing', () => onState(true));
-  el.addEventListener('pause', () => onState(false));
-  const resume = () => (ctx && ctx.state !== 'running' ? Promise.race([ctx.resume().catch(() => {}), new Promise((ok) => setTimeout(ok, 800))]) : Promise.resolve());
-  return {
-    el,
-    playing: () => !el.paused,
-    want: () => want,
-    async play() { if (leaving) return false; want = true; try { await resume(); if (gain) gain.gain.value = 1; await el.play(); return true; } catch (e) { return false; } },
-    pause() { want = false; el.pause(); },
-    fade(ms) { leaving = true; if (el.paused) return; const t0 = performance.now(), v0 = gain ? gain.gain.value : el.volume;
-      const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); const v = v0 * (1 - k) * (1 - k); if (gain) gain.gain.value = v; else el.volume = v; if (k < 1) requestAnimationFrame(step); else el.pause(); }; step(); },
-    destroy() { try { el.pause(); } catch (e) {} try { ctx && ctx.close(); } catch (e) {} },
-  };
-}
-// pulsazione: 1 su ogni battuta, poi cala; più forte dove il brano è più carico
-function innoPulse(t) {
-  if (!(t >= 0)) return 0;
-  const b = INNO.beats; let lo = 0, hi = b.length - 1, i = -1;
-  while (lo <= hi) { const m = (lo + hi) >> 1; if (b[m] <= t) { i = m; lo = m + 1; } else hi = m - 1; }
-  if (i < 0) return 0;
-  const e = INNO.energy[Math.min(INNO.energy.length - 1, Math.floor(t * 2))] || 0;
-  return Math.exp(-(t - b[i]) * 7) * Math.max(0, e - 0.35) / 0.65;
-}
+   Solo il tasto Entra: sfondo con i graffi, stemma, "Forza Tigers." e transizione con i tre graffi. Nessun audio. */
 
 function Intro({ onDone }) {
-  let skip = false; try { skip = localStorage.getItem('quinto-intro') === 'no'; } catch (e) {}
-  const [no, setNo] = useState(skip), [on, setOn] = useState(false), [want, setWant] = useState(true), [phase, setPhase] = useState('');
-  const cv = useRef(), disc = useRef(), au = useRef(), eqRef = useRef(), eng = useRef(null), leaving = useRef(false);
-  const nm = nextMatch();
+  const [phase, setPhase] = useState('');
+  const cv = useRef(), disc = useRef(), leaving = useRef(false);
   useEffect(() => {
-    const E = innoEngine(au.current, setOn); eng.current = E;
-    E.play();
     const c = cv.current, ctx = c.getContext('2d');
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let W = 0, H = 0, pulse = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
+    let W = 0, H = 0, mx = .5, my = .5, raf = 0, last = performance.now(), alive = true;
     const size = () => { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; c.width = W * d; c.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
     size(); addEventListener('resize', size);
     const slashes = []; for (let i = 0; i < 9; i++) slashes.push({ x: Math.random(), y: Math.random(), len: .25 + Math.random() * .45, w: 6 + Math.random() * 16, sp: .00003 + Math.random() * .00006, al: .05 + Math.random() * .08 });
-    const marks = [];
     const move = (e) => { mx = e.clientX / W; my = e.clientY / H; };
-    const tilt = (e) => { if (e.gamma == null) return; mx = .5 + Math.max(-1, Math.min(1, e.gamma / 30)) * .5; my = .5 + Math.max(-1, Math.min(1, (e.beta - 40) / 30)) * .5; };
-    const down = (e) => { if (e.target.closest && e.target.closest('button,label,input')) return; marks.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (marks.length > 8) marks.shift(); };
-    const key = () => { if (E.want() && !E.playing()) E.play(); };
-    addEventListener('pointermove', move); addEventListener('deviceorientation', tilt); addEventListener('pointerdown', down); addEventListener('keydown', key);
+    addEventListener('pointermove', move);
     const ANG = 18 * Math.PI / 180;
     const slash = (x, y, len, w, col) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ANG); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-w / 2, -len / 2); ctx.lineTo(w / 2, -len / 2 + w * .6); ctx.lineTo(w / 2, len / 2); ctx.lineTo(-w / 2, len / 2 - w * .6); ctx.closePath(); ctx.fill(); ctx.restore(); };
     const frame = (now) => { if (!alive) return; const dt = Math.min(50, now - last); last = now;
-      const t = E.playing() ? E.el.currentTime : -1;
-      const target = innoPulse(t);
-      pulse += (target - pulse) * (target > pulse ? .6 : .2);
-      if (eqRef.current) [...eqRef.current.children].forEach((b, i) => { b.style.height = (E.playing() ? 3 + 11 * Math.min(1, innoPulse(t - i * .06) + .15 + .25 * Math.abs(Math.sin(now / 180 + i))) : 3) + 'px'; });
-      const dEl = disc.current; if (dEl) { dEl.style.setProperty('--pulse', pulse.toFixed(3)); if (!reduce && !leaving.current) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); } }
+      const dEl = disc.current; if (dEl && !reduce && !leaving.current) { dEl.style.setProperty('--ry', ((mx - .5) * 18).toFixed(2) + 'deg'); dEl.style.setProperty('--rx', ((.5 - my) * 14).toFixed(2) + 'deg'); }
       ctx.clearRect(0, 0, W, H);
-      const g = ctx.createRadialGradient(W * .5, H * .42, 0, W * .5, H * .42, Math.max(W, H) * .7); g.addColorStop(0, 'rgba(11,18,87,' + (.9 + pulse * .1) + ')'); g.addColorStop(1, 'rgba(6,10,51,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      slashes.forEach((s) => { if (!reduce) s.y -= s.sp * dt * (1 + pulse * 3); if (s.y < -.5) { s.y = 1.5; s.x = Math.random(); } slash((s.x + (mx - .5) * .04 * s.w / 10) * W, s.y * H, s.len * H, s.w, 'rgba(240,78,35,' + (s.al + pulse * .08) + ')'); });
-      marks.forEach((m) => { const k = (now - m.t) / 1400; if (k < 1) { const L = Math.min(W, H) * .32 * Math.min(1, k * 4); for (let i = -1; i <= 1; i++) slash(m.x + i * Math.min(W, H) * .05, m.y + i * 8, L, 13, 'rgba(255,99,57,' + Math.min(1, (1 - k) * 1.1) + ')'); } });
+      const g = ctx.createRadialGradient(W * .5, H * .42, 0, W * .5, H * .42, Math.max(W, H) * .7); g.addColorStop(0, 'rgba(11,18,87,.92)'); g.addColorStop(1, 'rgba(6,10,51,1)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      slashes.forEach((s) => { if (!reduce) s.y -= s.sp * dt; if (s.y < -.5) { s.y = 1.5; s.x = Math.random(); } slash((s.x + (mx - .5) * .04 * s.w / 10) * W, s.y * H, s.len * H, s.w, 'rgba(240,78,35,' + s.al + ')'); });
       raf = requestAnimationFrame(frame); };
     raf = requestAnimationFrame(frame);
-    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); removeEventListener('deviceorientation', tilt); removeEventListener('pointerdown', down); removeEventListener('keydown', key); E.destroy(); };
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move); };
   }, []);
-  // ogni tocco sulla schermata (che per iPhone è un elemento cliccabile) avvia l'inno se non sta suonando
-  const touch = () => { const E = eng.current; if (!E || leaving.current || !E.want() || E.playing()) return; E.play(); };
-  const toggle = (e) => { e.stopPropagation(); const E = eng.current; if (!E) return; if (E.playing()) { E.pause(); setWant(false); } else { setWant(true); E.play(); } };
-  const enter = (e) => { e.stopPropagation(); if (leaving.current) return; leaving.current = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (x) {}
-    eng.current && eng.current.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
-  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${touch}>
+  const enter = () => { if (leaving.current) return; leaving.current = true; setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
+  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers">
     <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
     <div class="in2-stage">
-      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
-        <button class=${'in2-sound' + (on ? '' : ' off') + (!on && want ? ' ask' : '')} aria-pressed=${on} onClick=${toggle}><span class="in2-eq" ref=${eqRef} aria-hidden="true"><i></i><i></i><i></i><i></i></span>${on ? 'Audio acceso' : want ? 'Tocca per l’audio' : 'Audio spento'}</button></div>
+      <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div></div>
       <div class="in2-c">
         <div class="in2-disc" ref=${disc}><img src="tigers-stemma.png" alt="Stemma Polisportiva Tigers"/></div>
         <span class="in2-tag">Cinque in campo · tutti dalla stessa parte</span>
         <h1 class="in2-h"><span>Forza</span><em>Tigers.</em></h1>
-        ${nm && html`<div class="in2-next"><i></i>Prossima <b>${nm.home ? 'Tigers – ' + short(nm.opponent) : short(nm.opponent) + ' – Tigers'}</b> · ${fmtDate(nm.date)}${nm.time ? ' · ' + nm.time : ''}</div>`}
       </div>
-      <div class="in2-bottom">
-        <button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button>
-        <div class="in2-foot"><label onClick=${(e) => e.stopPropagation()}><input type="checkbox" checked=${no} onChange=${(e) => setNo(e.target.checked)}/>Non mostrare all’apertura</label><span>Polisportiva Tigers · Futsal</span></div>
-      </div>
+      <div class="in2-bottom"><button class="in2-enter" onClick=${enter}><span>Entra <${Icon} n="arrowR"/></span></button></div>
     </div>
     <div class="in2-wipe" aria-hidden="true"><i></i><i></i><i></i></div>
-    <audio ref=${au} src="inno-tigers.mp3" preload="auto" autoplay loop></audio>
   </div>`;
 }
 
@@ -3261,8 +3203,7 @@ function App() {
   const [menu, setMenu] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   useEffect(() => { window.__login = () => { setMenu(false); setLoginOpen(true); }; }, []);
-  let introPref = 'yes'; try { introPref = localStorage.getItem('quinto-intro') || 'yes'; } catch (e) {}
-  const [intro, setIntro] = useState(() => { try { return introPref !== 'no' && !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return introPref !== 'no'; } });
+  const [intro, setIntro] = useState(() => { try { return !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return true; } });
   useEffect(() => { window.__showIntro = () => setIntro(true); const f = () => { setLoc(parseHash()); setMenu(false); scrollTo(0, 0); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
   const go = (route, arg) => { const h = '#' + route + (arg ? '~' + encodeURIComponent(arg) : ''); if (location.hash === h) { setLoc(parseHash()); } else location.hash = h; };
   const R = ROUTES.find((r) => r[0] === loc.route);
