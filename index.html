@@ -603,6 +603,11 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 @keyframes in2call2{50%{box-shadow:0 0 0 1px rgba(245,197,24,.7) inset,0 0 44px -4px rgba(245,197,24,.6)}}
 @media (prefers-reduced-motion:reduce){.in2-enter.off{animation:none}}
 .in2-enter.warming .in2-lab-off{opacity:.45}
+
+/* transizione tra le pagine */
+.pwipe{position:fixed;top:0;bottom:0;z-index:45;pointer-events:none;overflow:hidden}
+.pwipe-old{position:absolute;left:0;margin:0;background:var(--bg);min-height:100vh}
+.pwipe i{position:absolute;top:-10%;bottom:-10%;display:block;transform:skewX(-18deg);will-change:left}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -3337,6 +3342,34 @@ const ROUTES = [
   ['impostazioni', 'Impostazioni', 'gear', Impostazioni, 'Altro'],
 ];
 function parseHash() { const h = decodeURIComponent((location.hash || '').slice(1)); const [r, ...rest] = h.split('~'); return { route: ROUTES.some((x) => x[0] === r) ? r : 'home', arg: rest.join('~') || '' }; }
+/* transizione tra le pagine: le tre bande dell'ingresso attraversano la pagina e dietro l'ultima (blu notte) c'è già la nuova.
+   Si fotografa la pagina vecchia, si disegna la nuova sotto, e la foto della vecchia resta visibile solo davanti alle bande. */
+let wiping = false;
+function pageWipe(dir) {
+  const main = document.getElementById('main');
+  if (!main || wiping || matchMedia('(prefers-reduced-motion: reduce)').matches || document.querySelector('.in2,.trailer,.scrim')) return null;
+  const r = main.getBoundingClientRect(), W = r.width, H = innerHeight;
+  const ov = document.createElement('div'); ov.className = 'pwipe'; ov.style.cssText = `left:${r.left}px;width:${W}px`;
+  const old = main.cloneNode(true); old.removeAttribute('id'); old.className += ' pwipe-old'; old.style.cssText = `top:${r.top}px;width:${W}px`;
+  old.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+  // la copia non conserva i valori scelti: li riporto (menu a tendina, campi, caselle)
+  const so = main.querySelectorAll('select,input,textarea'), sc = old.querySelectorAll('select,input,textarea'); so.forEach((n, i) => { const c = sc[i]; if (!c) return; if (n.tagName === 'SELECT') c.selectedIndex = n.selectedIndex; else if (n.type === 'checkbox' || n.type === 'radio') c.checked = n.checked; else c.value = n.value; });
+  const cols = dir > 0 ? ['var(--notte)', '#C63A12', 'var(--fiamma)'] : ['var(--fiamma)', '#C63A12', 'var(--notte)'];
+  ov.appendChild(old); const bands = cols.map((c) => { const i = document.createElement('i'); i.style.background = c; ov.appendChild(i); return i; });
+  document.body.appendChild(ov); wiping = true;
+  const sk = H * 1.2 * Math.tan(18 * Math.PI / 180), hs = H / 2 * Math.tan(18 * Math.PI / 180), bw = [W * .2, W * .12, W * .16], B = bw[0] + bw[1] + bw[2], DUR = 560;
+  const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  return () => { const t0 = performance.now();
+    const step = (now) => { const k = Math.min(1, (now - t0) / DUR), e = ease(k);
+      const top = -r.top, bot = H - r.top; // bordo alto e basso dello schermo, nelle coordinate della foto
+      if (dir > 0) { const L = -(B + sk / 2) + e * (W + B + sk); let x = L; bands.forEach((b, j) => { b.style.left = x + 'px'; b.style.width = (bw[j] + 1) + 'px'; x += bw[j]; });
+        old.style.clipPath = old.style.webkitClipPath = `polygon(${L + hs}px ${top}px,100% ${top}px,100% ${bot}px,${L - hs}px ${bot}px)`; }
+      else { const Rr = W + B + sk / 2 - e * (W + B + sk); let x = Rr - B; bands.forEach((b, j) => { const ww = bw[2 - j]; b.style.left = x + 'px'; b.style.width = (ww + 1) + 'px'; x += ww; });
+        old.style.clipPath = old.style.webkitClipPath = `polygon(0 ${top}px,${Rr + hs}px ${top}px,${Rr - hs}px ${bot}px,0 ${bot}px)`; }
+      if (k < 1) requestAnimationFrame(step); else { ov.remove(); wiping = false; } };
+    requestAnimationFrame(step); };
+}
+
 function App() {
   const s = useStore();
   const [loc, setLoc] = useState(parseHash());
@@ -3344,7 +3377,7 @@ function App() {
   const [loginOpen, setLoginOpen] = useState(false);
   useEffect(() => { window.__login = () => { setMenu(false); setLoginOpen(true); }; }, []);
   const [intro, setIntro] = useState(() => { try { return !sessionStorage.getItem('quinto-intro-seen'); } catch (e) { return true; } });
-  useEffect(() => { window.__showIntro = () => setIntro(true); const f = () => { setLoc(parseHash()); setMenu(false); scrollTo(0, 0); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
+  useEffect(() => { window.__showIntro = () => setIntro(true); let prev = parseHash().route; const f = () => { const nl = parseHash(); const a = ROUTES.findIndex((x) => x[0] === prev), b = ROUTES.findIndex((x) => x[0] === nl.route); const run = nl.route !== prev ? pageWipe(b >= a ? 1 : -1) : null; prev = nl.route; setLoc(nl); setMenu(false); scrollTo(0, 0); if (run) requestAnimationFrame(run); }; addEventListener('hashchange', f); return () => removeEventListener('hashchange', f); }, []);
   const go = (route, arg) => { const h = '#' + route + (arg ? '~' + encodeURIComponent(arg) : ''); if (location.hash === h) { setLoc(parseHash()); } else location.hash = h; };
   const R = ROUTES.find((r) => r[0] === loc.route);
   const View = R[3];
