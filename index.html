@@ -536,7 +536,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 @media (prefers-reduced-motion:reduce){.lv-tile.pick,.lv-to.late{animation:none}}
 .lv-editline{grid-template-columns:72px 22px minmax(0,1fr) auto}
 /* ingresso */
-.in2{position:fixed;inset:0;z-index:100;background:var(--notte);color:#fff;overflow:hidden;transition:opacity .5s ease}
+.in2{position:fixed;inset:0;z-index:100;background:var(--notte);color:#fff;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .5s ease}
 .in2.out{opacity:0;pointer-events:none}
 .in2-fx{position:absolute;inset:0;width:100%;height:100%;display:block}
 .in2-stage{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));transition:opacity .5s ease}
@@ -3210,7 +3210,9 @@ function Intro({ onDone }) {
   const enter = () => { const S0 = st.current; if (S0.leaving) return; S0.leaving = true; try { localStorage.setItem('quinto-intro', no ? 'no' : 'yes'); } catch (e) {}
     S0.fade && S0.fade(1400); setPhase('go'); setTimeout(() => setPhase('go out'), 820); setTimeout(onDone, 1350); };
   const toggle = (e) => { e.stopPropagation(); const S0 = st.current; if (S0.paused && S0.paused()) { S0.want = true; setWant(true); S0.play(); } else { S0.want = false; setWant(false); S0.pause && S0.pause(); } };
-  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers">
+  // su iPhone solo un elemento con un proprio gestore di click riceve un tocco valido per l'audio
+  const wake = () => { const S0 = st.current; if (S0.leaving || !S0.want || !(S0.paused && S0.paused())) return; S0.gesture = true; S0.play && S0.play(); };
+  return html`<div class=${'in2 ' + phase} role="dialog" aria-label="Ingresso Polisportiva Tigers" onClick=${wake} onTouchEnd=${wake}>
     <canvas ref=${cv} class="in2-fx" aria-hidden="true"></canvas>
     <div class="in2-stage">
       <div class="in2-top"><div class="brand" style="font-size:26px;color:#fff">QUINT<span class="o"><img src="tigers-stemma.png" alt=""/></span></div>
