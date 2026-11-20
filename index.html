@@ -2980,8 +2980,10 @@ function Intro({ onDone }) {
       fade,
     });
 let W=0,H=0,vert=true,sc=1,ox=0,oy=0,mx=0,my=0;const Lm=40,Wm=20;
-function size(){const d=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cvEl.width=W*d;cvEl.height=H*d;ctx.setTransform(d,0,0,d,0,0);vert=H>=W;const lw=vert?Wm:Lm,lh=vert?Lm:Wm;sc=Math.min(W*.92/lw,H*.9/lh);ox=(W-lw*sc)/2;oy=(H-lh*sc)/2}
+function size(){const d=Math.min(2,devicePixelRatio||1);W=cvEl.clientWidth||innerWidth;H=cvEl.clientHeight||innerHeight;cvEl.width=W*d;cvEl.height=H*d;ctx.setTransform(d,0,0,d,0,0);vert=H>=W;const lw=vert?Wm:Lm,lh=vert?Lm:Wm;sc=Math.min(W*.92/lw,H*.9/lh);ox=(W-lw*sc)/2;oy=(H-lh*sc)/2}
 addEventListener('resize',size);size();
+// la tela segue la sua misura vera (sull'iPhone installato è più alta di innerHeight): così la corona resta sullo stemma
+const ro=window.ResizeObserver?new ResizeObserver(()=>size()):null;if(ro)ro.observe(cvEl);
 const move=(e)=>{mx=e.clientX/W-.5;my=e.clientY/H-.5};addEventListener('pointermove',move);
 const P=(x,y)=>vert?[ox+x*sc,oy+y*sc]:[ox+(Lm-y)*sc,oy+x*sc];
 const rnd=(a,b)=>a+Math.random()*(b-a);
@@ -3059,7 +3061,7 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
   cor+=((t>=0?1:0)-cor)*Math.min(1,dt*3);
   fk=fk.filter(f=>now-f.t<900);let burst=0,thump=0;fk.forEach(f=>{const s=(now-f.t)/1000;burst=Math.max(burst,Math.exp(-s*6)*Math.cos(s*22)*(f.down?1:.45)*f.s);thump=Math.max(thump,Math.exp(-s*12)*(f.down?1:.5)*f.s)});
   const e=t>=0?en(t):0,drop=e>.72;rot+=dt*dir*(drop?.9:.25)*(1+thump*2);rot2-=dt*(drop?1.4:.45);wave+=dt*(drop?3.2:1.6);
-  if(cor>.01){const rc=discEl.getBoundingClientRect(),cx=rc.left+rc.width/2,cy=rc.top+rc.height/2,R=rc.width/2;
+  if(cor>.01){const rc=discEl.getBoundingClientRect(),cr=cvEl.getBoundingClientRect(),cx=rc.left-cr.left+rc.width/2,cy=rc.top-cr.top+rc.height/2,R=rc.width/2;
    ctx.save();ctx.globalAlpha=cor*Math.min(1,light*1.2);ctx.lineCap='round';
    const hg=ctx.createRadialGradient(cx,cy,R*.95,cx,cy,R*1.5);hg.addColorStop(0,'rgba(240,78,35,'+(.12+thump*.35)+')');hg.addColorStop(1,'rgba(240,78,35,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(cx,cy,R*1.5,0,7);ctx.fill();
    if(burst>.25){ctx.shadowColor='rgba(255,140,60,.8)';ctx.shadowBlur=18*burst}
@@ -3075,7 +3077,7 @@ function frame(now){if(!alive)return;const dt=Math.min(.05,(now-last)/1000);last
  raf=requestAnimationFrame(frame)}
     raf = requestAnimationFrame(frame);
     play(false);
-    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); removeEventListener('pointermove', move);
+    return () => { alive = false; cancelAnimationFrame(raf); removeEventListener('resize', size); if (ro) ro.disconnect(); removeEventListener('pointermove', move);
       au.removeEventListener('timeupdate', wrap); au.removeEventListener('playing', onPlaying); au.removeEventListener('pause', onPause);
       try { au.pause(); } catch (e) {} try { ac && ac.close().catch(() => {}); } catch (e) {} };
   }, []);
