@@ -252,7 +252,17 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 /* players */
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
 .pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;position:relative;overflow:hidden;display:grid;gap:10px;box-shadow:var(--shadow)}
-.pcard .num{position:absolute;right:-4px;top:-16px;font-family:var(--f-display);font-weight:900;font-size:110px;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--line);pointer-events:none}
+.pc-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.pc-who{min-width:0}
+.jersey{position:relative;width:56px;height:52px;flex:none;display:grid;place-items:center}
+.jersey svg{position:absolute;inset:0;width:100%;height:100%}
+.jersey svg path{fill:var(--jersey,var(--blu));stroke:var(--jersey,var(--blu));stroke-width:2;stroke-linejoin:round}
+.jersey svg .collar{fill:none;stroke:var(--fiamma);stroke-width:3;stroke-linecap:round}
+.jersey b{position:relative;margin-top:6px;font-family:var(--f-display);font-weight:900;font-size:24px;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.jersey.gk svg path{fill:var(--fiamma);stroke:var(--fiamma)}
+.jersey.gk svg .collar{stroke:var(--blu)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .jersey{--jersey:#2B3BB8}}
+:root[data-theme="dark"] .jersey{--jersey:#2B3BB8}
 .pcard .nick{font-family:var(--f-display);font-weight:900;font-size:30px;line-height:.9;text-transform:uppercase;color:var(--fg);position:relative;overflow-wrap:anywhere}
 .pcard .name{color:var(--muted);font-size:14px;position:relative}
 .pcard>*{position:relative}
@@ -1325,6 +1335,10 @@ function Alerts({ go }) {
 }
 
 /* ---------- LA SQUADRA ---------- */
+/* maglia con il numero: blu per i giocatori di movimento, arancio per i portieri */
+const Jersey = ({ n, gk }) => html`<span class=${'jersey' + (gk ? ' gk' : '')} aria-label=${n != null ? 'Maglia numero ' + n : 'Numero di maglia da assegnare'}>
+  <svg viewBox="0 0 64 60" aria-hidden="true"><path d="M22 3h20l4 3 15 8-6 14-7-3v32H16V25l-7 3-6-14 15-8z"/><path class="collar" d="M24 3q8 8 16 0"/></svg>
+  <b>${n ?? '–'}</b></span>`;
 function Squadra({ go }) {
   useStore();
   const [tab, setTab] = useState('rosa');
@@ -1355,9 +1369,11 @@ function Rosa() {
     </div>
     ${list.length ? html`<div class="pgrid">${list.map((p) => { const s = stats[p.id] || {}; return html`
       <article class="pcard">
-        <span class="num" aria-hidden="true">${p.number ?? ''}</span>
-        <div class="row between" style="align-items:start"><div><div class="nick">${p.nick || p.name}</div><div class="name">${p.nick ? p.name + ' · ' : ''}${p.role || 'Ruolo da definire'}${p.foot ? ' · ' + p.foot : ''}</div></div>
-        <button class="iconbtn" aria-label=${'Modifica ' + p.name} onClick=${() => setEdit(p)}><${Icon} n="edit"/></button></div>
+        <div class="pc-head">
+          <${Jersey} n=${p.number} gk=${p.role === 'Portiere'}/>
+          <div class="pc-who"><div class="nick">${p.nick || p.name}</div><div class="name">${p.nick ? p.name + ' · ' : ''}${p.role || 'Ruolo da definire'}${p.foot ? ' · ' + p.foot : ''}</div></div>
+          <button class="iconbtn" aria-label=${'Modifica ' + p.name} onClick=${() => setEdit(p)}><${Icon} n="edit"/></button>
+        </div>
         <div class="row" style="gap:6px">
           ${p.injury?.active && html`<span class="pill bad">Infortunato${p.injury.returnDate ? ' · ' + fmtDate(p.injury.returnDate) : ''}</span>`}
           ${p.suspension?.active && html`<span class="pill bad">Squalificato${p.suspension.games ? ' · ' + p.suspension.games + ' gare' : ''}</span>`}
