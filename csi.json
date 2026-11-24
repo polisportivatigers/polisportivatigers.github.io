@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-18T22:06:39.145Z",
+ "checkedAt": "2026-11-24T22:04:42.704Z",
  "source": "Portale CSI tramite automazione ChatGPT",
  "standings": [
   {
@@ -15,20 +15,32 @@
    "notes": ""
   },
   {
-   "name": "Don Lorenzo Milani Club",
+   "name": "U.S. i Dispettosi",
    "position": 2,
    "points": 12,
-   "played": 4,
+   "played": 5,
    "wins": 4,
    "draws": 0,
-   "losses": 0,
-   "gf": 21,
-   "ga": 14,
+   "losses": 1,
+   "gf": 28,
+   "ga": 8,
+   "notes": ""
+  },
+  {
+   "name": "Don Lorenzo Milani Club",
+   "position": 3,
+   "points": 12,
+   "played": 5,
+   "wins": 4,
+   "draws": 0,
+   "losses": 1,
+   "gf": 22,
+   "ga": 20,
    "notes": ""
   },
   {
    "name": "Atletico Gerre",
-   "position": 3,
+   "position": 4,
    "points": 10,
    "played": 5,
    "wins": 3,
@@ -39,20 +51,20 @@
    "notes": ""
   },
   {
-   "name": "U.S. i Dispettosi",
-   "position": 4,
+   "name": "Mirmidoni",
+   "position": 5,
    "points": 9,
    "played": 4,
    "wins": 3,
    "draws": 0,
    "losses": 1,
-   "gf": 22,
-   "ga": 7,
+   "gf": 19,
+   "ga": 9,
    "notes": ""
   },
   {
    "name": "Spartak Comazzo",
-   "position": 5,
+   "position": 6,
    "points": 7,
    "played": 5,
    "wins": 2,
@@ -60,18 +72,6 @@
    "losses": 2,
    "gf": 21,
    "ga": 26,
-   "notes": ""
-  },
-  {
-   "name": "Mirmidoni",
-   "position": 6,
-   "points": 6,
-   "played": 3,
-   "wins": 2,
-   "draws": 0,
-   "losses": 1,
-   "gf": 13,
-   "ga": 6,
    "notes": ""
   },
   {
@@ -102,12 +102,12 @@
    "name": "La Petrarca Pub",
    "position": 9,
    "points": 4,
-   "played": 4,
+   "played": 5,
    "wins": 1,
    "draws": 1,
-   "losses": 2,
-   "gf": 15,
-   "ga": 20,
+   "losses": 3,
+   "gf": 18,
+   "ga": 26,
    "notes": ""
   },
   {
@@ -308,6 +308,18 @@
    8,
    9,
    "2026-11-17",
+   "21:30"
+  ],
+  "2615A29": [
+   6,
+   1,
+   "2026-11-19",
+   "21:30"
+  ],
+  "2615A30": [
+   3,
+   6,
+   "2026-11-19",
    "21:30"
   ]
  }
