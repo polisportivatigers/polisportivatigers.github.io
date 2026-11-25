@@ -683,6 +683,157 @@ body{background:var(--bg);min-height:var(--appH,100%)}
 .pwipe.gwipe{z-index:2147483001}
 .gameov iframe{display:block;width:100%;height:100%;border:0}
 html.gaming,html.gaming body{overflow:hidden}
+
+/* ===== Trailer, tema "punk": pop punk da fanzine (fotocopie, nastro adesivo, pennarello, lettere ritagliate) ===== */
+.th-punk{background:#0d0d12;--mk:'Permanent Marker',var(--f-display);--acid:#FFE14D}
+.th-punk .tr-bg{opacity:.35;filter:grayscale(1)}
+.th-punk::before{background:radial-gradient(circle at 50% 45%,rgba(255,225,77,calc(.06 + var(--tension)*.14 + var(--pulse)*.2)),transparent 60%)}
+.th-punk::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;background-image:radial-gradient(#fff 1px,transparent 1.4px);background-size:7px 7px;mix-blend-mode:overlay}
+.tr-zine{position:absolute;inset:0;pointer-events:none;z-index:0}
+.tr-zine .tape{position:absolute;width:clamp(90px,22vw,200px);height:clamp(22px,4vw,34px);background:rgba(255,225,77,.78);box-shadow:0 2px 6px rgba(0,0,0,.4);clip-path:polygon(3% 0,97% 4%,100% 50%,96% 100%,2% 96%,0 45%)}
+.tr-zine .tape.a{top:7%;left:-3%;transform:rotate(-14deg)}
+.tr-zine .tape.b{bottom:12%;right:-4%;transform:rotate(9deg);background:rgba(240,78,35,.8)}
+.tr-zine .tape.c{top:44%;right:-6%;transform:rotate(-70deg);background:rgba(255,255,255,.6);width:clamp(60px,14vw,120px)}
+.tr-zine .scrib{position:absolute;inset:0;width:100%;height:100%}
+.tr-zine .scrib path{fill:none;stroke:rgba(255,255,255,.22);stroke-width:3;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.th-punk .tr-stage{z-index:1;transform:rotate(calc(var(--pulse)*-1.2deg)) translateY(calc(var(--pulse)*-6px))}
+.th-punk .tr-kicker{font-family:var(--mk);letter-spacing:.06em;text-transform:none;color:var(--acid);font-size:clamp(18px,3.4vw,28px);transform:rotate(-3deg)}
+.th-punk .tr-sub{color:#fff;font-family:var(--mk);text-transform:none;transform:rotate(2deg)}
+.th-punk .tr-vs{font-family:var(--mk);text-transform:none;letter-spacing:.04em;color:var(--fiamma);font-size:clamp(24px,5vw,40px)}
+.th-punk .tr-opp{color:#111;background:#fff;padding:.08em .22em .02em;transform:rotate(-2.5deg);box-shadow:8px 8px 0 var(--fiamma)}
+.th-punk .tr-disc{box-shadow:0 0 0 10px #111,0 0 0 16px var(--acid),0 0 calc(20px + var(--pulse)*50px) rgba(255,225,77,.5)}
+/* persona: numero spruzzato a vernice, cognome su striscia di carta, soprannome scritto a pennarello su un adesivo */
+.th-punk .tr-num{-webkit-text-stroke:0;color:var(--fiamma);font-style:italic;transform:rotate(-6deg);text-shadow:6px 6px 0 #111,-3px -3px 0 var(--acid),0 0 30px rgba(240,78,35,.4)}
+.th-punk .tr-num.coach{color:#fff;text-shadow:5px 5px 0 var(--fiamma)}
+.th-punk .tr-role{font-family:var(--mk);text-transform:none;letter-spacing:.04em;border:0;background:#111;color:var(--acid);border-radius:0;transform:rotate(-2deg);font-size:clamp(15px,2.6vw,22px)}
+.th-punk .tr-first{color:var(--acid);font-family:var(--mk);text-transform:none;font-weight:400;transform:rotate(-2deg)}
+.th-punk .tr-last{background:#fff;color:#111;padding:.06em .18em 0;transform:rotate(1.5deg);box-shadow:7px 7px 0 var(--fiamma);clip-path:polygon(0 4%,100% 0,99% 96%,1% 100%)}
+.th-punk .tr-nick{font-family:var(--mk);font-weight:400;text-transform:none;background:var(--acid);color:#111;transform:rotate(-5deg);padding:6px 20px 2px;border-radius:4px;box-shadow:0 6px 0 #111;margin-top:14px}
+.th-punk .tr-nick .graffi{display:none}
+.th-punk .tr-count{font-family:var(--mk);letter-spacing:.04em;color:var(--acid);font-size:18px}
+/* lettere ritagliate dai giornali */
+.tr-ransom{margin:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.04em .3em;font-family:var(--f-display);font-weight:900;text-transform:uppercase;line-height:1}
+.tr-ransom .w{display:inline-flex;align-items:center;gap:.02em;white-space:nowrap}
+.tr-ransom .l{display:inline-block;background:var(--bg);color:var(--fg);padding:.03em var(--px) 0;font-size:calc(var(--s)*1em);transform:translateY(var(--y)) rotate(var(--r));box-shadow:3px 3px 0 rgba(0,0,0,.5);clip-path:var(--cut);font-weight:900;line-height:1.05}
+.tr-ransom .l.bare{box-shadow:none;text-shadow:3px 3px 0 rgba(0,0,0,.25)}
+.tr-ransom .l.ol{color:transparent;-webkit-text-stroke:2px var(--fg)}
+.tr-rsec{font-size:clamp(54px,17vw,170px);max-width:94vw}
+.tr-rmega{font-size:clamp(70px,19vw,230px)}
+/* nel drop: coro e muro della rosa in versione fanzine */
+.th-punk .tr-mega{color:var(--acid);font-style:italic;text-shadow:7px 7px 0 var(--fiamma),14px 14px 0 #111;transform:rotate(-4deg)}
+.th-punk .tr-mega.outline{color:#fff;-webkit-text-stroke:0;text-shadow:7px 7px 0 #111;transform:rotate(3deg)}
+.th-punk .tr-marquee{border-block:0;background:var(--acid);color:#111;transform:rotate(-3deg);width:110vw}
+.th-punk .tr-marquee b{color:var(--fiamma)}
+.th-punk .tr-tile{border-radius:2px;border:0;background:#fff;color:#111;box-shadow:4px 4px 0 #111}
+.th-punk .tr-tile:nth-child(odd){transform:rotate(-3deg) scale(.85)}.th-punk .tr-tile:nth-child(even){transform:rotate(3deg) scale(.85)}
+.th-punk .tr-tile.on:nth-child(odd){transform:rotate(-3deg)}.th-punk .tr-tile.on:nth-child(even){transform:rotate(3deg)}
+.th-punk .tr-tile span{font-family:var(--mk)}
+.th-punk .tr-strobe-nick{font-family:var(--mk);font-weight:400;text-transform:none}
+.th-punk .tr-word{font-style:italic;transform:rotate(-3deg)}
+.th-punk .tr-bar i{background:var(--acid)}
+.th-punk.dropping .tr-flash{background:var(--acid)}
+@media (prefers-reduced-motion:no-preference){
+  .tr-ransom .l{animation:trrans .35s cubic-bezier(.2,1.6,.3,1) var(--d) both}
+}
+@keyframes trrans{from{opacity:0;transform:translateY(-40px) rotate(calc(var(--r)*4)) scale(1.6)}to{opacity:1;transform:translateY(var(--y)) rotate(var(--r))}}
+.th-punk .tr-strobe{background:#111}.th-punk .tr-strobe.alt{background:var(--fiamma)}
+.th-punk .tr-strobe-nick{color:var(--acid);transform:rotate(-4deg)}.th-punk .tr-strobe.alt .tr-strobe-nick{color:#111}
+.th-punk .tr-strobe-num{-webkit-text-stroke:3px rgba(255,225,77,.25)}
+/* tema punk con gli avatar: il giocatore è un adesivo ritagliato, attaccato col nastro */
+.tr-pp{position:absolute;inset:0;display:grid;grid-template-rows:minmax(0,1fr) auto;justify-items:center;align-items:end;padding:calc(120px + env(safe-area-inset-top,0px)) 18px calc(56px + env(safe-area-inset-bottom,0px))}
+.tr-pp-num{position:absolute;top:calc(74px + env(safe-area-inset-top,0px));left:50%;translate:-50% 0;font-family:var(--f-display);font-weight:900;font-style:italic;font-size:clamp(170px,52vw,480px);line-height:.8;color:var(--fiamma);text-shadow:8px 8px 0 #111,-4px -4px 0 var(--acid);opacity:.9;transform:rotate(-7deg);z-index:0}
+.tr-pp.coach .tr-pp-num{font-size:clamp(110px,34vw,300px);color:#fff;text-shadow:6px 6px 0 var(--fiamma)}
+.tr-pp-pic{position:relative;z-index:1;height:100%;max-height:min(50vh,76vw,560px);aspect-ratio:1;display:grid;place-items:end center;min-height:0}
+.tr-pp-av{max-height:100%;max-width:100%;transform:rotate(var(--tilt));filter:drop-shadow(0 0 0 #fff) drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(10px 12px 0 rgba(0,0,0,.55))}
+.tr-pp-tape{position:absolute;z-index:2;top:-4%;width:26%;height:24px;rotate:-38deg;background:rgba(255,225,77,.85);box-shadow:0 2px 4px rgba(0,0,0,.4);clip-path:polygon(3% 0,97% 6%,100% 50%,96% 100%,2% 94%,0 45%)}
+.tr-pp-txt{position:relative;z-index:2;display:grid;justify-items:center;text-align:center;gap:4px;margin-top:-4vh}
+.th-punk .tr-pp .tr-last{font-size:clamp(46px,13vw,130px)}
+.th-punk .tr-pp .tr-nick{font-size:clamp(34px,9vw,90px);margin-top:8px}
+.th-punk .tr-pp .tr-first{font-size:clamp(26px,7vw,60px);background:#111;padding:2px 12px 0}
+.th-punk .tr-pp .tr-role{position:relative;z-index:1}
+@media (min-aspect-ratio:1/1){
+  .tr-pp{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr;align-items:center;padding:40px 5vw}
+  .tr-pp-pic{max-height:80vh}
+  .tr-pp-num{left:25%;top:50%;translate:-50% -50%}
+  .tr-pp-txt{justify-items:start;text-align:left;margin:0}
+}
+.tr-chant-av{width:min(56vw,320px);filter:drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff) drop-shadow(8px 10px 0 rgba(0,0,0,.5));transform:rotate(-3deg)}
+.th-punk .tr-tile.pic{padding:0 0 6px;overflow:hidden;gap:0}
+.th-punk .tr-tile.pic img{width:100%;aspect-ratio:1;object-fit:cover;object-position:50% 8%;background:var(--acid)}
+.th-punk .tr-tile.pic:nth-child(3n+2) img{background:var(--fiamma)}
+.th-punk .tr-tile.pic b{font-size:15px;line-height:1;margin-top:4px}
+.th-punk .tr-tile.pic span{font-size:15px;line-height:1.1}
+.tr-strobe-av{position:absolute;bottom:0;left:50%;translate:-50% 0;height:min(58vh,640px);max-width:120vw;object-fit:contain;filter:grayscale(1) contrast(1.4) drop-shadow(10px 10px 0 rgba(0,0,0,.4));mix-blend-mode:luminosity;opacity:.9}
+.tr-strobe.alt .tr-strobe-av{mix-blend-mode:multiply;filter:grayscale(1) contrast(1.6)}
+.th-punk .tr-strobe-txt{margin-top:-52vh}
+.tr-poster .tr-crowd{position:absolute;left:4vw;right:4vw;bottom:calc(10px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:end;pointer-events:none}
+.tr-crowd img{width:150%;max-width:none;margin-left:-25%;transform:rotate(var(--r));filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(6px 6px 0 rgba(0,0,0,.5));}
+.tr-crowd img{position:relative}.tr-crowd img:nth-child(n+5){margin-top:-62%;z-index:1}.tr-crowd img:nth-child(n+9){z-index:2}.tr-crowd img:nth-child(8n+5),.tr-crowd img:nth-child(8n+6),.tr-crowd img:nth-child(8n+7),.tr-crowd img:nth-child(8n+8){translate:12% 0}
+.tr-poster .tr-disc,.tr-poster .tr-h,.tr-poster .tr-kicker{position:relative;z-index:3;translate:0 -22vh}
+@media (prefers-reduced-motion:no-preference){
+  .tr-stick{animation:trstick .45s cubic-bezier(.2,1.5,.3,1) both}
+  .tr-crowd img{animation:trcrowd .5s cubic-bezier(.2,1.4,.3,1) calc(var(--i)*.06s) both}
+}
+@keyframes trstick{from{opacity:0;transform:translateY(40vh) rotate(calc(var(--tilt,0deg)*6)) scale(.6)}to{opacity:1}}
+@keyframes trcrowd{from{opacity:0;translate:0 40vh}}
+/* ---- tema punk: carta fotocopiata, strappi, scarabocchi, coro, volantino, pogo ---- */
+.th-punk{--paper:#F1ECDD;--ink:#141414}
+.tr-paper{background:var(--paper);color:var(--ink)}
+.tr-center.tr-paper,.tr-flyer.tr-paper{position:absolute;inset:0}
+.tr-paper::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;background:radial-gradient(rgba(0,0,0,.18) 1px,transparent 1.3px) 0 0/5px 5px,linear-gradient(100deg,transparent 40%,rgba(0,0,0,.06) 41%,transparent 43%),linear-gradient(8deg,transparent 70%,rgba(0,0,0,.08) 71%,transparent 73%)}
+.th-punk .tr-paper .tr-kicker{color:var(--fiamma)}
+.th-punk .tr-paper .tr-ransom .l{box-shadow:3px 3px 0 rgba(0,0,0,.35)}
+/* effetto "stop motion": le scritte tremano a scatti come disegni rifatti a mano */
+@media (prefers-reduced-motion:no-preference){
+  .th-punk .tr-pp-txt,.th-punk .tr-ransom,.th-punk .tr-fl-info,.th-punk .tr-ohh,.th-punk .tr-mosh-t{animation:trboil .42s steps(1) infinite}
+}
+@keyframes trboil{0%{translate:0 0;rotate:0deg}33%{translate:1px -1px;rotate:.4deg}66%{translate:-1px 1px;rotate:-.3deg}}
+/* strappo di carta che attraversa lo schermo a ogni giocatore */
+.tr-tear{position:absolute;z-index:4;top:-10%;bottom:-10%;left:-60%;width:55%;background:var(--paper);pointer-events:none;clip-path:polygon(0 0,88% 0,94% 6%,90% 12%,97% 19%,92% 27%,99% 35%,93% 44%,98% 52%,91% 61%,97% 70%,92% 79%,99% 87%,94% 94%,100% 100%,0 100%);box-shadow:inset -6px 0 0 rgba(0,0,0,.08)}
+@media (prefers-reduced-motion:no-preference){.tr-tear{animation:trtear .42s cubic-bezier(.6,0,.4,1) both}}
+@keyframes trtear{0%{left:-60%}100%{left:130%}}
+/* scarabocchi a pennarello disegnati sopra l'adesivo */
+.tr-doodle{position:absolute;inset:-7% -7% -3%;width:114%;height:110%;z-index:0;pointer-events:none;overflow:visible}
+.tr-doodle path{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:0;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.5))}
+@media (prefers-reduced-motion:no-preference){.tr-doodle path{animation:trdraw .5s ease-out var(--dd) both}}
+@keyframes trdraw{from{stroke-dashoffset:1}}
+/* coro: una sillaba per battito, carta e inchiostro alternati */
+.tr-chantp.paper{background:var(--acid)}.tr-chantp.ink{background:var(--ink)}
+.tr-rsyl{font-size:clamp(66px,19vw,260px);max-width:96vw}
+.tr-rsyl.small{font-size:clamp(70px,20vw,220px);position:relative;z-index:3;translate:0 -22vh}
+.tr-oh{background:var(--fiamma)}
+.tr-ohh{margin:0;font-family:var(--mk);font-weight:400;font-size:clamp(52px,15vw,160px);color:var(--ink);transform:rotate(-5deg)}
+/* stampa fuori registro: tre copie dell'avatar sfasate, come una serigrafia */
+.tr-misprint{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:var(--paper)}
+.tr-misprint.alt{background:var(--acid)}
+.tr-misprint .tr-strobe-num{-webkit-text-stroke:3px rgba(0,0,0,.12)}
+.tr-mp-pic{position:absolute;bottom:0;left:50%;translate:-50% 0;height:min(58vh,640px);aspect-ratio:1}
+.tr-mp-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 100%}
+.tr-mp-pic .c1{filter:grayscale(1) brightness(1.25) sepia(1) saturate(12) hue-rotate(-22deg);mix-blend-mode:multiply;translate:-12px 7px;opacity:.9}
+.tr-mp-pic .c2{display:none}
+.tr-mp-pic .c0{filter:grayscale(1) contrast(2.2) brightness(1.05);mix-blend-mode:multiply}
+.tr-mp-txt{position:relative;z-index:2;display:grid;justify-items:center;text-align:center;margin-top:-52vh}
+.tr-misprint .tr-first{color:var(--ink);font-family:var(--mk);text-transform:none;font-weight:400;background:none}
+.tr-misprint .tr-strobe-nick{color:var(--ink);font-family:var(--mk);font-weight:400;text-transform:none;transform:rotate(-4deg);text-shadow:4px 4px 0 var(--fiamma)}
+/* volantino del concerto */
+.tr-flyer{display:grid;place-items:center;align-content:center;gap:clamp(6px,1.6vh,14px);text-align:center;padding:24px}
+.tr-fl-top{font-family:var(--mk);font-size:clamp(22px,6vw,48px);color:var(--fiamma);transform:rotate(-4deg)}
+.tr-rfl{font-size:clamp(70px,21vw,220px)}
+.tr-fl-vs{font-family:var(--mk);font-size:clamp(30px,8vw,64px);color:var(--ink)}
+.tr-fl-opp{margin:0;font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(56px,17vw,170px);line-height:.9;color:var(--paper);background:var(--ink);padding:.05em .2em 0;transform:rotate(2deg)}
+.tr-fl-info{display:grid;gap:4px;margin-top:2vh;font-family:var(--f-data);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:clamp(14px,3.6vw,24px);color:var(--ink)}
+.tr-fl-info b{font-size:1.25em;background:var(--acid);padding:2px 10px;transform:rotate(-1.5deg)}
+.tr-fl-stamp{position:absolute;right:6vw;bottom:12vh;font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(20px,5vw,40px);line-height:.95;color:var(--fiamma);border:4px solid var(--fiamma);padding:8px 12px;border-radius:8px;transform:rotate(-14deg);opacity:.85}
+/* pogo: gli adesivi saltano a tempo */
+.tr-mosh{position:absolute;inset:0;background:var(--ink)}
+.tr-mo{position:absolute;left:var(--x);top:var(--y);width:31vw;max-width:260px;translate:-50% 0;transform:rotate(var(--r));display:grid;justify-items:center;transition:translate .12s cubic-bezier(.2,1.6,.3,1)}
+.tr-mo.up{translate:-50% -5vh}
+.tr-mo img{width:100%;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)}
+.tr-mo span{font-family:var(--mk);font-size:clamp(14px,3.6vw,26px);background:var(--acid);color:var(--ink);padding:0 8px;margin-top:-8px;transform:rotate(-4deg)}
+.tr-mosh-t{position:absolute;left:0;right:0;bottom:8vh;margin:0;text-align:center;font-family:var(--mk);font-weight:400;font-size:clamp(60px,18vw,180px);color:var(--fiamma);text-shadow:5px 5px 0 #fff;transform:rotate(-6deg)}
+.tr-rmotto{font-size:clamp(54px,15vw,170px);max-width:92vw}
+.tr-pp-tape.l{left:-8%}.tr-pp-tape.r{left:auto;right:-8%;rotate:38deg;background:rgba(240,78,35,.8)}
+.tr-pp-av{position:relative;z-index:1}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -2772,6 +2923,31 @@ async function loadTrailerIndex() {
   bump(); return TRAILER_INDEX;
 }
 function hasTrailer(id) { return !!(TRAILER_INDEX && TRAILER_INDEX[id]); }
+/* tema "punk" (pop punk): carattere a pennarello e scritte con lettere ritagliate come un collage */
+function trailerFont(theme) {
+  if (theme !== 'punk' || document.getElementById('tr-font-punk')) return;
+  const l = document.createElement('link'); l.id = 'tr-font-punk'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bungee&family=Permanent+Marker&family=Rubik+Mono+One&family=Special+Elite&display=swap'; document.head.appendChild(l);
+  // caricati subito, così le scritte non cambiano misura mentre il video scorre
+  l.onload = () => { if (document.fonts) ['Abril Fatface', 'Bungee', 'Permanent Marker', 'Rubik Mono One', 'Special Elite'].forEach((f) => document.fonts.load('40px "' + f + '"', 'TIGERS').catch(() => {})); };
+}
+/* lettere ritagliate: ogni lettera ha carattere, carta, colore, misura e inclinazione "a caso",
+   ma sempre le stesse per la stessa scritta (generatore pseudo-casuale con seme), così il video non cambia tra una visione e l'altra */
+const R_FONTS = ["'Abril Fatface',serif", "'Special Elite',monospace", "'Rubik Mono One',sans-serif", "'Permanent Marker',cursive", "var(--f-display)", "'Bungee',sans-serif", "Georgia,serif"];
+const R_PAPER = [['#F04E23', '#fff'], ['#FFE14D', '#111'], ['#fff', '#111'], ['#0B1257', '#fff'], ['#111', '#FFE14D'], ['#F1ECDD', '#C63A12'], ['#E9E2CF', '#0B1257'], ['#FF8A66', '#111'], ['#2A3192', '#FFE14D'], ['#fff', '#F04E23']];
+function rng(seed) { let h = 2166136261; for (const c of seed) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; }; }
+function Ransom({ text, cls = '', seed = '', light = false }) {
+  // la scritta non deve mai uscire dallo schermo: si rimpicciolisce finché ci sta (anche dopo il caricamento dei caratteri)
+  const el = useRef();
+  useEffect(() => { const h = el.current; if (!h) return; const fit = () => { h.style.fontSize = ''; const max = Math.min(innerWidth * 0.86, (h.parentElement || h).clientWidth * 0.9); let w = 0; h.querySelectorAll('.w').forEach((x) => { w = Math.max(w, x.scrollWidth); }); if (w > max) h.style.fontSize = (parseFloat(getComputedStyle(h).fontSize) * max / w) + 'px'; }; fit(); const ts = [120, 400, 900].map((ms) => setTimeout(fit, ms)); document.fonts && document.fonts.ready.then(fit); return () => ts.forEach(clearTimeout); }, [text, seed]);
+  const r = rng(text + seed); let k = 0, lastF = -1, lastP = -1;
+  const pick = (n, last) => { let v = Math.floor(r() * n); if (v === last) v = (v + 1 + Math.floor(r() * (n - 1))) % n; return v; };
+  return html`<h2 ref=${el} class=${'tr-ransom ' + cls} data-light=${light ? 1 : 0} aria-label=${text}>${text.split(' ').map((w) => html`<span class="w">${[...w].map((ch) => {
+    const i = k++, f = pick(R_FONTS.length, lastF), p = pick(R_PAPER.length, lastP); lastF = f; lastP = p;
+    const bare = r() < 0.16, outline = !bare && r() < 0.1, low = f <= 1 && r() < 0.5;
+    const [bg, fg] = R_PAPER[p];
+    const st = `--r:${(r() * 22 - 11).toFixed(1)}deg;--y:${(r() * 0.24 - 0.12).toFixed(2)}em;--s:${(0.78 + r() * 0.5).toFixed(2)};--px:${(0.04 + r() * 0.12).toFixed(2)}em;--d:${(i * 0.035 + r() * 0.05).toFixed(3)}s;font-family:${R_FONTS[f]};--bg:${bare ? 'transparent' : bg};--fg:${bare ? (light ? ['#111', '#0B1257', '#C63A12'] : ['#FFE14D', '#fff', '#FF7424'])[p % 3] : fg};--cut:${['polygon(2% 0,100% 3%,97% 100%,0 96%)', 'polygon(0 4%,96% 0,100% 94%,4% 100%)', 'polygon(5% 2%,98% 0,95% 97%,0 100%)', 'none'][Math.floor(r() * 4)]}`;
+    return html`<span class=${'l' + (bare ? ' bare' : '') + (outline ? ' ol' : '')} style=${st}>${low ? ch.toLowerCase() : ch}</span>`; })}</span>`)}</h2>`;
+}
 
 /* scena corrente a partire dal tempo */
 function trailerScene(d, t) {
@@ -2793,7 +2969,7 @@ function Trailer({ id, onClose }) {
   const [d, setD] = useState(null), [err, setErr] = useState(''), [started, setStarted] = useState(false);
   const [scene, setScene] = useState({ kind: 'intro' }), [stage, setStage] = useState(0);
   const audio = useRef(), root = useRef(), raf = useRef();
-  useEffect(() => { fetch(TRAILER_INDEX[id], { cache: 'no-cache' }).then((r) => r.json()).then(setD).catch(() => setErr('Trailer non disponibile: controlla la connessione.')); }, [id]);
+  useEffect(() => { fetch(TRAILER_INDEX[id], { cache: 'no-cache' }).then((r) => r.json()).then((x) => { trailerFont(x.theme); (x.people || []).forEach((p) => { if (p.img) { const im = new Image(); im.src = p.img; } }); setD(x); }).catch(() => setErr('Trailer non disponibile: controlla la connessione.')); }, [id]);
   useEffect(() => { const k = (e) => { if (e.key === 'Escape') close(); }; addEventListener('keydown', k); document.body.style.overflow = 'hidden'; return () => { removeEventListener('keydown', k); document.body.style.overflow = ''; cancelAnimationFrame(raf.current); }; }, []);
   const close = () => { try { audio.current && audio.current.pause(); } catch (e) {} cancelAnimationFrame(raf.current); onClose(); };
   const loop = () => {
@@ -2824,9 +3000,10 @@ function Trailer({ id, onClose }) {
   };
   const start = () => { const a = audio.current; if (!a) return; a.currentTime = 0; a.play().then(() => { setStarted(true); cancelAnimationFrame(raf.current); raf.current = requestAnimationFrame(loop); }).catch(() => setErr('Il browser ha bloccato l’audio: tocca di nuovo Play.')); };
   useEffect(() => { if (d && window.__trailerT != null) { setStarted(true); raf.current = requestAnimationFrame(loop); } }, [d]);
-  const I = d && d.intro;
-  return html`<div class="trailer" ref=${root} role="dialog" aria-label="Trailer della partita">
+  const I = d && d.intro, punk = d && d.theme === 'punk';
+  return html`<div class=${'trailer' + (punk ? ' th-punk' : '')} ref=${root} role="dialog" aria-label="Trailer della partita">
     <div class="tr-bg"><${Stripes} seed=${5} count=${20} alpha=${.06}/></div>
+    ${punk && html`<div class="tr-zine" aria-hidden="true"><i class="tape a"></i><i class="tape b"></i><i class="tape c"></i><svg class="scrib" viewBox="0 0 400 300" preserveAspectRatio="none"><path d="M10 40 C80 10 120 70 190 30 S320 60 390 20"/><path d="M20 270 C90 240 160 290 230 255 S340 280 385 250"/><path d="M330 120 l40 -25 M335 135 l45 -10 M340 150 l40 5"/></svg></div>`}
     <div class="tr-flash"></div>
     <button class="tr-close" aria-label="Chiudi il trailer" onClick=${close}><${Icon} n="x"/></button>
     ${d && html`<audio ref=${audio} src=${d.audio} preload="auto" onEnded=${close}></audio>`}
@@ -2843,10 +3020,22 @@ function Trailer({ id, onClose }) {
         ${stage >= 2 && stage < 4 && html`<h2 class="tr-opp tr-slam" key="o">${d.opponent}</h2>`}
         ${stage >= 3 && stage < 4 && html`<span class="tr-vs tr-in" key="v">contro</span>`}
         ${stage >= 4 && html`<div class="tr-disc tr-spin" key="d"><img src="tigers-stemma.png" alt=""/></div><span class="tr-kicker tr-in" key="p">la Polisportiva</span>`}
-        ${stage >= 5 && html`<h2 class="tr-mega tr-slam tr-shake" key="t">Tigers</h2>`}
+        ${stage >= 5 && (punk ? html`<${Ransom} text="Tigers" cls="tr-rmega" key="t"/>` : html`<h2 class="tr-mega tr-slam tr-shake" key="t">Tigers</h2>`)}
       </div>`}
-      ${scene.kind === 'section' && html`<div class="tr-center" key=${'s' + scene.i}><span class="tr-kicker tr-in">${d.round}</span><h2 class="tr-section tr-wipe">${d.sections[scene.i].label}</h2></div>`}
-      ${scene.kind === 'person' && (() => { const p = d.people[scene.i]; const coach = isNaN(+p.num); return html`<div class="tr-person" key=${'p' + scene.i}>
+      ${scene.kind === 'section' && html`<div class=${'tr-center' + (punk ? ' tr-paper' : '')} key=${'s' + scene.i}><span class="tr-kicker tr-in">${d.round}</span>${punk ? html`<${Ransom} text=${d.sections[scene.i].label} cls="tr-rsec" light=${true}/>` : html`<h2 class="tr-section tr-wipe">${d.sections[scene.i].label}</h2>`}</div>`}
+      ${scene.kind === 'person' && punk && d.people[scene.i].img && (() => { const p = d.people[scene.i]; const coach = isNaN(+p.num); return html`<div class=${'tr-pp' + (coach ? ' coach' : '')} key=${'pp' + scene.i} style=${`--tilt:${scene.i % 2 ? 4 : -4}deg`}>
+        <span class="tr-pp-num tr-slam">${p.num}</span>
+        <i class="tr-tear" aria-hidden="true"></i>
+        <div class="tr-pp-pic">${stage >= 1 && html`<img class="tr-pp-av tr-stick" src=${p.img} alt="" key="av"/>`}${stage >= 1 && html`<i class="tr-pp-tape l" key="tp"></i><i class="tr-pp-tape r" key="tp2"></i>`}${stage >= 2 && html`<${Doodle} n=${scene.i} key="dd"/>`}</div>
+        <div class="tr-pp-txt">
+          <span class="tr-role tr-in">${p.role}</span>
+          ${stage >= 1 && html`<span class="tr-first tr-in" key="f">${p.first}</span>`}
+          ${stage >= 2 && html`<span class="tr-last tr-slam tr-shake" key="l">${p.last}</span>`}
+          ${stage >= 3 && p.nick && html`<span class="tr-nick tr-pop" key="n">${p.nick}!</span>`}
+        </div>
+        <div class="tr-count">${scene.i < 12 ? (scene.i + 1) + ' / 12' : 'Staff'}</div>
+      </div>`; })()}
+      ${scene.kind === 'person' && !(punk && d.people[scene.i].img) && (() => { const p = d.people[scene.i]; const coach = isNaN(+p.num); return html`<div class="tr-person" key=${'p' + scene.i}>
         <span class=${'tr-num tr-slam' + (coach ? ' coach' : '')}>${p.num}</span>
         <div class="tr-who">
           <span class="tr-role tr-in">${p.role}</span>
@@ -2856,7 +3045,7 @@ function Trailer({ id, onClose }) {
         </div>
         <div class="tr-count">${scene.i < 12 ? (scene.i + 1) + ' / 12' : 'Staff'}</div>
       </div>`; })()}
-      ${scene.kind === 'chant' && html`<div class="tr-center" key="chant"><span class="tr-kicker">L’allenatore</span>${[0, 1, 2].map((k) => stage > k && html`<h2 class="tr-chant tr-slam" key=${k}>Davide!</h2>`)}</div>`}
+      ${scene.kind === 'chant' && html`<div class="tr-center" key="chant">${punk && d.people[d.people.length - 1].img && html`<img class="tr-chant-av tr-stick" src=${d.people[d.people.length - 1].img} alt=""/>`}<span class="tr-kicker">L’allenatore</span>${[0, 1, 2].map((k) => stage > k && html`<h2 class="tr-chant tr-slam" key=${k}>Davide!</h2>`)}</div>`}
       ${scene.kind === 'build' && html`<div class="tr-center" key="build"><div class="tr-ring"><div class="tr-ring-n">${d.people.slice(0, 12).map((p, k) => html`<span style=${`--a:${k * 30}deg`}>${p.num}</span>`)}</div><div class="tr-disc"><img src="tigers-stemma.png" alt=""/></div></div></div>`}
       ${(scene.kind === 'drop' || scene.kind === 'wave' || scene.kind === 'peak') && html`<${DropScene} d=${d} beat=${stage} kind=${scene.kind}/>`}
     </div><div class="tr-bar"><i></i></div>`}
@@ -2866,11 +3055,18 @@ function Trailer({ id, onClose }) {
 /* ---- il drop: fasi a tempo di musica (battito = stage) ---- */
 const DROP_WORDS = ['Cinque in campo.', 'Tutti', 'dalla stessa parte.', 'Tigers!'];
 function DropScene({ d, beat, kind }) {
+  if (d.theme === 'punk' && d.punk) return html`<${PunkDrop} d=${d} beat=${beat}/>`;
   const squad = d.people.slice(0, 12);
   const b0 = d.beats.filter((b) => b < d.drop).length; // battiti prima del drop
   const k = Math.max(0, beat - b0); // battiti dal drop
   const tAt = (n) => d.beats[b0 + n] ?? d.end;
   const match = d.home ? ['Tigers', d.opponent] : [d.opponent, 'Tigers'];
+  const pics = d.theme === 'punk' && squad.every((p) => p.img);
+  if (kind === 'peak' && pics) return html`<div class="tr-center tr-poster" key="peak">
+    <div class="tr-crowd">${squad.map((p, i) => html`<img src=${p.img} alt="" style=${`--i:${i};--r:${((i * 37) % 13) - 6}deg`}/>`)}</div>
+    <div class="tr-disc tr-spin big"><img src="tigers-stemma.png" alt=""/></div>
+    <h2 class="tr-h tr-slam">Una squadra.<br/><em>Una fede.</em></h2>
+    <span class="tr-kicker tr-in">${d.round} · ${match[0]} – ${match[1]}</span></div>`;
   if (kind === 'peak') return html`<div class="tr-center" key="peak">
     <div class="tr-burst"></div>
     <div class="tr-disc tr-spin big"><img src="tigers-stemma.png" alt=""/></div>
@@ -2892,12 +3088,87 @@ function DropScene({ d, beat, kind }) {
     <div class="tr-marquee"><div>${[...squad, ...squad].map((p) => html`<span><b>${p.num}</b>${p.nick}</span>`)}</div></div></div>`; }
   // fase 2 (12 battiti): il muro della rosa, una tessera per battito
   if (k < 28) { const n = k - 15; return html`<div class="tr-center" key="wall"><span class="tr-kicker">La rosa · ${d.round}</span>
-    <div class="tr-wall">${squad.map((p, i) => html`<div class=${'tr-tile' + (i < n ? ' on' : '')}><b>${p.num}</b><span>${p.nick}</span></div>`)}</div></div>`; }
+    <div class="tr-wall">${squad.map((p, i) => html`<div class=${'tr-tile' + (i < n ? ' on' : '') + (pics ? ' pic' : '')}>${pics && html`<img src=${p.img} alt=""/>`}<b>${p.num}</b><span>${p.nick}</span></div>`)}</div></div>`; }
   // fase 3: ogni giocatore a tutto schermo per 2 battiti, a colori alterni
   const i = Math.floor((k - 28) / 2) % 12, p = squad[i];
   return html`<div class=${'tr-strobe' + (i % 2 ? ' alt' : '')} key=${'s' + Math.floor((k - 28) / 2)}>
     <span class="tr-strobe-num">${p.num}</span>
+    ${pics && html`<img class="tr-strobe-av" src=${p.img} alt=""/>`}
     <div class="tr-strobe-txt"><span class="tr-first">${p.first} ${p.last}</span><h2 class="tr-strobe-nick tr-pop">${p.nick}!</h2></div></div>`;
+}
+
+/* ---- tema punk: scarabocchi, coro a sillabe, volantino del concerto, pogo ---- */
+/* cornici disegnate a pennarello attorno all'adesivo: restano sempre sui bordi, mai sopra la faccia */
+const FRAMES = [
+  // rettangolo tremolante ripassato due volte
+  ['M8 10 L100 6 L192 11 L189 104 L193 192 L98 195 L7 190 L11 98 Z', 'M14 16 L102 13 L186 17 L184 100 L187 186 L99 189 L12 185 L15 96 Z'],
+  // angoli a squadra + stelline fuori
+  ['M6 40 L6 6 L44 6', 'M156 6 L194 6 L194 40', 'M194 160 L194 194 L156 194', 'M44 194 L6 194 L6 160', 'M182 24 l3 7 l7 1 l-5 5 l1 7 l-6 -3 l-6 3 l1 -7 l-5 -5 l7 -1 z'],
+  // zig-zag sopra e sotto, linee di velocità ai lati
+  ['M6 8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8', 'M6 192 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 l12 -8', 'M4 70 v60 M10 80 v40', 'M196 70 v60 M190 80 v40'],
+  // cornice a fumetto: doppio bordo arrotondato
+  ['M20 6 H180 Q194 6 194 20 V180 Q194 194 180 194 H20 Q6 194 6 180 V20 Q6 6 20 6 Z', 'M12 28 Q12 12 28 12', 'M188 172 Q188 188 172 188'],
+];
+function Doodle({ n }) {
+  const set = FRAMES[n % FRAMES.length];
+  return html`<svg class="tr-doodle" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true">${set.map((dd, i) => html`<path d=${dd} pathLength="1" style=${`--dd:${i * 0.1}s;stroke:${['#FFE14D', '#F04E23', '#fff'][(n + i) % 3]}`}/>`)}</svg>`;
+}
+const PUNK_MOTTO = ['Cinque in campo', 'Tutti', 'dalla stessa parte'];
+function PunkDrop({ d, beat }) {
+  const P = d.punk, B = d.beats, squad = d.people.slice(0, 12);
+  const t = B[beat - 1] ?? d.drop; // ultimo battito
+  const bAt = (x) => B.findIndex((b) => b >= x - 0.01); // indice del battito che apre una parte
+  const since = (x) => beat - 1 - bAt(x); // battiti passati dall'inizio di una parte
+  const pics = squad.every((p) => p.img);
+  // il coro: TIGERS! a ogni grido (2 battiti), ogni volta ritagliato in modo diverso; poi oh-oh-oh-oh con i soprannomi
+  const ch = P.ch.filter((c) => c <= t + 0.01).pop();
+  const nextAfter = (x) => [P.wall, P.strobe, P.flyer, P.motto, P.mosh, P.poster, ...P.ch, 9999].filter((y) => y > x + 0.01).sort((a, b) => a - b)[0];
+  const parts = [['wall', P.wall], ['strobe', P.strobe], ['flyer', P.flyer], ['motto', P.motto], ['mosh', P.mosh], ['poster', P.poster]].filter(([, x]) => x <= t + 0.01).sort((a, b) => a[1] - b[1]);
+  const part = parts.length ? parts[parts.length - 1] : null;
+  const inChant = ch != null && ch < P.poster - 0.01 && (!part || ch >= part[1]) && since(ch) < 4;
+  const vsLine = d.home ? 'Tigers vs ' + d.opponent : d.opponent + ' vs Tigers';
+  if (inChant) {
+    const k = since(ch), shout = Math.floor(k / 2);
+    return html`<div class=${'tr-center tr-chantp' + (k % 2 ? ' ink' : ' paper')} key=${'ch' + ch + Math.floor(k / 2)}>
+      <${Ransom} text="Tigers!" seed=${String(ch) + shout} cls="tr-rsyl" light=${k % 2 === 0}/></div>`;
+  }
+  const name = part ? part[0] : 'oh';
+  if (name === 'wall' || (!part && ch != null)) {
+    if (!part) return html`<div class="tr-center tr-oh" key="oh"><h2 class="tr-ohh">oh-oh-oh-oh</h2>
+      <div class="tr-marquee"><div>${[...squad, ...squad].map((p) => html`<span><b>${p.num}</b>${p.nick}</span>`)}</div></div></div>`;
+    const n = since(P.wall) + 1;
+    return html`<div class="tr-center tr-paper" key="wall"><span class="tr-kicker">La rosa · ${d.round}</span>
+      <div class="tr-wall">${squad.map((p, i) => html`<div class=${'tr-tile' + (i < n ? ' on' : '') + (pics ? ' pic' : '')}>${pics && html`<img src=${p.img} alt=""/>`}<b>${p.num}</b><span>${p.nick}</span></div>`)}</div></div>`;
+  }
+  if (name === 'strobe') {
+    const i = Math.floor(since(P.strobe) / 2) % 12, p = squad[i];
+    return html`<div class=${'tr-misprint' + (i % 2 ? ' alt' : '')} key=${'mp' + i}>
+      <span class="tr-strobe-num">${p.num}</span>
+      ${pics && html`<div class="tr-mp-pic"><img class="c1" src=${p.img} alt=""/><img class="c2" src=${p.img} alt=""/><img class="c0" src=${p.img} alt=""/></div>`}
+      <div class="tr-mp-txt"><span class="tr-first">${p.first} ${p.last}</span><h2 class="tr-strobe-nick tr-pop">${p.nick}!</h2></div></div>`;
+  }
+  if (name === 'flyer') return html`<div class="tr-flyer tr-paper" key="flyer">
+      <span class="tr-fl-top">Live a Sordio</span>
+      <${Ransom} text="Tigers" cls="tr-rfl" light=${true}/>
+      <span class="tr-fl-vs">vs</span>
+      <h2 class="tr-fl-opp">${d.opponent}</h2>
+      <div class="tr-fl-info"><b>${d.when || ''}</b><span>${d.where || ''}</span><span>${d.round} · Calcio a 5</span></div>
+      <span class="tr-fl-stamp">Forza<br/>Tigers</span></div>`;
+  if (name === 'motto') {
+    const w = Math.min(PUNK_MOTTO.length - 1, Math.floor(since(P.motto) / 3));
+    return html`<div class=${'tr-center' + (w % 2 ? ' tr-paper' : '')} key=${'m' + w}><${Ransom} text=${PUNK_MOTTO[w]} cls="tr-rmotto" light=${w % 2 === 1}/></div>`;
+  }
+  if (name === 'mosh') {
+    const k = since(P.mosh);
+    return html`<div class="tr-mosh" key="mosh" style=${`--k:${k}`}>${squad.map((p, i) => html`<div class=${'tr-mo' + ((i + k) % 2 ? ' up' : '')} style=${`--x:${(i % 3) * 33 + 17 + (Math.floor(i / 3) % 2) * 4}%;--y:${Math.floor(i / 3) * 17 + 6}%;--r:${((i * 53) % 21) - 10}deg`}>${pics && html`<img src=${p.img} alt=""/>`}<span>${p.nick}</span></div>`)}
+      <h2 class="tr-mosh-t">Pogo!</h2></div>`;
+  }
+  // poster finale: foto di squadra e volantino
+  return html`<div class="tr-center tr-poster" key="poster">
+    ${pics && html`<div class="tr-crowd">${squad.map((p, i) => html`<img src=${p.img} alt="" style=${`--i:${i};--r:${((i * 37) % 13) - 6}deg`}/>`)}</div>`}
+    <div class="tr-disc tr-spin big"><img src="tigers-stemma.png" alt=""/></div>
+    ${since(P.poster) < 4 ? html`<${Ransom} text="Tigers!" seed=${'p' + Math.floor(since(P.poster) / 2)} cls="tr-rsyl small" key=${'ps' + Math.floor(since(P.poster) / 2)}/>` : html`<h2 class="tr-h tr-slam" key="motto">Una squadra.<br/><em>Una fede.</em></h2>`}
+    <span class="tr-kicker tr-in">${vsLine} · ${d.when || d.round}</span></div>`;
 }
 
 /* ===== QUINTO · analisi video degli avversari =====
