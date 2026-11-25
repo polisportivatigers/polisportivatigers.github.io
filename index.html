@@ -378,7 +378,7 @@ tr.us td{background:var(--accent-soft);font-weight:700}
 .readonly-banner svg{width:18px;height:18px;flex:none}
 
 /* ---------- trailer della partita ---------- */
-.trailer{position:fixed;inset:0;z-index:150;background:#060A33;color:#fff;overflow:hidden;--pulse:0;--tension:0;--prog:0;font-family:var(--f-body)}
+.trailer{position:fixed;inset:0;z-index:2147482000;background:#060A33;color:#fff;overflow:hidden;--pulse:0;--tension:0;--prog:0;font-family:var(--f-body)}
 .tr-bg{position:absolute;inset:0;opacity:calc(.5 + var(--tension)*.5)}
 .tr-bg canvas{position:absolute;inset:0;width:100%;height:100%}
 .trailer::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 45%,rgba(240,78,35,calc(.12 + var(--tension)*.25 + var(--pulse)*.3)),transparent 55%);pointer-events:none}
@@ -2352,8 +2352,8 @@ function Live({ go, arg }) {
     <${PageHead} eyebrow="Live partita" title="Dentro la partita." lead="Cronometro di supporto e cronaca della gara. Il tempo ufficiale e le decisioni restano all’arbitro.">
       <${MatchPicker} id=${id} onPick=${(v) => go('live', v)}/>
     </${PageHead}>
-    ${hasTrailer(m.id) && html`<button class="btn fire" style="justify-self:start;padding:13px 20px;font-size:17px" onClick=${() => setTrailer(true)}><${Icon} n="play"/>Trailer della partita</button>`}
-    ${trailer && html`<${Trailer} id=${m.id} onClose=${() => setTrailer(false)}/>`}
+    ${hasTrailer(m.id) && html`<button class="btn fire" style="justify-self:start;padding:13px 20px;font-size:17px" onClick=${() => window.__trailer && window.__trailer(m.id)}><${Icon} n="play"/>Trailer della partita</button>`}
+    
     ${L.timeout && html`<section class=${'lv-to' + (toLeft === 0 ? ' late' : '')} aria-live="polite">
       <div class="lv-toh">Timeout <b>${L.timeout.side === 'ours' ? 'Tigers' : m.opponent}</b></div>
       <div class="lv-toc">${Math.floor(toLeft / 60000)}:${String(Math.floor(toLeft / 1000) % 60).padStart(2, '0')}</div>
@@ -4042,6 +4042,9 @@ function App() {
   const [loc, setLoc] = useState(parseHash());
   const [menu, setMenu] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  // trailer della partita: si apre qui, sopra pagina e barra, a tutto schermo
+  const [trailerId, setTrailerId] = useState(null);
+  useEffect(() => { window.__trailer = (id) => setTrailerId(id); }, []);
   const mbar = useRef();
   // la voce della pagina aperta resta sempre visibile al centro della barra
   useEffect(() => { const b = mbar.current; const on = b && b.querySelector('.on'); if (on) b.scrollTo({ left: on.offsetLeft - (b.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' }); }, [loc.route]);
@@ -4079,6 +4082,7 @@ function App() {
         : html`<button onClick=${() => setLoginOpen(true)}><${Icon} n="lock"/>Staff</button>`}
     </nav>
     ${loginOpen && html`<${LoginModal} onClose=${() => setLoginOpen(false)}/>`}
+    ${trailerId && html`<${Trailer} id=${trailerId} onClose=${() => setTrailerId(null)}/>`}
     ${intro && html`<${Intro} onDone=${() => { setIntro(false); try { sessionStorage.setItem('quinto-intro-seen', '1'); } catch (e) {} }}/>`}
     <${Toaster}/>
   </div>`;
