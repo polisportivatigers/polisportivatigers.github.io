@@ -3,3 +3,6 @@ CREATE TABLE IF NOT EXISTS sent (key TEXT PRIMARY KEY, at INTEGER);
 CREATE TABLE IF NOT EXISTS presence (match TEXT, player TEXT, answer TEXT, at INTEGER, PRIMARY KEY (match, player));
 CREATE TABLE IF NOT EXISTS polls (match TEXT PRIMARY KEY, title TEXT, candidates TEXT, opens INTEGER, closes INTEGER, winner TEXT, announced INTEGER DEFAULT 0);
 CREATE TABLE IF NOT EXISTS votes (match TEXT, voter TEXT, player TEXT, at INTEGER, PRIMARY KEY (match, voter));
+CREATE TABLE IF NOT EXISTS games (id INTEGER PRIMARY KEY AUTOINCREMENT, shooter TEXT, keeper TEXT, goals INTEGER, dev TEXT, at INTEGER);
+CREATE INDEX IF NOT EXISTS games_at ON games(at);
+CREATE INDEX IF NOT EXISTS games_dev ON games(dev, at);

@@ -120,6 +120,24 @@ async function closePolls(env) {
 }
 async function tally(env, match) { const { results } = await env.DB.prepare('SELECT player, COUNT(*) n FROM votes WHERE match=? GROUP BY player').bind(match).all(); return results; }
 
+/* ---------- minigioco: classifiche ---------- */
+const GAME_SH = ['albergo', 'ardito', 'ascia', 'balducci', 'carafa', 'collini', 'coppola', 'danieletti', 'gnarra', 'manitto', 'merlini', 'moroni', 'zacchetti'], GAME_GK = ['adamoli', 'napolitano'];
+// inizio della settimana (lunedì 00:00) o dell'anno, in ora italiana
+function romeStart(now, kind) {
+  const d = new Date(new Date(now).toLocaleString('en-US', { timeZone: 'Europe/Rome', hourCycle: 'h23' }) + ' UTC'), off = Math.round((d.getTime() - now) / 60000) * 60000;
+  const st = kind === 'w' ? Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - (d.getUTCDay() + 6) % 7) : Date.UTC(d.getUTCFullYear(), 0, 1);
+  return st - off;
+}
+async function gameRank(env) {
+  const now = Date.now(), out = {};
+  for (const [k, from] of [['week', romeStart(now, 'w')], ['year', romeStart(now, 'y')]]) {
+    const a = await env.DB.prepare('SELECT shooter id, SUM(goals) g, MAX(goals) best, COUNT(*) n FROM games WHERE at>=? GROUP BY shooter').bind(from).all();
+    const b = await env.DB.prepare('SELECT keeper id, SUM(10-goals) p, COUNT(*) n FROM games WHERE at>=? GROUP BY keeper').bind(from).all();
+    out[k] = { from, sh: a.results, gk: b.results };
+  }
+  return out;
+}
+
 /* ---------- richieste dall'app ---------- */
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type,Authorization', 'Access-Control-Max-Age': '86400' };
 const J = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...CORS, 'Content-Type': 'application/json' } });
@@ -130,6 +148,16 @@ async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
   const body = req.method === 'POST' ? await req.json().catch(() => ({})) : {};
 
+  /* minigioco "Aiutaci a segnare": una serie da 10 tiri e le classifiche (settimana da lunedì, anno solare, ora italiana) */
+  if (p === '/game' && req.method === 'POST') {
+    const sh = str(body.sh, 20), gk = str(body.gk, 20), g = body.g, dev = str(body.dev, 40);
+    if (!GAME_SH.includes(sh) || !GAME_GK.includes(gk) || !Number.isInteger(g) || g < 0 || g > 10 || dev.length < 10) return J({ error: 'serie non valida' }, 400);
+    const last = await env.DB.prepare('SELECT MAX(at) t FROM games WHERE dev=?').bind(dev).first();
+    if (last && last.t && Date.now() - last.t < 20000) return J({ error: 'troppo presto' }, 429);
+    await env.DB.prepare('INSERT INTO games(shooter,keeper,goals,dev,at) VALUES(?,?,?,?,?)').bind(sh, gk, g, dev, Date.now()).run();
+    return J({ ok: true, rank: await gameRank(env) });
+  }
+  if (p === '/game/rank') return J({ rank: await gameRank(env) });
   if (p === '/sub' && req.method === 'POST') {
     const s = body.sub || {}, k = s.keys || {};
     if (!(/^https:\/\//.test(s.endpoint || '') || (env.TEST_TOKEN && /^http:\/\/localhost:/.test(s.endpoint || ''))) || !k.p256dh || !k.auth) return J({ error: 'iscrizione non valida' }, 400);

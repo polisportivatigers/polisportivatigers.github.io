@@ -88,6 +88,7 @@ h1 em{font-style:normal;color:var(--fiamma)}
 .tabs{display:flex;gap:6px}
 .tab{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--linea);background:transparent;color:var(--gesso);font:800 16px/1 var(--f-display);text-transform:uppercase;letter-spacing:.6px;cursor:pointer}
 .tab.on{background:var(--gesso);color:var(--blu);border-color:var(--gesso)}
+.per .tab{padding:7px;font-size:13px;border-width:1px}.per .tab.on{background:var(--fiamma,#F04E23);border-color:var(--fiamma,#F04E23);color:#fff}
 .list{display:flex;flex-direction:column;gap:6px;overflow:auto}
 .lr{display:grid;grid-template-columns:28px 40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.05)}
 .lr.me{background:rgba(240,78,35,.16);box-shadow:inset 0 0 0 1.5px var(--fiamma)}
@@ -144,6 +145,7 @@ h1 em{font-style:normal;color:var(--fiamma)}
   <section class="view" id="v-rank" hidden>
     <h1>La <em>classifica</em></h1>
     <div class="tabs"><button class="tab on" id="t-b">Bomber</button><button class="tab" id="t-p">Portieri</button></div>
+    <div class="tabs per"><button class="tab on" id="t-w">Settimana</button><button class="tab" id="t-y">Anno</button></div>
     <div class="list" id="rank"></div>
     
     <button class="btn line" id="rank-back" style="flex:none">Gioca</button>
@@ -166,6 +168,15 @@ const FIMG={};Object.entries(FACES).forEach(([k,v])=>{const i=new Image();i.src=
 const $=(id)=>document.getElementById(id);
 const store={get(){try{return JSON.parse(localStorage.getItem('tl-rank')||'null')}catch(e){return null}},set(v){try{localStorage.setItem('tl-rank',JSON.stringify(v))}catch(e){}}};
 let RANK=store.get()||{sh:{},gk:{}};
+/* classifiche condivise da tutta la squadra (settimana e anno), salvate dal postino delle notifiche */
+const API='https://quinto-push.quinto-tigers.workers.dev';let SRANK=null,per='week';
+const DEV=(()=>{try{let d=localStorage.getItem('tl-dev');if(!d){d=Array.from(crypto.getRandomValues(new Uint8Array(12)),(x)=>x.toString(16).padStart(2,'0')).join('');localStorage.setItem('tl-dev',d);}return d;}catch(e){return 'anon'+Date.now();}})();
+const pend={get(){try{return JSON.parse(localStorage.getItem('tl-pend')||'[]')}catch(e){return []}},set(v){try{localStorage.setItem('tl-pend',JSON.stringify(v))}catch(e){}}};
+async function apiRank(){try{const r=await fetch(API+'/game/rank');const j=await r.json();if(j.rank)SRANK=j.rank;}catch(e){}return SRANK;}
+// invia le serie in attesa (anche quelle giocate senza rete), una alla volta
+async function flush(){const q=pend.get();while(q.length){try{const r=await fetch(API+'/game',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({dev:DEV},q[0]))});const j=await r.json().catch(()=>({}));
+  if(r.status===429)break;q.shift();pend.set(q);if(j.rank)SRANK=j.rank;}catch(e){break;}}return SRANK;}
+function sval(kind,id){const P=SRANK&&SRANK[per];if(!P)return null;const x=(P[kind]||[]).find((r)=>r.id===id);return x||{};}
 
 /* ritratto: maglia disegnata (arancio i giocatori, blu i portieri) con il volto del giocatore */
 function bust(x,size,gk,face){const r=size/2;
@@ -709,21 +720,28 @@ function finish(){
   const pos=Object.entries(RANK.sh).sort((a,b)=>b[1].g-a[1].g).findIndex(([id])=>id===sh.id)+1;
   $('end-card').innerHTML='';const c=document.createElement('div');c.className='row';c.style.gap='12px';c.appendChild(avatar(sh,false,48));
   const t=document.createElement('div');t.innerHTML='<b style="font:800 20px/1 var(--f-display);text-transform:uppercase"></b><div class="sub" style="font-size:14px;margin-top:4px"></div>';
-  t.querySelector('b').textContent=sh.name+' · '+r.g+' gol totali';t.querySelector('.sub').textContent=(rec?'Nuovo record personale: '+g+' su 10. ':'Record: '+r.best+' su 10. ')+pos+'º nella classifica bomber.';c.appendChild(t);$('end-card').appendChild(c);
+  t.querySelector('b').textContent=sh.name;t.querySelector('.sub').textContent=(rec?'Nuovo record personale: '+g+' su 10.':'Record: '+r.best+' su 10.');c.appendChild(t);$('end-card').appendChild(c);
   show('end');
+  const q=pend.get();q.push({sh:sh.id,gk:gk.id,g});pend.set(q.slice(-20));
+  const me=sh;flush().then((R)=>{if(!R||!R.week||me!==sh)return;const w=R.week.sh.slice().sort((a,b)=>b.g-a.g),i=w.findIndex((x)=>x.id===me.id),x=w[i];
+    if(x)t.querySelector('b').textContent=me.name+' · '+x.g+' gol questa settimana',t.querySelector('.sub').textContent+=' '+(i+1)+'º nella classifica bomber della settimana.';});
 }
 $('again').onclick=start;$('change').onclick=()=>show('gk');
 
 /* ---------- classifica ---------- */
 let tab='b';
 function rank(){const L=$('rank');L.innerHTML='';
-  const rows=tab==='b'?SH.map((p)=>({p,gk:false,val:(RANK.sh[p.id]||{}).g||0,sub:'record '+((RANK.sh[p.id]||{}).best||0)+'/10',lab:'gol'})):GK.map((p)=>({p,gk:true,val:(RANK.gk[p.id]||{}).p||0,sub:'portiere',lab:'parate'}));
+  const sv=(k,id)=>{const x=sval(k,id);if(x)return x;return k==='sh'?(RANK.sh[id]||{}):(RANK.gk[id]||{});};
+  const rows=tab==='b'?SH.map((p)=>{const x=sv('sh',p.id);return {p,gk:false,val:x.g||0,sub:'record '+(x.best||0)+'/10'+(x.n?' · '+x.n+' serie':''),lab:'gol'};}):GK.map((p)=>{const x=sv('gk',p.id);return {p,gk:true,val:x.p||0,sub:'portiere'+(x.n?' · '+x.n+' serie':''),lab:'parate'};});
   rows.sort((a,b)=>b.val-a.val||a.p.name.localeCompare(b.p.name)).forEach((r,i)=>{const d=document.createElement('div');d.className='lr'+((tab==='b'?sh:gk)&&r.p.id===(tab==='b'?sh:gk).id?' me':'');
     d.innerHTML='<span class="pos">'+(i+1)+'</span><span class="av"></span><div><b></b><small></small></div><div class="val">'+r.val+'<small>'+r.lab+'</small></div>';
     d.querySelector('.av').appendChild(avatar(r.p,r.gk,40));d.querySelector('b').textContent=r.p.name;d.querySelector('small').textContent=r.sub;L.appendChild(d);});}
 $('t-b').onclick=()=>{tab='b';$('t-b').classList.add('on');$('t-p').classList.remove('on');rank();};
 $('t-p').onclick=()=>{tab='p';$('t-p').classList.add('on');$('t-b').classList.remove('on');rank();};
-const toRank=()=>{rank();show('rank');};$('to-rank1').onclick=toRank;$('to-rank2').onclick=toRank;$('rank-back').onclick=()=>show('gk');
+$('t-w').onclick=()=>{per='week';$('t-w').classList.add('on');$('t-y').classList.remove('on');rank();};
+$('t-y').onclick=()=>{per='year';$('t-y').classList.add('on');$('t-w').classList.remove('on');rank();};
+const toRank=()=>{rank();show('rank');flush().then(apiRank).then(()=>{if(!$('v-rank').hidden)rank();});};
+flush().then(apiRank);$('to-rank1').onclick=toRank;$('to-rank2').onclick=toRank;$('rank-back').onclick=()=>show('gk');
 
 /* ---------- suoni (dopo il primo tocco) ---------- */
 let AC=null;function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();}catch(e){}return AC;}
