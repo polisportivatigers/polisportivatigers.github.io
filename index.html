@@ -799,7 +799,7 @@ html.gaming,html.gaming body{overflow:hidden}
 @keyframes trdraw{from{stroke-dashoffset:1}}
 /* coro: una sillaba per battito, carta e inchiostro alternati */
 .tr-chantp.paper{background:var(--acid)}.tr-chantp.ink{background:var(--ink)}
-.tr-rsyl{font-size:clamp(66px,19vw,260px);max-width:96vw}
+.tr-rsyl{font-size:clamp(80px,26vw,300px);max-width:96vw}
 .tr-rsyl.small{font-size:clamp(70px,20vw,220px);position:relative;z-index:3;translate:0 -22vh}
 .tr-oh{background:var(--fiamma)}
 .tr-ohh{margin:0;font-family:var(--mk);font-weight:400;font-size:clamp(52px,15vw,160px);color:var(--ink);transform:rotate(-5deg)}
@@ -834,6 +834,57 @@ html.gaming,html.gaming body{overflow:hidden}
 .tr-rmotto{font-size:clamp(54px,15vw,170px);max-width:92vw}
 .tr-pp-tape.l{left:-8%}.tr-pp-tape.r{left:auto;right:-8%;rotate:38deg;background:rgba(240,78,35,.8)}
 .tr-pp-av{position:relative;z-index:1}
+/* ---- ritornello a clip (tema punk) ---- */
+.tr-chorus{position:absolute;inset:0;display:grid;grid-template-rows:1fr auto;justify-items:center;align-items:center;padding:calc(70px + env(safe-area-inset-top,0px)) 16px calc(40px + env(safe-area-inset-bottom,0px));overflow:hidden}
+.tr-chorus.dark{background:var(--ink)}.tr-chorus.acid{background:var(--acid)}
+.tr-chorus.hit{animation:trhit .25s steps(2) both}
+@keyframes trhit{0%{filter:invert(1)}100%{filter:none}}
+.tr-clip{width:100%;height:100%;display:grid;place-items:center;min-height:0}
+.tr-words{display:grid;justify-items:center;gap:0;min-height:30vh;align-content:start}
+.tr-rw{font-size:clamp(60px,21vw,190px)}
+.tr-rw.w1{font-size:clamp(52px,17vw,160px)}
+.tr-rq{font-size:clamp(64px,23vw,200px);max-width:92vw}
+.tr-ans{background:var(--acid)}
+.tr-qa3{background:var(--ink);gap:6vh}
+.tr-pinmap{width:clamp(60px,16vw,120px);margin-bottom:-2vh}
+.tr-pinmap path{fill:var(--fiamma);stroke:#111;stroke-width:3}.tr-pinmap circle{fill:#fff;stroke:#111;stroke-width:3}
+@media (prefers-reduced-motion:no-preference){.tr-pinmap{animation:trslam .45s cubic-bezier(.2,1.4,.3,1) both}}
+/* tabellone del futsal */
+.tr-board{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:min(92vw,760px);padding:18px 14px 30px;background:#0B1257;border:4px solid #111;box-shadow:8px 8px 0 var(--fiamma);transform:rotate(-2deg)}
+.tb-team{display:grid;justify-items:center;gap:2px}
+.tb-team b{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(20px,5.4vw,44px);color:#fff;line-height:1}
+.tb-team span{font-family:var(--mk);font-size:clamp(12px,3vw,20px);color:var(--acid)}
+.tb-clock{font-family:'Special Elite',monospace;font-size:clamp(38px,11vw,96px);color:#FF3B2F;background:#050505;padding:4px 12px;border-radius:6px;text-shadow:0 0 12px rgba(255,59,47,.8);letter-spacing:.02em}
+.tb-half{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-family:var(--f-data);font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#AEB3D6}
+.tr-board.alarm .tb-clock{animation:tralarm .3s steps(1) infinite}
+@keyframes tralarm{50%{background:#FF3B2F;color:#050505}}
+/* porta e pallone */
+.tr-goal{width:min(96vw,620px);height:auto;overflow:visible}
+.tr-goal .net line{stroke:#111;stroke-width:1.4;opacity:.5}
+.tr-goal .net{transform-origin:150px 120px}
+.tr-goal .posts{fill:none;stroke:#111;stroke-width:10;stroke-linejoin:round}
+.tr-goal .posts{stroke:var(--fiamma)}
+.tr-goal .floor{stroke:#111;stroke-width:3;stroke-dasharray:10 8}
+.tr-goal .ball{fill:#fff;stroke:#111;stroke-width:3}.tr-goal .pent{fill:#111}.tr-goal .seam{stroke:#111;stroke-width:2;fill:none}
+.tr-goal .burst{fill:none;stroke:var(--acid);stroke-width:8}
+/* cronometro */
+.tr-watch{width:min(80vw,460px);height:auto}
+.tr-watch .face{fill:#fff;stroke:#111;stroke-width:6}.tr-watch .crown{fill:#111}
+.tr-watch .tk{stroke:#111;stroke-width:1.5}.tr-watch .tk.big{stroke-width:4}
+.tr-watch .sweep{fill:rgba(240,78,35,.35)}.tr-watch .hand{stroke:var(--fiamma);stroke-width:6;stroke-linecap:round}.tr-watch .pin{fill:#111}
+.tr-watch.ding{animation:trshake .35s both}
+/* foto di squadra che salta */
+.tr-crowd.jump{position:relative;inset:auto;width:94vw;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:end;translate:0 calc(var(--j)*-3vh)}
+.tr-crowd.jump img{width:150%;max-width:none;margin-left:-25%;transform:rotate(var(--r));filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(6px 6px 0 rgba(0,0,0,.5))}
+.tr-crowd.jump img:nth-child(n+5){margin-top:-62%}
+/* risposte del pubblico */
+.tr-resp{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:3}
+.tr-resp.big{background:rgba(255,225,77,.92)}
+.tr-resp .tr-ohh{background:var(--fiamma);padding:4px 18px;color:#111;box-shadow:6px 6px 0 #111}
+.tr-hey{position:absolute;font-family:var(--mk);font-size:clamp(40px,12vw,110px);color:#111;background:var(--acid);padding:0 16px;border:3px solid #111;box-shadow:5px 5px 0 #111;transform:rotate(var(--r))}
+.tr-chorus.acid .tr-hey{background:#fff}
+.tr-ransom .l.p{background:none;box-shadow:none;clip-path:none;padding:0 .02em;margin-left:-.04em;font-family:var(--f-display)!important}
+.tr-qa3 .tr-board{transform:rotate(-2deg) scale(1.08)}
 </style>
 <div id="app"></div>
 <script src="https://unpkg.com/htm@3.1.1/preact/standalone.umd.js"></script>
@@ -2946,7 +2997,8 @@ function Ransom({ text, cls = '', seed = '', light = false }) {
     const bare = r() < 0.16, outline = !bare && r() < 0.1, low = f <= 1 && r() < 0.5;
     const [bg, fg] = R_PAPER[p];
     const st = `--r:${(r() * 22 - 11).toFixed(1)}deg;--y:${(r() * 0.24 - 0.12).toFixed(2)}em;--s:${(0.78 + r() * 0.5).toFixed(2)};--px:${(0.04 + r() * 0.12).toFixed(2)}em;--d:${(i * 0.035 + r() * 0.05).toFixed(3)}s;font-family:${R_FONTS[f]};--bg:${bare ? 'transparent' : bg};--fg:${bare ? (light ? ['#111', '#0B1257', '#C63A12'] : ['#FFE14D', '#fff', '#FF7424'])[p % 3] : fg};--cut:${['polygon(2% 0,100% 3%,97% 100%,0 96%)', 'polygon(0 4%,96% 0,100% 94%,4% 100%)', 'polygon(5% 2%,98% 0,95% 97%,0 100%)', 'none'][Math.floor(r() * 4)]}`;
-    return html`<span class=${'l' + (bare ? ' bare' : '') + (outline ? ' ol' : '')} style=${st}>${low ? ch.toLowerCase() : ch}</span>`; })}</span>`)}</h2>`;
+    const punct = /[!?.,']/.test(ch);
+    return html`<span class=${'l' + (punct ? ' p bare' : bare ? ' bare' : '') + (outline && !punct ? ' ol' : '')} style=${st}>${low ? ch.toLowerCase() : ch}</span>`; })}</span>`)}</h2>`;
 }
 
 /* scena corrente a partire dal tempo */
@@ -2981,7 +3033,7 @@ function Trailer({ id, onClose }) {
     if (sc.kind === 'person') { const p = d.people[sc.i]; st = t >= (p.tNick ?? 1e9) ? 3 : t >= p.tLast ? 2 : t >= p.tName ? 1 : 0; }
     if (sc.kind === 'intro') { const I = d.intro; st = t >= I.tigers ? 5 : t >= I.polisportiva ? 4 : t >= I.contro ? 3 : t >= I.opponent ? 2 : t >= I.giornata ? 1 : 0; }
     if (sc.kind === 'chant') st = d.chant.filter((c) => t >= c).length;
-    if (sc.kind === 'drop' || sc.kind === 'wave' || sc.kind === 'peak') st = d.beats.filter((b) => b <= t).length;
+    if (sc.kind === 'drop' || sc.kind === 'wave' || sc.kind === 'peak') st = d.show ? Math.floor(t * 30) : d.beats.filter((b) => b <= t).length;
     setScene((o) => (o.kind === sc.kind && o.i === sc.i ? o : sc)); setStage(st);
     // impulso sul ritmo nel drop: 1 sul battito, poi decade
     const el = root.current;
@@ -3055,6 +3107,7 @@ function Trailer({ id, onClose }) {
 /* ---- il drop: fasi a tempo di musica (battito = stage) ---- */
 const DROP_WORDS = ['Cinque in campo.', 'Tutti', 'dalla stessa parte.', 'Tigers!'];
 function DropScene({ d, beat, kind }) {
+  if (d.theme === 'punk' && d.show) return html`<${PunkShow} d=${d} t=${beat / 30}/>`;
   if (d.theme === 'punk' && d.punk) return html`<${PunkDrop} d=${d} beat=${beat}/>`;
   const squad = d.people.slice(0, 12);
   const b0 = d.beats.filter((b) => b < d.drop).length; // battiti prima del drop
@@ -3169,6 +3222,89 @@ function PunkDrop({ d, beat }) {
     <div class="tr-disc tr-spin big"><img src="tigers-stemma.png" alt=""/></div>
     ${since(P.poster) < 4 ? html`<${Ransom} text="Tigers!" seed=${'p' + Math.floor(since(P.poster) / 2)} cls="tr-rsyl small" key=${'ps' + Math.floor(since(P.poster) / 2)}/>` : html`<h2 class="tr-h tr-slam" key="motto">Una squadra.<br/><em>Una fede.</em></h2>`}
     <span class="tr-kicker tr-in">${vsLine} · ${d.when || d.round}</span></div>`;
+}
+
+/* ---- tema punk con scaletta a tempi esatti (d.show): domande e risposte, ritornello a clip ---- */
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+function Scoreboard({ d, rem, alarm }) {
+  const s = Math.max(0, rem), txt = '00:' + (s < 10 ? '0' : '') + s.toFixed(1);
+  return html`<div class=${'tr-board' + (alarm ? ' alarm' : '')}><div class="tb-team"><b>Tigers</b><span>casa</span></div><div class="tb-clock">${txt}</div><div class="tb-team"><b>${d.opponent}</b><span>ospiti</span></div><div class="tb-half">2° tempo</div></div>`;
+}
+function GoalClip({ k, after }) {
+  // il pallone parte dal basso a sinistra e si infila all'incrocio dei pali sulla parola "secondo"
+  const e = k < 1 ? 1 - Math.pow(1 - k, 2) : 1, x = 30 + e * 215, y = 300 - e * 210 - Math.sin(e * Math.PI) * 60, sc = 1 - e * 0.45, bulge = after > 0 ? Math.max(0, 1 - after / 0.5) : 0;
+  return html`<svg class="tr-goal" viewBox="0 0 300 330" aria-hidden="true">
+    <g class="net" style=${`transform:translate(${bulge * 6}px,${-bulge * 4}px) scale(${1 + bulge * 0.06})`}>${Array.from({ length: 9 }, (_, i) => html`<line x1=${50 + i * 25} y1="60" x2=${58 + i * 24} y2="190"/>`)}${Array.from({ length: 6 }, (_, i) => html`<line x1=${50 - i} y1=${60 + i * 26} x2=${250 + i} y2=${60 + i * 26}/>`)}</g>
+    <path class="posts" d="M44 196 V54 H256 V196"/><line class="floor" x1="10" y1="200" x2="290" y2="200"/>
+    <g transform=${`translate(${x} ${y}) scale(${sc}) rotate(${k * 720})`}><circle r="20" class="ball"/><path class="pent" d="M0 -7 L7 -2 L4 6 L-4 6 L-7 -2 Z"/><path class="seam" d="M0 -7 V-20 M7 -2 L19 -6 M4 6 L12 16 M-4 6 L-12 16 M-7 -2 L-19 -6"/></g>
+    ${after > 0 && after < 0.6 && html`<circle class="burst" cx="245" cy="88" r=${20 + after * 120} style=${`opacity:${1 - after / 0.6}`}/>`}
+  </svg>`;
+}
+function WatchClip({ k, after }) {
+  const a = Math.min(1, k) * 360;
+  return html`<svg class=${'tr-watch' + (after > 0 && after < 0.4 ? ' ding' : '')} viewBox="0 0 200 220" aria-hidden="true">
+    <rect x="88" y="4" width="24" height="16" rx="3" class="crown"/><circle cx="100" cy="120" r="84" class="face"/>
+    ${Array.from({ length: 60 }, (_, i) => html`<line x1="100" y1=${i % 5 ? 42 : 46} x2="100" y2="38" transform=${`rotate(${i * 6} 100 120)`} class=${i % 5 ? 'tk' : 'tk big'}/>`)}
+    <path d=${`M100 120 L100 40 A80 80 0 ${a > 180 ? 1 : 0} 1 ${100 + 80 * Math.sin(a * Math.PI / 180)} ${120 - 80 * Math.cos(a * Math.PI / 180)} Z`} class="sweep"/>
+    <line x1="100" y1="120" x2="100" y2="48" class="hand" transform=${`rotate(${a} 100 120)`}/><circle cx="100" cy="120" r="7" class="pin"/></svg>`;
+}
+function Responses({ r, t, seed }) {
+  if (!r || !r.t.length || t < r.t[0] - 0.02) return null;
+  if (r.kind === 'tigers') return html`<div class="tr-resp big"><${Ransom} text="Tigers!" seed=${seed} cls="tr-rsyl"/></div>`;
+  if (r.kind === 'oh') return html`<div class="tr-resp"><h2 class="tr-ohh tr-pop">oh-oh-oh-oh!</h2></div>`;
+  const n = r.t.filter((x) => x <= t + 0.02).length, rr = rng(seed);
+  return html`<div class="tr-resp hey">${r.t.slice(0, n).map((_, i) => { const x = 12 + rr() * 60, y = 8 + rr() * 70, rot = rr() * 30 - 15; return html`<span class="tr-hey tr-pop" style=${`left:${x}%;top:${y}%;--r:${rot}deg`} key=${i}>Hey!</span>`; })}</div>`;
+}
+function PunkShow({ d, t }) {
+  const S = d.show, squad = d.people.slice(0, 12), Q = S.qa;
+  // domande e risposte
+  if (t < S.phr[0].w[0] - 0.01) {
+    const qi = Q.filter((q) => q.tq <= t + 0.01).length - 1, q = Q[Math.max(0, qi)], ans = q.ta && t >= q.ta - 0.01;
+    if (qi === 2) return html`<div class="tr-center tr-qa3" key="qa3"><${Ransom} text=${q.q} cls="tr-rq" light=${false}/><${Scoreboard} d=${d} rem=${S.phr[0].w[0] - t}/></div>`;
+    return html`<div class=${'tr-center ' + (ans ? 'tr-ans' : 'tr-paper')} key=${'qa' + qi + (ans ? 'a' : 'q')}>
+      ${ans ? html`${qi === 1 && html`<svg class="tr-pinmap" viewBox="0 0 60 80" aria-hidden="true"><path d="M30 76 C30 76 6 46 6 30 A24 24 0 0 1 54 30 C54 46 30 76 30 76 Z"/><circle cx="30" cy="30" r="9"/></svg>`}<${Ransom} text=${q.a} seed=${'a' + qi} cls="tr-rsyl" light=${true}/>`
+        : html`<${Ransom} text=${q.q} seed=${'q' + qi} cls="tr-rq" light=${true}/>`}</div>`;
+  }
+  // ritornello: 8 volte "Fino all'ultimo secondo!", ognuna con la sua clip
+  const pi = S.phr.findIndex((p, i) => t >= p.w[0] - 0.01 && (i === S.phr.length - 1 || t < S.phr[i + 1].w[0] - 0.01));
+  const inst1 = t >= S.flyer && t < S.phr[4].w[0] - 0.01, tail = t >= S.mosh;
+  if (pi >= 0 && !inst1 && !tail) {
+    const p = S.phr[pi], v = ['clock', 'goal', 'watch', 'clock', 'crowd', 'goal', 'watch', 'clock'][pi];
+    const k = clamp01((t - p.w[0]) / (p.w[2] - p.w[0])), after = t - p.w[2];
+    const words = [['Fino', p.w[0]], ["all'ultimo", p.w[1]], ['secondo!', p.w[2]]].filter(([, x]) => t >= x - 0.01);
+    const bg = { clock: ' dark', goal: ' tr-paper', watch: ' acid', crowd: ' dark' }[v];
+    return html`<div class=${'tr-chorus v-' + v + bg + (after > 0 && after < 0.25 ? ' hit' : '')} key=${'ph' + pi}>
+      <div class="tr-clip">
+        ${v === 'clock' && html`<${Scoreboard} d=${d} rem=${Math.max(0, (p.w[2] - t) * 2)} alarm=${after >= 0}/>`}
+        ${v === 'goal' && html`<${GoalClip} k=${k} after=${after}/>`}
+        ${v === 'watch' && html`<${WatchClip} k=${k} after=${after}/>`}
+        ${v === 'crowd' && html`<div class="tr-crowd jump" style=${`--j:${Math.abs(Math.sin(t * Math.PI / 0.58))}`}>${squad.map((pp, i) => html`<img src=${pp.img} alt="" style=${`--i:${i};--r:${((i * 37) % 13) - 6}deg`}/>`)}</div>`}
+      </div>
+      <div class="tr-words">${words.map(([w], i) => html`<${Ransom} text=${w} seed=${'f' + pi + i} cls=${'tr-rw w' + i} light=${v === 'goal' || v === 'watch'} key=${i}/>`)}</div>
+      <${Responses} r=${p.resp} t=${t} seed=${'r' + pi}/>
+    </div>`;
+  }
+  if (inst1 && t < S.strobe) return html`<div class="tr-flyer tr-paper" key="flyer">
+      <span class="tr-fl-top">Live a Sordio</span>
+      <${Ransom} text="Tigers" cls="tr-rfl" light=${true}/>
+      <span class="tr-fl-vs">vs</span>
+      <h2 class="tr-fl-opp">${d.opponent}</h2>
+      <div class="tr-fl-info"><b>${d.when}</b><span>${d.where}</span><span>${d.round} · Calcio a 5</span></div>
+      <span class="tr-fl-stamp">Forza<br/>Tigers</span></div>`;
+  if (inst1) {
+    const step = (S.phr[4].w[0] - S.strobe) / 12, i = Math.min(11, Math.floor((t - S.strobe) / step)), p = squad[i];
+    return html`<div class=${'tr-misprint' + (i % 2 ? ' alt' : '')} key=${'mp' + i}>
+      <span class="tr-strobe-num">${p.num}</span>
+      <div class="tr-mp-pic"><img class="c1" src=${p.img} alt=""/><img class="c0" src=${p.img} alt=""/></div>
+      <div class="tr-mp-txt"><span class="tr-first">${p.first} ${p.last}</span><h2 class="tr-strobe-nick tr-pop">${p.nick}!</h2></div></div>`;
+  }
+  if (t < S.poster) { const k = Math.floor((t - S.mosh) / 0.58);
+    return html`<div class="tr-mosh" key="mosh">${squad.map((p, i) => html`<div class=${'tr-mo' + ((i + k) % 2 ? ' up' : '')} style=${`--x:${(i % 3) * 33 + 17 + (Math.floor(i / 3) % 2) * 4}%;--y:${Math.floor(i / 3) * 17 + 6}%;--r:${((i * 53) % 21) - 10}deg`}><img src=${p.img} alt=""/><span>${p.nick}</span></div>`)}<h2 class="tr-mosh-t">Pogo!</h2></div>`; }
+  return html`<div class="tr-center tr-poster" key="poster">
+    <div class="tr-crowd">${squad.map((p, i) => html`<img src=${p.img} alt="" style=${`--i:${i};--r:${((i * 37) % 13) - 6}deg`}/>`)}</div>
+    <div class="tr-disc tr-spin big"><img src="tigers-stemma.png" alt=""/></div>
+    <h2 class="tr-h tr-slam">Fino all’ultimo<br/><em>secondo.</em></h2>
+    <span class="tr-kicker tr-in">Tigers vs ${d.opponent} · ${d.when}</span></div>`;
 }
 
 /* ===== QUINTO · analisi video degli avversari =====
