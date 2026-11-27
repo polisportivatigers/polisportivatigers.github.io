@@ -914,6 +914,8 @@ const FIFA_BASE = 'https://www.fifatrainingcentre.com/en/practice/futsal/';
 const MAX_CALLED = 12;
 // in amichevole non c'è distinta CSI: si convoca chi si vuole
 const isFriendly = (m) => !!m && m.phase === 'Amichevole';
+// partite di campionato: tutto tranne amichevoli e coppa
+const isLeague = (m) => !!m && m.phase !== 'Amichevole' && m.phase !== 'Coppa';
 const maxCalled = (m) => (isFriendly(m) ? Infinity : MAX_CALLED);
 const FIELD_CRITERIA = ['Tecnica', 'Visione di gioco', 'Difesa', 'Velocità', 'Resistenza', 'Gioco senza palla'];
 const KEEPER_CRITERIA = ['Riflessi e parate', 'Posizionamento', 'Uscite e 1 contro 1', 'Gioco con i piedi', 'Distribuzione e rilanci', 'Comunicazione'];
@@ -1191,7 +1193,7 @@ function playerStats() {
   const st = {};
   Object.values(S.players).forEach((p) => { st[p.id] = { played: 0, goals: 0, assists: 0, minutes: 0, yellow: 0, red: 0, mvp: 0, called: 0 }; });
   Object.values(S.matches).forEach((m) => {
-    if (m.status !== 'played') return;
+    if (m.status !== 'played' || !isLeague(m)) return;
     const r = staffOf(m.id);
     (r.called || []).forEach((id) => { if (st[id]) st[id].called++; });
     Object.entries(r.report || {}).forEach(([id, v]) => {
@@ -2184,14 +2186,14 @@ function openGame() {
 function Statistiche() {
   useStore();
   const [sort, setSort] = useState('goals');
-  const played = matchList().filter((m) => m.status === 'played');
+  const played = matchList().filter((m) => m.status === 'played' && isLeague(m));
   const W = played.filter((m) => resultOf(m) === 'V').length, N = played.filter((m) => resultOf(m) === 'N').length, P = played.filter((m) => resultOf(m) === 'P').length;
   const gf = sum(played.map((m) => m.ourScore || 0)), ga = sum(played.map((m) => m.theirScore || 0));
   const last = played.slice(-10);
   const st = playerStats();
   const rows = sortBy(playerList(true).map((p) => ({ p, ...st[p.id] })), (r) => -(r[sort] || 0));
   return html`<div class="page">
-    <${PageHead} eyebrow="Statistiche" title="Quello che dice il campo." lead="Calcolate solo dalle partite e dai referti registrati."/>
+    <${PageHead} eyebrow="Statistiche" title="Quello che dice il campo." lead="Solo partite di campionato, calcolate dai risultati e dai referti registrati."/>
     <div class="kpis">
       <div class="kpi"><span>Partite giocate</span><b>${played.length}</b></div>
       <div class="kpi"><span>Vinte · pari · perse</span><b>${W}·${N}·${P}</b></div>
