@@ -1,11 +1,11 @@
 name: Aggiorna dati CSI
 
-# Ogni sera alle 23:15 ora italiana (ChatGPT legge il CSI alle 23). GitHub usa l'ora UTC: le due righe coprono ora solare e legale,
-# e il passo "orario" lascia proseguire solo quella che cade alle 23:15 in Italia.
+# Ogni mattina alle 8:00 ora italiana. GitHub usa l'ora UTC: le due righe coprono ora solare e legale,
+# e il passo "orario" lascia proseguire solo quella che cade alle 8 in Italia.
 on:
   schedule:
-    - cron: '15 21 * * *'
-    - cron: '15 22 * * *'
+    - cron: '0 6 * * *'
+    - cron: '0 7 * * *'
   workflow_dispatch:
 
 permissions:
@@ -19,7 +19,7 @@ jobs:
         id: orario
         run: |
           ORA=$(TZ=Europe/Rome date +%H)
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$ORA" = "23" ] || [ "$ORA" = "00" ]; then echo "vai=si" >> "$GITHUB_OUTPUT"; else echo "vai=no" >> "$GITHUB_OUTPUT"; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$ORA" = "08" ]; then echo "vai=si" >> "$GITHUB_OUTPUT"; else echo "vai=no" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/checkout@v4
         if: steps.orario.outputs.vai == 'si'
       - name: leggi i dati CSI

@@ -755,7 +755,7 @@ Promise.all(Object.values(FIMG).map((i)=>i.decode?i.decode().catch(()=>{}):0)).t
 show('gk');
 })();
 </script>
-<script>(function(){var b=document.getElementById('tl-close');if(window.parent===window){b.hidden=true;return;}b.onclick=function(){parent.postMessage('tl-close','*');};})();</script>
+<script>(function(){var b=document.getElementById('tl-close');b.hidden=true;b.onclick=function(){parent.postMessage('tl-close','*');};})();</script>
 
 </body>
 </html>

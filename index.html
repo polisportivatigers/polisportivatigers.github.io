@@ -679,7 +679,9 @@ body{background:var(--bg);min-height:var(--appH,100%)}
 @keyframes helpgoal{50%{background-position:100% 0}}
 @keyframes helpball{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(180deg)}}
 @media (prefers-reduced-motion:reduce){.helpgoal,.helpgoal svg{animation:none}}
-.gameov{position:fixed;left:0;right:0;top:0;height:var(--appH,100%);z-index:2147483000;background:#060a2e}
+.gameov{position:fixed;left:0;right:0;top:0;height:var(--appH,100%);z-index:2147483000;background:#060a2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+.gameov-x{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px));z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.gameov-x svg{width:22px;height:22px}
 .pwipe.gwipe{z-index:2147483001}
 .gameov iframe{display:block;width:100%;height:100%;border:0}
 html.gaming,html.gaming body{overflow:hidden}
@@ -2170,9 +2172,14 @@ function openGame() {
   let go = false; const start = () => { if (go) return; go = true; gameWipe(ov, 1); };
   fr.addEventListener('load', start); setTimeout(start, 700);
   let closing = false;
-  const close = (e) => { if (e.data !== 'tl-close' || closing) return; closing = true; window.removeEventListener('message', close);
+  const shut = () => { if (closing) return; closing = true; window.removeEventListener('message', close);
     gameWipe(ov, -1, () => { ov.remove(); document.documentElement.classList.remove('gaming'); }); };
+  const close = (e) => { if (e.data === 'tl-close') shut(); };
   window.addEventListener('message', close);
+  // la X per chiudere il gioco, sempre in alto a destra
+  const x = document.createElement('button'); x.type = 'button'; x.className = 'gameov-x'; x.setAttribute('aria-label', 'Chiudi il gioco');
+  x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  x.onclick = shut; ov.appendChild(x);
 }
 function Statistiche() {
   useStore();
@@ -2208,7 +2215,7 @@ function Classifica() {
   const [edit, setEdit] = useState(null);
   const checked = standingsCheckedAt();
   return html`<div class="page">
-    <${PageHead} eyebrow="Classifica" title="Ogni punto conta." lead=${`Girone unico, 12 squadre. Valori ufficiali CSI letti il ${fmtDate(String(checked).slice(0, 10), { year: true })}${String(checked).length > 10 ? ' alle ' + new Date(checked).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : ''}. Aggiornamento automatico ogni sera verso le 23:15.`}>
+    <${PageHead} eyebrow="Classifica" title="Ogni punto conta." lead=${`Girone unico, 12 squadre. Valori ufficiali CSI letti il ${fmtDate(String(checked).slice(0, 10), { year: true })}${String(checked).length > 10 ? ' alle ' + new Date(checked).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : ''}.`}>
       <a class="btn line" href=${CSI_LEAGUE} target="_blank" rel="noopener"><${Icon} n="ext"/>Verifica sul CSI</a>
     </${PageHead}>
     <div class="tablewrap"><table>
